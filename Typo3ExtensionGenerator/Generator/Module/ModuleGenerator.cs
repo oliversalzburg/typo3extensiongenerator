@@ -18,7 +18,7 @@ namespace Typo3ExtensionGenerator.Generator.Module {
     }
 
     /// <summary>
-    /// Generates the PHP statements to register the plugins.
+    /// Generates the PHP statements to register the modules.
     /// </summary>
     /// <returns></returns>
     private string GeneratePhp( ) {

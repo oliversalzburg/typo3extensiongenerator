@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
@@ -32,6 +33,30 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
       
       WriteFile( "ext_tables.sql", GenerateSql() );
+
+      foreach( DataModel dataModel in Subject.Models ) {
+        const string path = "Classes/Domain/Model";
+        string content = GenerateModelFile( dataModel );
+        
+        string targetFilename = Path.Combine( path, dataModel.Name + ".php" );
+        Console.WriteLine( string.Format( "Generating {0}...", targetFilename ) );
+        WritePhpFile( targetFilename, content );
+      }
+    }
+
+    private string GenerateModelFile( DataModel dataModel ) {
+      const string template =
+        "class {1} extends Tx_Extbase_DomainObject_AbstractEntity {{\n" +
+        "{0}" +
+        "}}";
+        
+
+      StringBuilder dataMembers = new StringBuilder();
+      foreach( KeyValuePair<string, string> member in dataModel.Members ) {
+        dataMembers.Append( string.Format( "  protected ${0};\n", member.Value ) );
+      }
+
+      return string.Format( template, dataMembers.ToString(), NameHelper.GetExtbaseClassName( Subject, dataModel ) );
     }
 
     /// <summary>

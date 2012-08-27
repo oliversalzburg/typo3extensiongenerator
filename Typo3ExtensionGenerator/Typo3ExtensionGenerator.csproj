@@ -49,6 +49,7 @@
     <Compile Include="Generator\Model\ModelGenerator.cs" />
     <Compile Include="Generator\Module\ModuleGenerator.cs" />
     <Compile Include="Generator\Plugin\PluginGenerator.cs" />
+    <Compile Include="Helper\NameHelper.cs" />
     <Compile Include="Helper\TypeTranslator.cs" />
     <Compile Include="Model\DataModel.cs" />
     <Compile Include="Model\Module.cs" />
