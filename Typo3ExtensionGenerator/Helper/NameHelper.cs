@@ -21,6 +21,16 @@ namespace Typo3ExtensionGenerator.Helper {
       return string.Format( "Tx_{0}_Domain_Model_{1}", UpperCamelCase( extension.Key ), UpperCamelCase( dataModel.Name ) );
     }
 
+    /// <summary>
+    /// Generates the Extbase class name for a given data model.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseFileName( Extension extension, DataModel dataModel ) {
+      return string.Format( "{0}.php", UpperCamelCase( dataModel.Name ) );
+    }
+
     private static string UpperCamelCase( string input ) {
       return input.Substring( 0, 1 ).ToUpper() + Regex.Replace( input.Substring( 1 ), "_(.)", delegate( Match match ) {
                                                                                                 return

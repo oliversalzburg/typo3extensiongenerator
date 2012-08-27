@@ -38,7 +38,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         const string path = "Classes/Domain/Model";
         string content = GenerateModelFile( dataModel );
         
-        string targetFilename = Path.Combine( path, dataModel.Name + ".php" );
+        string targetFilename = Path.Combine( path, NameHelper.GetExtbaseFileName( Subject, dataModel ) );
         Console.WriteLine( string.Format( "Generating {0}...", targetFilename ) );
         WritePhpFile( targetFilename, content );
       }
@@ -56,7 +56,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         dataMembers.Append( string.Format( "  protected ${0};\n", member.Value ) );
       }
 
-      return string.Format( template, dataMembers.ToString(), NameHelper.GetExtbaseClassName( Subject, dataModel ) );
+      return string.Format( template, dataMembers, NameHelper.GetExtbaseClassName( Subject, dataModel ) );
     }
 
     /// <summary>
