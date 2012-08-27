@@ -1,0 +1,6 @@
+/_ReSharper.Typo3ExtensionGenerator
+/Typo3ExtensionGenerator/obj
+/Typo3ExtensionGenerator/bin
+/Typo3ExtensionGenerator/*.user
+/*.suo
+/*.user
