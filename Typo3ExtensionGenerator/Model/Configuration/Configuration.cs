@@ -52,8 +52,14 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     /// </summary>
     public List<Type> Types { get; set; }
 
+    /// <summary>
+    /// The palettes defined  in this data model configuration.
+    /// </summary>
+    public List<Palette> Palettes { get; set; }
+
     public Configuration() {
-      Types = new List<Type>();
+      Types    = new List<Type>();
+      Palettes = new List<Palette>();
     }
   }
 }

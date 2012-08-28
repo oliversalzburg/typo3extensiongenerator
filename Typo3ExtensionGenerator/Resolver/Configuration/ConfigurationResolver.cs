@@ -42,6 +42,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
             
             } else if( Keywords.ConfigurationDirectives.TypeDeclaration == configurationDirective.Keyword ) {
               configuration.Types.Add( TypeResolver.Resolve( configurationDirective ) );
+
+            } else if( Keywords.ConfigurationDirectives.PaletteDeclaration == configurationDirective.Keyword ) {
+              configuration.Palettes.Add( PaletteResolver.Resolve( configurationDirective ) );
             }
 
           }

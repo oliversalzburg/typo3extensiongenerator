@@ -41,22 +41,29 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  'ctrl' => $TCA['{model}']['ctrl'],\n" +
                               "{interfaceFields},\n" +
                               "{types},\n" +
+                              "{palettes},\n" +
                               ");";
 
       string finalInterface = GenerateInterface();
       string finalTypes     = GenerateTypes();
+      string finalPalettes  = GeneratePalettes();
 
       var dataObject = new {
                              extensionKey = Subject.Key,
                              model = NameHelper.GetAbsoluteModelName( Subject, Configuration.Model ),
                              interfaceFields = finalInterface,
-                             types = finalTypes
+                             types = finalTypes,
+                             palettes = finalPalettes
                            };
 
       string generatedConfiguration = template.HaackFormat( dataObject );
       return generatedConfiguration;
     }
 
+    /// <summary>
+    /// Generates the 'interface' array.
+    /// </summary>
+    /// <returns></returns>
     private string GenerateInterface() {
       // Describes which fields (and in which order) are shown in the Info/View Item dialog in the BE.
       const string infoInterfaceTemplate = "  'interface' => array( 'showRecordFieldList' => '{0}' )";
@@ -99,6 +106,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       return finalInterface;
     }
 
+    /// <summary>
+    /// Generates the 'types' array.
+    /// </summary>
+    /// <returns></returns>
     private string GenerateTypes() {
       const string typesTemplate = "  'types' => array( {0} )";
 
@@ -124,13 +135,25 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
 
           if( null == referencedModelMember.Key ) {
-            throw new GeneratorException(
-              string.Format(
-                "The type interface field '{0}' does not exist in the data model '{1}'.", userInterfaceField,
-                Configuration.Model.Name ) );
-          }
+            // Not found in data model. Is it a palette maybe?
+            Palette referencedPalette = Configuration.Palettes.SingleOrDefault( p => p.Name == field );
 
-          allTypes += NameHelper.GetSqlColumnName( Subject, userInterfaceField ) + ",";
+            if( null == referencedPalette ) {
+              throw new GeneratorException(
+                string.Format(
+                  "The type interface field '{0}' neither exists in the data model '{1}' nor is it a palette.",
+                  userInterfaceField,
+                  Configuration.Model.Name ) );
+
+            } else {
+              // The field that was provided by the user is actually a palette.
+              allTypes += "--palette--;;" + userInterfaceField + ",";
+            }
+
+
+          } else {
+            allTypes += NameHelper.GetSqlColumnName( Subject, userInterfaceField ) + ",";
+          }
         }
 
         // Add Access tab
@@ -147,6 +170,15 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       }
 
       return String.Format( typesTemplate, finalTypes );
+    }
+
+    /// <summary>
+    /// Generates the 'palettes' array.
+    /// </summary>
+    /// <returns></returns>
+    private string GeneratePalettes() {
+      const string palettesTemplate = "  'palettes' => array( {0} )";
+      return palettesTemplate;
     }
   }
 }

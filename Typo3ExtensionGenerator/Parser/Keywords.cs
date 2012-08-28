@@ -75,6 +75,9 @@ namespace Typo3ExtensionGenerator.Parser {
 
       public const string TypeDeclaration = "type";
       public const string InterfaceType   = "interface";
+
+      public const string PaletteDeclaration = "palette";
+      public const string InterfacePalette   = "interface";
     }
   }
 }
