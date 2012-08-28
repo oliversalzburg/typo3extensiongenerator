@@ -11,5 +11,9 @@
                                   "t3ver_move_id int(11) DEFAULT '0' NOT NULL";
 
     public const string Keys = "KEY t3ver_oid (t3ver_oid,t3ver_wsid)";
+
+    public const string TableControlFields = "    'versioningWS'             => 2,\n" +
+                                             "    'versioning_followPages'   => TRUE";
+
   }
 }

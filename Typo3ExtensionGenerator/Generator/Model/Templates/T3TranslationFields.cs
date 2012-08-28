@@ -6,5 +6,10 @@
                                   "l10n_diffsource mediumblob";
 
     public const string Keys = "KEY language (l10n_parent,sys_language_uid)";
+
+    public const string TableControlFields = "    'origUid'                  => 't3_origuid',\n" +
+                                             "    'languageField'            => 'sys_language_uid',\n" +
+                                             "    'transOrigPointerField'    => 'l10n_parent',\n" +
+                                             "    'transOrigDiffSourceField' => 'l10n_diffsource'";
   }
 }

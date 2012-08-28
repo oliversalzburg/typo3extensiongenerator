@@ -9,5 +9,17 @@
                                   "endtime int(11) unsigned DEFAULT '0' NOT NULL,\n" +
                                   "fe_group varchar(100) DEFAULT '0' NOT NULL,\n" +
                                   "editlock tinyint(4) DEFAULT '0' NOT NULL";
+
+    public const string TableControlFields = "    'tstamp'                   => 'tstamp',\n" +
+                                             "    'crdate'                   => 'crdate',\n" +
+                                             "    'cruser_id'                => 'cruser_id',\n" +
+                                             "    'delete'                   => 'deleted',\n" +
+                                             "    'enablecolumns'            => array(\n" +
+                                             "      'disabled'  => 'hidden',\n" +
+                                             "      'starttime' => 'starttime',\n" +
+                                             "      'endtime'   => 'endtime',\n" +
+                                             "      'fe_group'  => 'fe_group'\n" +
+                                             "    ),\n" +
+                                             "    'editlock'                 => 'editlock'";
   }
 }

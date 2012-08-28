@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generator\AbstractGenerator.cs" />
+    <Compile Include="Generator\Configuration\ConfigurationFileGenerator.cs" />
     <Compile Include="Generator\Configuration\ConfigurationGenerator.cs" />
     <Compile Include="Generator\ExtEmconfGenerator.cs" />
     <Compile Include="Generator\ExtensionGenerator.cs" />

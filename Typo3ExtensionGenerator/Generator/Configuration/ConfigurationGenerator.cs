@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using StringLib;
@@ -21,10 +19,22 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
       
       WriteFile( "ext_tables.php", GeneratePhp(), true );
+      WriteConfigurationFiles();
+    }
+
+    private void WriteConfigurationFiles() {
+      if( null == Subject.Configurations ) return;
+
+      foreach( Typo3ExtensionGenerator.Model.Configuration configuration in Subject.Configurations ) {
+        // Export dynamic config file
+        ConfigurationFileGenerator configurationFileGenerator = new ConfigurationFileGenerator(
+          OutputDirectory, Subject, configuration );
+        configurationFileGenerator.Generate();
+      }
     }
 
     /// <summary>
-    /// Generates the PHP statements to required instructions in the TCA.
+    /// Generates the PHP statements to create required instructions in the TCA.
     /// </summary>
     /// <returns></returns>
     private string GeneratePhp( ) {
@@ -54,26 +64,6 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  )\n" +
                               ");";
 
-      const string t3CommonFieldsTemplate = "    'tstamp'                   => 'tstamp',\n" +
-                                            "    'crdate'                   => 'crdate',\n" +
-                                            "    'cruser_id'                => 'cruser_id',\n" +
-                                            "    'delete'                   => 'deleted',\n" +
-                                            "    'enablecolumns'            => array(\n" +
-                                            "      'disabled'  => 'hidden',\n" +
-                                            "      'starttime' => 'starttime',\n" +
-                                            "      'endtime'   => 'endtime',\n" +
-                                            "      'fe_group'  => 'fe_group'\n" +
-                                            "    ),\n" +
-                                            "    'editlock'                 => 'editlock',\n";
-
-      const string t3TranslationFieldsTemplate = "    'origUid'                  => 't3_origuid',\n" +
-                                                 "    'languageField'            => 'sys_language_uid',\n" +
-                                                 "    'transOrigPointerField'    => 'l10n_parent',\n" +
-                                                 "    'transOrigDiffSourceField' => 'l10n_diffsource',\n";
-
-      const string t3VersioningFieldsTemplate = "    'versioningWS'             => 2,\n" +
-                                                "    'versioning_followPages'   => TRUE,\n";
-
       foreach( Typo3ExtensionGenerator.Model.Configuration configuration in Subject.Configurations ) {
         // First, find the data model this configuration applies to
         DataModel targetModel = Subject.Models.SingleOrDefault( m => m.Name == configuration.Target );
@@ -85,19 +75,19 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         // Were the T3CommonFields included in this model?
         string finalCommonFields = string.Empty;
         if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
-          finalCommonFields = t3CommonFieldsTemplate;
+          finalCommonFields = T3CommonFields.TableControlFields + ",\n";
         }
 
         // Were the T3TranslationFields included in this model?
         string finalTranslationFields = string.Empty;
         if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
-          finalTranslationFields  = t3TranslationFieldsTemplate;
+          finalTranslationFields  = T3TranslationFields.TableControlFields + ",\n";
         }
 
         // Were the T3VersioningFields included in this model?
         string finalVersioningFields = string.Empty;
         if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3VersioningFields ) ) {
-          finalVersioningFields = t3VersioningFieldsTemplate;
+          finalVersioningFields = T3VersioningFields.TableControlFields + ",\n";
         }
 
         // Is an alternative label defined?
@@ -139,7 +129,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                commonFields = finalCommonFields,
                                translationFields = finalTranslationFields,
                                versioningFields = finalVersioningFields,
-                               configFilename = NameHelper.GetExtbaseFileName( Subject,configuration.Model ),
+                               configFilename = NameHelper.GetExtbaseFileName( Subject, configuration.Model ),
                                thumbnail = thumbnailField,
                                searchFields = finalSearchFields
                              };
@@ -149,6 +139,6 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );
-    }    
+    } 
   }
 }
