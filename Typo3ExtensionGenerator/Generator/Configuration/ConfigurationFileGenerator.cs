@@ -11,7 +11,7 @@ using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationFileGenerator : AbstractGenerator, IGenerator {
-    public ConfigurationFileGenerator( string outputDirectory, Extension extension, Typo3ExtensionGenerator.Model.Configuration configuration ) : base( outputDirectory, extension ) {
+    public ConfigurationFileGenerator( string outputDirectory, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) : base( outputDirectory, extension ) {
       Configuration = configuration;
     }
 
@@ -19,7 +19,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       get { return "Configuration/TCA/" + NameHelper.GetExtbaseFileName( Subject, Configuration.Model ); }
     }
 
-    public Typo3ExtensionGenerator.Model.Configuration Configuration { get; private set; }
+    public Typo3ExtensionGenerator.Model.Configuration.Configuration Configuration { get; private set; }
 
     public void Generate() {
       Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
@@ -38,23 +38,41 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "$TCA['{model}'] = array(\n" +
                               "  'ctrl' => $TCA['{model}']['ctrl'],\n" +
                               "{interfaceFields}" +
+                              "{types}" +
                               ");";
 
+      string finalInterface = GenerateInterface();
+      string finalTypes = GenerateTypes();
+
+      var dataObject = new {
+                             extensionKey = Subject.Key,
+                             model = NameHelper.GetAbsoluteModelName( Subject, Configuration.Model ),
+                             interfaceFields = finalInterface,
+                             types = finalTypes
+                           };
+
+      string generatedConfiguration = template.HaackFormat( dataObject );
+      return generatedConfiguration;
+    }
+
+    private string GenerateInterface() {
       // Describes which fields (and in which order) are shown in the Info/View Item dialog in the BE.
       const string infoInterfaceTemplate = "'interface' => array(\n" +
                                            "	'showRecordFieldList' => '{0}'\n" +
                                            ")";
 
-      // title, download_category, file_name, description, install_notes, qualifier
-
       // Were the T3CommonFields included in this model?
       string finalInterfaceFields = string.Empty;
-      if( Configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
+      if(
+        Configuration.Model.Members.Any(
+          m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
         finalInterfaceFields += T3TranslationFields.InterfaceInfoFields + ", ";
       }
 
       // Were the T3TranslationFields included in this model?
-      if( Configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
+      if(
+        Configuration.Model.Members.Any(
+          m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
         finalInterfaceFields += T3TranslationFields.InterfaceInfoFields + ", ";
       }
 
@@ -78,18 +96,19 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       }
 
       // Cut off trailing comma and unify spacing
-      finalInterfaceFields = finalInterfaceFields.TrimEnd( new[] {',',' '} );
+      finalInterfaceFields = finalInterfaceFields.TrimEnd( new[] {',', ' '} );
       finalInterfaceFields = Regex.Replace( finalInterfaceFields, ", *", ", " );
 
       string finalInterface = string.Format( infoInterfaceTemplate, finalInterfaceFields );
+      return finalInterface;
+    }
 
-      var dataObject = new {
-                               extensionKey = Subject.Key,
-                               model = NameHelper.GetAbsoluteModelName( Subject, Configuration.Model ),
-                               interfaceFields = finalInterface
-                             };
-      string generatedConfiguration = template.HaackFormat( dataObject );
-      return generatedConfiguration;
+    private string GenerateTypes() {
+      // Describes which fields (and in which order) are shown in the BE when editing a record.
+      const string typeInterfaceTemplate = "'interface' => array(\n" +
+                                           "	'showRecordFieldList' => '{0}'\n" +
+                                           ")";
+      return typeInterfaceTemplate;
     }
   }
 }

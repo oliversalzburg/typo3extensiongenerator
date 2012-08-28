@@ -43,6 +43,6 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The configurations for the data models.
     /// </summary>
-    public List<Configuration> Configurations { get; set; }
+    public List<Configuration.Configuration> Configurations { get; set; }
   }
 }

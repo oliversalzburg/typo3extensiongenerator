@@ -54,9 +54,9 @@ namespace Typo3ExtensionGenerator.Parser {
     /// Keywords of data model template definitions.
     /// </summary>
     public static class DataModelTemplates {
-      public const string T3ManagedFields = "t3ManagedFields";
-      public const string T3CommonFields = "t3CommonFields";
-      public const string T3VersioningFields = "t3VersioningFields";
+      public const string T3ManagedFields     = "t3ManagedFields";
+      public const string T3CommonFields      = "t3CommonFields";
+      public const string T3VersioningFields  = "t3VersioningFields";
       public const string T3TranslationFields = "t3TranslationFields";
     }
 
@@ -64,14 +64,17 @@ namespace Typo3ExtensionGenerator.Parser {
     /// Keywords used in data model configurations.
     /// </summary>
     public static class ConfigurationDirectives {
-      public const string Label = "label";
+      public const string Label            = "label";
       public const string LabelAlternative = "labelAlt";
-      public const string LabelHook = "labelHook";
+      public const string LabelHook        = "labelHook";
 
-      public const string Thumbnail = "thumbnail";
+      public const string Thumbnail    = "thumbnail";
       public const string SearchFields = "searchFields";
 
       public const string InterfaceInfo = "interfaceInfo";
+
+      public const string TypeDeclaration = "type";
+      public const string InterfaceType   = "interface";
     }
   }
 }

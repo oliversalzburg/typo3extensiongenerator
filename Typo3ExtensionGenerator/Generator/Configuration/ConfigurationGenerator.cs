@@ -25,7 +25,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     private void WriteConfigurationFiles() {
       if( null == Subject.Configurations ) return;
 
-      foreach( Typo3ExtensionGenerator.Model.Configuration configuration in Subject.Configurations ) {
+      foreach( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration in Subject.Configurations ) {
         // Export dynamic config file
         ConfigurationFileGenerator configurationFileGenerator = new ConfigurationFileGenerator(
           OutputDirectory, Subject, configuration );
@@ -63,7 +63,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  )\n" +
                               ");";
 
-      foreach( Typo3ExtensionGenerator.Model.Configuration configuration in Subject.Configurations ) {
+      foreach( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration in Subject.Configurations ) {
         // First, find the data model this configuration applies to
         DataModel targetModel = Subject.Models.SingleOrDefault( m => m.Name == configuration.Target );
         if( null == targetModel ) {

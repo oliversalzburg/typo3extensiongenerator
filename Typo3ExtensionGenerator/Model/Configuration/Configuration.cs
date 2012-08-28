@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Typo3ExtensionGenerator.Model {
+namespace Typo3ExtensionGenerator.Model.Configuration {
   /// <summary>
   /// A configuration for a data model.
   /// </summary>
@@ -48,5 +46,14 @@ namespace Typo3ExtensionGenerator.Model {
     /// The fields that will be displayed in the Info/View Item dialog
     /// </summary>
     public string InterfaceInfo { get; set; }
+
+    /// <summary>
+    /// The types defined in this data model configuration.
+    /// </summary>
+    public List<Type> Types { get; set; }
+
+    public Configuration() {
+      Types = new List<Type>();
+    }
   }
 }

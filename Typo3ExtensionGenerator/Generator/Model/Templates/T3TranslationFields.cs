@@ -13,5 +13,6 @@
                                              "    'transOrigDiffSourceField' => 'l10n_diffsource'";
 
     public const string InterfaceInfoFields = "sys_language_uid, l10n_parent, l10n_diffsource";
+    public const string InterfaceTypeFields = "l10n_parent, l10n_diffsource";
   }
 }

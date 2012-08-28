@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
@@ -9,13 +10,13 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// </summary>
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The configurations of the extension</returns>
-    public static List<Typo3ExtensionGenerator.Model.Configuration> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+    public static List<Typo3ExtensionGenerator.Model.Configuration.Configuration> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
       IEnumerable<ExtensionParser.ParsedPartial> configurationPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.DeclareConfiguration );
       if( !configurationPartials.Any() ) return null;
 
-      List<Typo3ExtensionGenerator.Model.Configuration> configurations = new List<Typo3ExtensionGenerator.Model.Configuration>();
+      List<Typo3ExtensionGenerator.Model.Configuration.Configuration> configurations = new List<Typo3ExtensionGenerator.Model.Configuration.Configuration>();
       foreach( ExtensionParser.ParsedPartial configurationPartial in configurationPartials ) {
-        Typo3ExtensionGenerator.Model.Configuration configuration = new Typo3ExtensionGenerator.Model.Configuration { Target = configurationPartial.Parameters };
+        Typo3ExtensionGenerator.Model.Configuration.Configuration configuration = new Typo3ExtensionGenerator.Model.Configuration.Configuration { Target = configurationPartial.Parameters };
         configurations.Add( configuration );
         if( configurationPartial.Partials.Any() ) {
           foreach( ExtensionParser.ParsedPartial configurationDirective in configurationPartial.Partials ) {
@@ -38,6 +39,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
 
             } else if( Keywords.ConfigurationDirectives.InterfaceInfo == configurationDirective.Keyword ) {
               configuration.InterfaceInfo = configurationDirective.Parameters;
+            
+            } else if( Keywords.ConfigurationDirectives.TypeDeclaration == configurationDirective.Keyword ) {
+              configuration.Types.Add( TypeResolver.Resolve( configurationDirective ) );
             }
 
           }
