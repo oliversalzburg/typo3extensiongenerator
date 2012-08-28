@@ -73,19 +73,19 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
         // Were the T3CommonFields included in this model?
         string finalCommonFields = string.Empty;
-        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
+        if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
           finalCommonFields = T3CommonFields.TableControlFields + ",\n";
         }
 
         // Were the T3TranslationFields included in this model?
         string finalTranslationFields = string.Empty;
-        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
+        if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3TranslationFields ) ) {
           finalTranslationFields  = T3TranslationFields.TableControlFields + ",\n";
         }
 
         // Were the T3VersioningFields included in this model?
         string finalVersioningFields = string.Empty;
-        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3VersioningFields ) ) {
+        if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3VersioningFields ) ) {
           finalVersioningFields = T3VersioningFields.TableControlFields + ",\n";
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model {
   /// <summary>
@@ -19,6 +20,15 @@ namespace Typo3ExtensionGenerator.Model {
     /// The contained data members.
     /// </summary>
     public List<KeyValuePair<string, string>> Members { get; set; }
+
+    /// <summary>
+    /// Determine if this model uses a specific data model template
+    /// </summary>
+    /// <param name="template"></param>
+    /// <returns></returns>
+    public bool UsesTemplate( string template ) {
+      return Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == template );
+    }
 
     public DataModel() {
       Members = new List<KeyValuePair<string, string>>();

@@ -7,7 +7,9 @@ using StringLib;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using Type = Typo3ExtensionGenerator.Model.Configuration.Type;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationFileGenerator : AbstractGenerator, IGenerator {
@@ -37,12 +39,12 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "}}\n" +
                               "$TCA['{model}'] = array(\n" +
                               "  'ctrl' => $TCA['{model}']['ctrl'],\n" +
-                              "{interfaceFields}" +
-                              "{types}" +
+                              "{interfaceFields},\n" +
+                              "{types},\n" +
                               ");";
 
       string finalInterface = GenerateInterface();
-      string finalTypes = GenerateTypes();
+      string finalTypes     = GenerateTypes();
 
       var dataObject = new {
                              extensionKey = Subject.Key,
@@ -57,22 +59,16 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
     private string GenerateInterface() {
       // Describes which fields (and in which order) are shown in the Info/View Item dialog in the BE.
-      const string infoInterfaceTemplate = "'interface' => array(\n" +
-                                           "	'showRecordFieldList' => '{0}'\n" +
-                                           ")";
+      const string infoInterfaceTemplate = "  'interface' => array( 'showRecordFieldList' => '{0}' )";
 
       // Were the T3CommonFields included in this model?
       string finalInterfaceFields = string.Empty;
-      if(
-        Configuration.Model.Members.Any(
-          m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
         finalInterfaceFields += T3TranslationFields.InterfaceInfoFields + ", ";
       }
 
       // Were the T3TranslationFields included in this model?
-      if(
-        Configuration.Model.Members.Any(
-          m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3TranslationFields ) ) { 
         finalInterfaceFields += T3TranslationFields.InterfaceInfoFields + ", ";
       }
 
@@ -104,11 +100,53 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     }
 
     private string GenerateTypes() {
+      const string typesTemplate = "  'types' => array( {0} )";
+
+      const string typeTemplate = "'{0}' => array( {1} )";
+
       // Describes which fields (and in which order) are shown in the BE when editing a record.
-      const string typeInterfaceTemplate = "'interface' => array(\n" +
-                                           "	'showRecordFieldList' => '{0}'\n" +
-                                           ")";
-      return typeInterfaceTemplate;
+      const string typeInterfaceTemplate = "'showitem' => '{0}'";
+
+      StringBuilder finalTypes = new StringBuilder();
+      for( int typeIndex = 0; typeIndex < Configuration.Types.Count; typeIndex++ ) {
+        Type type = Configuration.Types[ typeIndex ];
+
+        string allTypes = string.Empty;
+        if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3TranslationFields ) ) {
+          allTypes += T3TranslationFields.InterfaceTypeFields + ",";
+        }
+
+        // Translate user fields to SQL fields and add them to the interface
+        string[] userInterfaceFields = type.Interface.Split( new[] {','} );
+        foreach( string userInterfaceField in userInterfaceFields ) {
+          string field = userInterfaceField;
+          KeyValuePair<string, string> referencedModelMember =
+            Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
+
+          if( null == referencedModelMember.Key ) {
+            throw new GeneratorException(
+              string.Format(
+                "The type interface field '{0}' does not exist in the data model '{1}'.", userInterfaceField,
+                Configuration.Model.Name ) );
+          }
+
+          allTypes += NameHelper.GetSqlColumnName( Subject, userInterfaceField ) + ",";
+        }
+
+        // Add Access tab
+        allTypes = allTypes.TrimEnd( new[] {',', ' '} );
+        allTypes +=
+          ",--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.access;paletteAccess";
+
+        // Cut off trailing comma and unify spacing
+        allTypes = allTypes.TrimEnd( new[] {',', ' '} );
+        allTypes = Regex.Replace( allTypes, ", *", ", " );
+
+        string typeInterface = String.Format( typeInterfaceTemplate, allTypes );
+        finalTypes.Append( string.Format( typeTemplate, typeIndex + 1, typeInterface ) );
+      }
+
+      return String.Format( typesTemplate, finalTypes );
     }
   }
 }
