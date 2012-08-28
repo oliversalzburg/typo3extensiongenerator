@@ -64,6 +64,8 @@ namespace Typo3ExtensionGenerator.Parser {
     /// Keywords used in data model configurations.
     /// </summary>
     public static class ConfigurationDirectives {
+      public const string Title = "as";
+
       public const string Label            = "label";
       public const string LabelAlternative = "labelAlt";
       public const string LabelHook        = "labelHook";
@@ -76,6 +78,7 @@ namespace Typo3ExtensionGenerator.Parser {
 
       public static class InterfaceDirectives {
         public const string Exclude        = "exclude";
+        public const string Title          = "as";
         public const string Representation = "through";
       }
 

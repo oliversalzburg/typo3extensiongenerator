@@ -25,6 +25,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
         if( Keywords.ConfigurationDirectives.InterfaceDirectives.Exclude == setting.Key ) {
           @interface.Exclude = ParseHelper.ParseBool( setting.Value );
         }
+        if( Keywords.ConfigurationDirectives.InterfaceDirectives.Title == setting.Key ) {
+          @interface.Title = setting.Value;
+        }
         if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representation == setting.Key ) {
           @interface.DisplayType = setting.Value;
         }

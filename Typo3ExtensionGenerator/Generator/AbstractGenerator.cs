@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Model;
 
 namespace Typo3ExtensionGenerator.Generator {
@@ -22,7 +23,7 @@ namespace Typo3ExtensionGenerator.Generator {
     /// Provides a virtual file system for files that need to be written by multiple generators.
     /// The results will be flushed when generation has completed.
     /// </summary>
-    protected static Dictionary<string,StringBuilder> VirtualFileSystem = new Dictionary<string, StringBuilder>();
+    protected static readonly Dictionary<string,StringBuilder> VirtualFileSystem = new Dictionary<string, StringBuilder>();
 
     protected AbstractGenerator( string outputDirectory, Extension subject ) {
       OutputDirectory = outputDirectory;
@@ -30,18 +31,17 @@ namespace Typo3ExtensionGenerator.Generator {
     }
 
     public void WriteFile( string filename, string content, bool useVirtual = false ) {
-      string targetFilename = Path.Combine( OutputDirectory, filename );
-
       if( useVirtual ) {
-        WriteVirtual( targetFilename, content );
+        WriteVirtual( filename, content );
 
       } else {
+        string targetFilename = Path.Combine( OutputDirectory, filename );
         Directory.CreateDirectory( new FileInfo( targetFilename ).DirectoryName );
         File.WriteAllText( targetFilename, content, Encoding.Default );
       }
     }
 
-    public void WritePhpFile( string filename, string content, bool useVirtual = false ) {
+    public void WritePhpFile( string filename, string content ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
       WriteFile( filename, fileContent );
     }
@@ -57,26 +57,42 @@ namespace Typo3ExtensionGenerator.Generator {
     /// Flushes the virtual file system to disc.
     /// Should only be used after extension generation has completed.
     /// </summary>
-    public static void FlushVirtual() {
+    public static void FlushVirtual( string targetDirectory ) {
       foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
-        File.WriteAllText( file.Key, file.Value.ToString() );
+        string absoluteFilename = Path.Combine( targetDirectory, file.Key );
+        Directory.CreateDirectory( new FileInfo( absoluteFilename  ).DirectoryName );
+        Console.WriteLine( "Flushing {0}...", file.Key );
+        File.WriteAllText( absoluteFilename , file.Value.ToString() );
       }
     }
 
     /// <summary>
     /// Wraps a given virtual file with two strings.
     /// </summary>
-    /// <param name="outputDirectory">The output directory of the extension.</param>
     /// <param name="filename">The file that should be wrapped.</param>
     /// <param name="front">The part that should be placed in front.</param>
     /// <param name="back">The part that should be appended.</param>
-    public static void WrapVirtual( string outputDirectory, string filename, string front, string back ) {
-      string targetFilename = Path.Combine( outputDirectory, filename );
-      if( !VirtualFileSystem.ContainsKey( targetFilename ) ) {
-        VirtualFileSystem[ targetFilename ] = new StringBuilder();
+    public static void WrapVirtual( string filename, string front, string back ) {
+      if( !VirtualFileSystem.ContainsKey( filename ) ) {
+        VirtualFileSystem[ filename ] = new StringBuilder();
       }
-      VirtualFileSystem[ targetFilename ].Insert( 0, front );
-      VirtualFileSystem[ targetFilename ].Append( back );
+      VirtualFileSystem[ filename ].Insert( 0, front );
+      VirtualFileSystem[ filename ].Append( back );
+    }
+
+    /// <summary>
+    /// Wraps all matching files in given strings.
+    /// </summary>
+    /// <param name="filter">A regular expression.</param>
+    /// <param name="front"></param>
+    /// <param name="back"></param>
+    public static void WrapAllVirtual( string filter, string front, string back ) {
+      foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
+        if( new Regex( filter ).IsMatch( file.Key ) ) {
+          file.Value.Insert( 0, front );
+          file.Value.Append( back );
+        }
+      }
     }
   }
 }

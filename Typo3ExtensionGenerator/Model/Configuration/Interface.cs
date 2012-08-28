@@ -38,6 +38,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     public bool Exclude { get; set; }
 
     /// <summary>
+    /// A readable title for the described field.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
     /// The TCEForms user interface element that will be used to edit the target.
     /// </summary>
     public string DisplayType { get; set; }

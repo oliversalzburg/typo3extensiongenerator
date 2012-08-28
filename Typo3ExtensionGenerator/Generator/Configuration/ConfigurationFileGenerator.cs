@@ -248,7 +248,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}'", fieldInterface.Target ) );
         }
         // Generate the column
-        string interfaceDefinition = InterfaceGenerator.Generate( Subject, fieldInterface );
+        string interfaceDefinition = InterfaceGenerator.Generate( this, Subject, fieldInterface );
         finalColumns.Append( string.Format( columnTemplate, NameHelper.GetSqlColumnName( Subject, fieldInterface.Target ), interfaceDefinition ) + "," );
       }
 

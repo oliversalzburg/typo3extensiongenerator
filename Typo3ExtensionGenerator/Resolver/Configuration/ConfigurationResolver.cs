@@ -50,7 +50,11 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
               Interface @interface = InterfaceResolver.Resolve( configurationDirective );
               @interface.ParentModelTarget = configuration.Target;
               configuration.Interfaces.Add( @interface );
-            }
+
+            } else if( Keywords.ConfigurationDirectives.Title == configurationDirective.Keyword ) {
+              configuration.Title = configurationDirective.Parameters;
+
+            } 
           }
         }
       }

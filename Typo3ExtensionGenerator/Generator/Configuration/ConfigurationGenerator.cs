@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using StringLib;
@@ -71,6 +72,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         }
         configuration.Model = targetModel;
 
+        // Now flush out any language fields
+        FlushLanguageFields( configuration );
+
         // Were the T3CommonFields included in this model?
         string finalCommonFields = string.Empty;
         if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
@@ -138,6 +142,12 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );
-    } 
+    }
+
+    private void FlushLanguageFields( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) {
+      string languageConstant = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
+
+      WriteFile( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, configuration.Title ), true );
+    }
   }
 }

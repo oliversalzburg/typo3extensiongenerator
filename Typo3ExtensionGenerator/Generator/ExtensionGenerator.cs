@@ -45,10 +45,24 @@ namespace Typo3ExtensionGenerator.Generator {
                                      "}\n";
       const string extTablesSuffix = "?>";
 
-      AbstractGenerator.WrapVirtual( TargetDirectory, "ext_tables.php", extTablesPrefix, extTablesSuffix );
+      const string languageFilePrefix = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" +
+                                        "<T3locallang>\n" +
+                                        "	<meta type=\"array\">\n" +
+                                        "		<type>database</type>\n" +
+                                        "		<description>Language labels for database tables/fields belonging to extension 'downloads'</description>\n" +
+                                        "	</meta>\n" +
+                                        "	<data type=\"array\">\n" +
+                                        "		<languageKey index=\"default\" type=\"array\">";
+
+      const string languageFileSuffix = "		</languageKey>\n" +
+                                        "	</data>\n" +
+                                        "</T3locallang>";
+
+      AbstractGenerator.WrapVirtual( "ext_tables.php", extTablesPrefix, extTablesSuffix );
+      AbstractGenerator.WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
 
       // Flush virtual file system to disk
-      AbstractGenerator.FlushVirtual();
+      AbstractGenerator.FlushVirtual( TargetDirectory );
     }
   }
 }

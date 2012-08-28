@@ -18,6 +18,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     public DataModel Model { get; set; }
 
     /// <summary>
+    /// The readable name for the configured data model.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
     /// What field in the data model should be the label for the data model?
     /// </summary>
     public string Label { get; set; }
