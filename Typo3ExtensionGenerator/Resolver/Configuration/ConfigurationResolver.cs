@@ -23,12 +23,16 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
             // Find configuration directives
             if( Keywords.ConfigurationDirectives.Label == configurationDirective.Keyword ) {
               configuration.Label = configurationDirective.Parameters;
+
             } else if( Keywords.ConfigurationDirectives.LabelAlternative == configurationDirective.Keyword ) {
               configuration.LabelAlternative = configurationDirective.Parameters;
+
             } else if( Keywords.ConfigurationDirectives.LabelHook == configurationDirective.Keyword ) {
               configuration.LabelHook = "TODO to be generated!";
+
             } else if( Keywords.ConfigurationDirectives.SearchFields == configurationDirective.Keyword ) {
               configuration.SearchFields = configurationDirective.Parameters;
+
             } else if( Keywords.ConfigurationDirectives.Thumbnail == configurationDirective.Keyword ) {
               configuration.Thumbnail = configurationDirective.Parameters;
             }

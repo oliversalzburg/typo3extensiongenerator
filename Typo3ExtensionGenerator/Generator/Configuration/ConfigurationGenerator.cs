@@ -37,7 +37,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "    'title'                    => 'LLL:EXT:downloads/Resources/Private/Language/locallang_db.xml:tx_downloads_domain_model_download',\n" +
                               "    'label'                    => '{label}',\n" +
                               "    'label_alt'                => '{labelAlt}',\n" +
-                              "    'label_userFunc'           => 'Tx_Downloads_Hooks_Labels->getUserLabelDownload',\n" +
+                              "{labelFunc}" +
                               "    'dividers2tabs'            => TRUE,\n" +
 
                               "{commonFields}" +
@@ -100,11 +100,20 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           finalVersioningFields = t3VersioningFieldsTemplate;
         }
 
+        string labelFunction = string.Empty;
+        if( !string.IsNullOrEmpty( configuration.LabelHook ) ) {
+          labelFunction = String.Format(
+            "    'label_userFunc'           => '{0}->getUserLabel{1}',\n",
+            NameHelper.GetExtbaseHookClassName( Subject, "labels" ),
+            NameHelper.UpperCamelCase( configuration.Model.Name ) );
+        }
+
         var dataObject = new {
                                extensionKey = Subject.Key,
                                model = NameHelper.GetAbsoluteModelName( Subject, configuration.Model ),
                                label = configuration.Label,
                                labelAlt = configuration.LabelAlternative,
+                               labelFunc = labelFunction,
                                commonFields = finalCommonFields,
                                translationFields = finalTranslationFields,
                                versioningFields = finalVersioningFields,

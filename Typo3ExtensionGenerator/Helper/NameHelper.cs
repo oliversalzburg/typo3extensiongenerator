@@ -17,8 +17,18 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="extension"></param>
     /// <param name="dataModel"></param>
     /// <returns></returns>
-    public static string GetExtbaseClassName( Extension extension, DataModel dataModel ) {
+    public static string GetExtbaseDomainModelClassName( Extension extension, DataModel dataModel ) {
       return String.Format( "Tx_{0}_Domain_Model_{1}", UpperCamelCase( extension.Key ), UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the name of a class that will be used to supply hooks.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="category"></param>
+    /// <returns></returns>
+    public static string GetExtbaseHookClassName( Extension extension, string category ) {
+      return String.Format( "Tx_{0}_Hooks_{1}", UpperCamelCase( extension.Key ), UpperCamelCase( category ) );
     }
 
     /// <summary>
@@ -31,13 +41,9 @@ namespace Typo3ExtensionGenerator.Helper {
       return String.Format( "{0}.php", UpperCamelCase( dataModel.Name ) );
     }
 
-    private static string UpperCamelCase( string input ) {
-      return input.Substring( 0, 1 ).ToUpper() + Regex.Replace( input.Substring( 1 ), "_(.)", delegate( Match match ) {
-                                                                                                return
-                                                                                                  match.Groups[ 1 ].
-                                                                                                    Captures[ 0 ].Value.
-                                                                                                    ToUpper();
-                                                                                              } );
+    public static string UpperCamelCase( string input ) {
+      return input.Substring( 0, 1 ).ToUpper()
+             + Regex.Replace( input.Substring( 1 ), "_(.)", match => match.Groups[ 1 ].Captures[ 0 ].Value.ToUpper() );
     }
 
     /// <summary>

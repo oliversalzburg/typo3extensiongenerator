@@ -43,7 +43,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         dataMembers.Append( string.Format( "  protected ${0};\n", member.Value ) );
       }
 
-      return string.Format( template, dataMembers, NameHelper.GetExtbaseClassName( Subject, dataModel ) );
+      return string.Format( template, dataMembers, NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel ) );
     }
 
     /// <summary>
