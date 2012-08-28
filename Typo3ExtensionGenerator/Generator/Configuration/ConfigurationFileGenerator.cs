@@ -111,8 +111,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// </summary>
     /// <returns></returns>
     private string GenerateTypes() {
+      // Template for the 'types' collection.
       const string typesTemplate = "  'types' => array( {0} )";
-
+      // Template for a single type definition.
       const string typeTemplate = "'{0}' => array( {1} )";
 
       // Describes which fields (and in which order) are shown in the BE when editing a record.
@@ -161,8 +162,6 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         allTypes +=
           ",--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.access;paletteAccess";
 
-        // Cut off trailing comma and unify spacing
-        allTypes = allTypes.TrimEnd( new[] {',', ' '} );
         allTypes = Regex.Replace( allTypes, ", *", ", " );
 
         string typeInterface = String.Format( typeInterfaceTemplate, allTypes );
@@ -177,8 +176,45 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// </summary>
     /// <returns></returns>
     private string GeneratePalettes() {
+      // Template for the 'palettes' collection.
       const string palettesTemplate = "  'palettes' => array( {0} )";
-      return palettesTemplate;
+      // Template for a single palette definition.
+      const string paletteTemplate = "'{0}' => array( {1} )";
+
+      // Describes which fields (and in which order) are shown in the palette in the BE when editing a record.
+      const string paletteInterfaceTemplate = "'showitem' => '{0}'";
+
+      StringBuilder finalPalettes = new StringBuilder();
+      foreach( Palette palette in Configuration.Palettes ) {
+        // Validate and translate fields
+        string[] fields = palette.Interface.Split( new[] {','} );
+        String paletteInterfaceFields = string.Empty;
+        foreach( string field in fields ) {
+          KeyValuePair<string, string> referencedModelMember =
+            Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
+
+          if( null == referencedModelMember.Key ) {
+            throw new GeneratorException(
+                string.Format(
+                  "The palette field '{0}' does not exist in the data model '{1}'.",
+                  field,
+                  Configuration.Model.Name ) );
+          }
+
+          paletteInterfaceFields += NameHelper.GetSqlColumnName( Subject, field ) + ",";
+        }
+
+        paletteInterfaceFields = paletteInterfaceFields.TrimEnd( new[] {',', ' '} );
+        paletteInterfaceFields = Regex.Replace( paletteInterfaceFields, ", *", ", " );
+
+        string paletteInterface = string.Format( paletteInterfaceTemplate, paletteInterfaceFields );
+        string paletteBody = String.Format( paletteTemplate, palette.Name, paletteInterface );
+        finalPalettes.Append( paletteBody );
+      }
+
+      string resultingPalettes = string.Format( palettesTemplate, finalPalettes );
+
+      return resultingPalettes;
     }
   }
 }
