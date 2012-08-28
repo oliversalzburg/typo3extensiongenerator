@@ -1,7 +1,0 @@
-P:\GitHub\typo3extensiongenerator\StringLib\bin\Debug\StringLib.dll
-P:\GitHub\typo3extensiongenerator\StringLib\bin\Debug\StringLib.pdb
-P:\GitHub\typo3extensiongenerator\StringLib\bin\Debug\StringLib.dll.CodeAnalysisLog.xml
-P:\GitHub\typo3extensiongenerator\StringLib\bin\Debug\StringLib.dll.lastcodeanalysissucceeded
-P:\GitHub\typo3extensiongenerator\StringLib\obj\Debug\ResolveAssemblyReference.cache
-P:\GitHub\typo3extensiongenerator\StringLib\obj\Debug\StringLib.dll
-P:\GitHub\typo3extensiongenerator\StringLib\obj\Debug\StringLib.pdb

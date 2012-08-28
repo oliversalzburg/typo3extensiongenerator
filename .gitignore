@@ -4,3 +4,5 @@
 /Typo3ExtensionGenerator/*.user
 /*.suo
 /*.user
+/StringLib/bin
+/StringLib/obj
