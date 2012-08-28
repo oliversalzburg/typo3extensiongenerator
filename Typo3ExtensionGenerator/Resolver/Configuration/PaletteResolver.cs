@@ -13,9 +13,14 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The palette defintion.</returns>
     public static Palette Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+      // Check if the palette defines an interface
       ExtensionParser.ParsedPartial interfacePartial =
         parsedPartial.Partials.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfacePalette );
-      if( null == interfacePartial ) return null;
+      if( null == interfacePartial ) {
+        Console.Error.WriteLine(
+          string.Format( "Palette does not define an interface." ) );
+        return null;
+      }
 
       Palette parsedType = new Palette { Name = parsedPartial.Parameters, Interface = interfacePartial.Parameters };
 

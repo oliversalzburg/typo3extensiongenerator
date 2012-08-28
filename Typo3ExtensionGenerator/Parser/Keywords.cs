@@ -71,7 +71,12 @@ namespace Typo3ExtensionGenerator.Parser {
       public const string Thumbnail    = "thumbnail";
       public const string SearchFields = "searchFields";
 
-      public const string InterfaceInfo = "interfaceInfo";
+      public const string InterfaceInfo       = "interfaceInfo";
+      public const string InterfaceModelField = "interface";
+
+      public static class InterfaceDirectives {
+        public const string Exclude = "exclude";
+      }
 
       public const string TypeDeclaration = "type";
       public const string InterfaceType   = "interface";

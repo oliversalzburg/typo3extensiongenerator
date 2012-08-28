@@ -42,18 +42,21 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "{interfaceFields},\n" +
                               "{types},\n" +
                               "{palettes},\n" +
+                              "{columns}\n" +
                               ");";
 
       string finalInterface = GenerateInterface();
       string finalTypes     = GenerateTypes();
       string finalPalettes  = GeneratePalettes();
+      string finalColumns   = GenerateColumns();
 
       var dataObject = new {
                              extensionKey = Subject.Key,
                              model = NameHelper.GetAbsoluteModelName( Subject, Configuration.Model ),
                              interfaceFields = finalInterface,
                              types = finalTypes,
-                             palettes = finalPalettes
+                             palettes = finalPalettes,
+                             columns = finalColumns
                            };
 
       string generatedConfiguration = template.HaackFormat( dataObject );
@@ -220,6 +223,34 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       string resultingPalettes = string.Format( palettesTemplate, finalPalettes );
 
       return resultingPalettes;
+    }
+
+    /// <summary>
+    /// Generates the 'columns' array.
+    /// </summary>
+    /// <returns></returns>
+    private string GenerateColumns() {
+      // Template for the 'columns' collection.
+      const string columnsTemplate = "  'columns' => array( {0} )";
+      // Template for a single columns definition.
+      const string columnTemplate = "'{0}' => array( {1} )";
+      
+      StringBuilder finalColumns = new StringBuilder();
+
+
+      foreach( Interface fieldInterface in Configuration.Interfaces ) {
+        // Check if the target field exists
+        if( !Configuration.Model.Members.Any( m=>m.Value == fieldInterface.Target) ) {
+          throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}'", fieldInterface.Target ) );
+        }
+        // Generate the column
+        string interfaceDefinition = InterfaceGenerator.Generate( Subject, fieldInterface );
+        finalColumns.Append( string.Format( columnTemplate, NameHelper.GetSqlColumnName( Subject, fieldInterface.Target ), interfaceDefinition ) + "," );
+      }
+
+      string resultingColumns = string.Format( columnsTemplate, finalColumns );
+
+      return resultingColumns;
     }
   }
 }

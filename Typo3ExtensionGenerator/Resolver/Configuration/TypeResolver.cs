@@ -13,9 +13,14 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The defined type.</returns>
     public static Typo3ExtensionGenerator.Model.Configuration.Type Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+      // Check if the type defines an interface
       ExtensionParser.ParsedPartial interfacePartial =
         parsedPartial.Partials.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfaceType );
-      if( null == interfacePartial ) return null;
+      if( null == interfacePartial ) {
+        Console.Error.WriteLine(
+          string.Format( "Type does not define an interface." ) );
+        return null;
+      }
 
       Typo3ExtensionGenerator.Model.Configuration.Type parsedType =
         new Typo3ExtensionGenerator.Model.Configuration.Type {Interface = interfacePartial.Parameters};
