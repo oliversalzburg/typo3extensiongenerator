@@ -36,7 +36,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  'ctrl' => array(\n" +
                               "    'title'                    => 'LLL:EXT:{extensionKey}/Resources/Private/Language/locallang_db.xml:{model}',\n" +
                               "    'label'                    => '{label}',\n" +
-                              "    'label_alt'                => '{labelAlt}',\n" +
+                              "{labelAlt}" +
                               "{labelFunc}" +
                               "    'dividers2tabs'            => TRUE,\n" +
 
@@ -100,6 +100,14 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           finalVersioningFields = t3VersioningFieldsTemplate;
         }
 
+        // Is an alternative label defined?
+        string labelAlternative = string.Empty;
+        if( !string.IsNullOrEmpty( configuration.LabelAlternative ) ) {
+          labelAlternative = string.Format(
+            "    'label_alt'                => '{0}',\n", configuration.LabelAlternative );
+        }
+
+        // Is a label hook requested?
         string labelFunction = string.Empty;
         if( !string.IsNullOrEmpty( configuration.LabelHook ) ) {
           labelFunction = String.Format(
@@ -112,7 +120,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                extensionKey = Subject.Key,
                                model = NameHelper.GetAbsoluteModelName( Subject, configuration.Model ),
                                label = configuration.Label,
-                               labelAlt = configuration.LabelAlternative,
+                               labelAlt = labelAlternative,
                                labelFunc = labelFunction,
                                commonFields = finalCommonFields,
                                translationFields = finalTranslationFields,
