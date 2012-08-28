@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Model;
 using Typo3ExtensionGenerator.Generator.Module;
 using Typo3ExtensionGenerator.Generator.Plugin;
@@ -34,6 +35,8 @@ namespace Typo3ExtensionGenerator.Generator {
       moduleGenerator.Generate();
       ModelGenerator modelGenerator = new ModelGenerator( TargetDirectory, extension );
       modelGenerator.Generate();
+      ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
+      configurationGenerator.Generate();
 
       // Wrap virtual files as needed
       const string extTablesPrefix = "<?php\n" +

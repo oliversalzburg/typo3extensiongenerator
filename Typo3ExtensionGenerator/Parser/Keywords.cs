@@ -46,6 +46,11 @@ namespace Typo3ExtensionGenerator.Parser {
     public const string DataModelTemplate = "template";
 
     /// <summary>
+    /// Used to define a model configuration.
+    /// </summary>
+    public const string DeclareConfiguration = "configure";
+
+    /// <summary>
     /// Keywords of data model template definitions.
     /// </summary>
     public static class DataModelTemplates {

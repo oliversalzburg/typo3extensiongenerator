@@ -15,7 +15,14 @@ namespace Typo3ExtensionGenerator.Parser {
   public class ExtensionParser {
 
     /// <summary>
-    /// A partially parsed markup element
+    /// A partially parsed markup element. This is the core element of the grammar.
+    /// Elements always consist of a header and an optional body.
+    /// The basic syntax is:
+    /// keyword parameters {
+    ///   body
+    /// }
+    /// 
+    /// keyword + parameters = header
     /// </summary>
     public class ParsedPartial {
       /// <summary>
