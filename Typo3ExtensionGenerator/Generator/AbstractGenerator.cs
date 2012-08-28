@@ -87,8 +87,9 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <param name="front"></param>
     /// <param name="back"></param>
     public static void WrapAllVirtual( string filter, string front, string back ) {
+      Regex fileFilter = new Regex( filter );
       foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
-        if( new Regex( filter ).IsMatch( file.Key ) ) {
+        if( fileFilter.IsMatch( file.Key ) ) {
           file.Value.Insert( 0, front );
           file.Value.Append( back );
         }

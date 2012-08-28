@@ -165,7 +165,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         allTypes +=
           ",--div--;LLL:EXT:cms/locallang_ttc.xml:tabs.access,--palette--;LLL:EXT:cms/locallang_ttc.xml:palette.access;paletteAccess";
 
-        allTypes = Regex.Replace( allTypes, ", *", ", " );
+        allTypes = Regex.Replace( allTypes, ", *", "," );
 
         string typeInterface = String.Format( typeInterfaceTemplate, allTypes );
         finalTypes.Append( string.Format( typeTemplate, typeIndex + 1, typeInterface ) );
@@ -244,7 +244,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       foreach( Interface fieldInterface in Configuration.Interfaces ) {
         // Check if the target field exists
-        if( !Configuration.Model.Members.Any( m=>m.Value == fieldInterface.Target) ) {
+        if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
           throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}'", fieldInterface.Target ) );
         }
         // Generate the column
@@ -252,7 +252,18 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         finalColumns.Append( string.Format( columnTemplate, NameHelper.GetSqlColumnName( Subject, fieldInterface.Target ), interfaceDefinition ) + "," );
       }
 
-      string resultingColumns = string.Format( columnsTemplate, finalColumns );
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
+        finalColumns.Append( T3CommonFields.Interfaces + "," );
+      }
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3TranslationFields ) ) {
+        finalColumns.Append( T3TranslationFields.Interfaces + "," );
+      }
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3VersioningFields ) ) {
+        finalColumns.Append( T3VersioningFields.Interfaces + "," );
+      }
+
+      string finalColumnsString = finalColumns.ToString().TrimEnd( new[] {','} );
+      string resultingColumns = string.Format( columnsTemplate, finalColumnsString );
 
       return resultingColumns;
     }

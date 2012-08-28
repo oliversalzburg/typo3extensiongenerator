@@ -32,5 +32,82 @@
                                   "      --linebreak--,editlock,hidden',\n" +
                                   "  'canNotCollapse' => TRUE\n" +
                                   ")";
+
+    public const string Interfaces = "'starttime' => array(" +
+                                     "	'exclude' => 1," +
+                                     "	'l10n_mode' => 'mergeIfNotBlank'," +
+                                     "	'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime'," +
+                                     "	'config' => array(" +
+                                     "		'type' => 'input'," +
+                                     "		'size' => 13," +
+                                     "		'max' => 20," +
+                                     "		'eval' => 'datetime'," +
+                                     "		'checkbox' => 0," +
+                                     "		'default' => 0," +
+                                     "		'range' => array(" +
+                                     "			'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))" +
+                                     "		)," +
+                                     "	)," +
+                                     ")," +
+                                     "'endtime' => array(" +
+                                     "	'exclude' => 1," +
+                                     "	'l10n_mode' => 'mergeIfNotBlank'," +
+                                     "	'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.endtime'," +
+                                     "	'config' => array(" +
+                                     "		'type' => 'input'," +
+                                     "		'size' => 13," +
+                                     "		'max' => 20," +
+                                     "		'eval' => 'datetime'," +
+                                     "		'checkbox' => 0," +
+                                     "		'default' => 0," +
+                                     "		'range' => array(" +
+                                     "			'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))" +
+                                     "		)," +
+                                     "	)," +
+                                     ")," +
+                                     "'fe_group' => array(" +
+                                     "  'exclude' => 1," +
+                                     "  'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.fe_group'," +
+                                     "  'config' => array(" +
+                                     "    'type' => 'select'," +
+                                     "    'size' => 5," +
+                                     "    'maxitems' => 20," +
+                                     "    'items' => array(" +
+                                     "      array(" +
+                                     "        'LLL:EXT:lang/locallang_general.xml:LGL.hide_at_login'," +
+                                     "        -1," +
+                                     "      )," +
+                                     "      array(" +
+                                     "        'LLL:EXT:lang/locallang_general.xml:LGL.any_login'," +
+                                     "        -2," +
+                                     "      )," +
+                                     "      array(" +
+                                     "        'LLL:EXT:lang/locallang_general.xml:LGL.usergroups'," +
+                                     "        '--div--'," +
+                                     "      )," +
+                                     "    )," +
+                                     "    'exclusiveKeys' => '-1,-2'," +
+                                     "    'foreign_table' => 'fe_groups'," +
+                                     "    'foreign_table_where' => 'ORDER BY fe_groups.title'," +
+                                     "  )," +
+                                     ")," +
+                                     "'editlock' => array(" +
+                                     "  'exclude' => 1," +
+                                     "  'l10n_mode' => 'mergeIfNotBlank'," +
+                                     "  'label' => 'LLL:EXT:lang/locallang_tca.xml:editlock'," +
+                                     "  'config' => array(" +
+                                     "    'type' => 'check'" +
+                                     "  )" +
+                                     ")," +
+                                     "'hidden' => array(" +
+                                     "	'exclude' => 1," +
+                                     "	'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden'," +
+                                     "	'config' => array(" +
+                                     "		'type' => 'check'," +
+                                     "	)," +
+                                     ")";
+
+
+
   }
 }

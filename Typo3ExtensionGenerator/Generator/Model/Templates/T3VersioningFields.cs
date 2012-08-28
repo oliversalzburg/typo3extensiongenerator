@@ -15,5 +15,13 @@
     public const string TableControlFields = "    'versioningWS'             => 2,\n" +
                                              "    'versioning_followPages'   => TRUE";
 
+    public const string Interfaces = "'t3ver_label' => array(" +
+                                     "	'label' => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel'," +
+                                     "	'config' => array(" +
+                                     "		'type' => 'input'," +
+                                     "		'size' => 30," +
+                                     "		'max' => 255," +
+                                     "	)" +
+                                     ")";
   }
 }
