@@ -39,5 +39,10 @@ namespace Typo3ExtensionGenerator.Model {
     /// The data models defined in this extension.
     /// </summary>
     public List<DataModel> Models { get; set; }
+
+    /// <summary>
+    /// The configurations for the data models.
+    /// </summary>
+    public List<Configuration> Configurations { get; set; }
   }
 }

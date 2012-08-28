@@ -17,6 +17,24 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       foreach( ExtensionParser.ParsedPartial configurationPartial in configurationPartials ) {
         Typo3ExtensionGenerator.Model.Configuration configuration = new Typo3ExtensionGenerator.Model.Configuration { Target = configurationPartial.Parameters };
         configurations.Add( configuration );
+        if( configurationPartial.Partials.Any() ) {
+          foreach( ExtensionParser.ParsedPartial configurationDirective in configurationPartial.Partials ) {
+            
+            // Find configuration directives
+            if( Keywords.ConfigurationDirectives.Label == configurationDirective.Keyword ) {
+              configuration.Label = configurationDirective.Parameters;
+            } else if( Keywords.ConfigurationDirectives.LabelAlternative == configurationDirective.Keyword ) {
+              configuration.LabelAlternative = configurationDirective.Parameters;
+            } else if( Keywords.ConfigurationDirectives.LabelHook == configurationDirective.Keyword ) {
+              configuration.LabelHook = "TODO to be generated!";
+            } else if( Keywords.ConfigurationDirectives.SearchFields == configurationDirective.Keyword ) {
+              configuration.SearchFields = configurationDirective.Parameters;
+            } else if( Keywords.ConfigurationDirectives.Thumbnail == configurationDirective.Keyword ) {
+              configuration.Thumbnail = configurationDirective.Parameters;
+            }
+
+          }
+        }
       }
 
       return configurations;

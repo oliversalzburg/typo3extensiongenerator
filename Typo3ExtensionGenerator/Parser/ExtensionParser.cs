@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Resolver.Configuration;
 using Typo3ExtensionGenerator.Resolver.Extension;
 using Typo3ExtensionGenerator.Resolver.Model;
 using Typo3ExtensionGenerator.Resolver.Module;
@@ -107,7 +108,7 @@ namespace Typo3ExtensionGenerator.Parser {
                                                           Email = AuthorResolver.ResolveEmail( partial ),
                                                           Name = AuthorResolver.ResolveAuthor( partial )
                                                         },
-
+                                         Configurations = ConfigurationResolver.Resolve( partial ),
                                          Description = DescriptionResolver.Resolve( partial ),
                                          Key = extensionKey,
                                          Models = ModelResolver.Resolve( partial ),
@@ -219,6 +220,7 @@ namespace Typo3ExtensionGenerator.Parser {
                 ++characterPointer;
                 if( Syntax.CommentMultilineEnd
                     == element.Substring( characterPointer, Syntax.CommentMultilineEnd.Length ) ) {
+                  characterPointer += Syntax.CommentMultilineEnd.Length;
                   inComment = false;
                 }
               }

@@ -35,8 +35,8 @@ namespace Typo3ExtensionGenerator.Generator {
       moduleGenerator.Generate();
       ModelGenerator modelGenerator = new ModelGenerator( TargetDirectory, extension );
       modelGenerator.Generate();
-      //ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
-      //configurationGenerator.Generate();
+      ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
+      configurationGenerator.Generate();
 
       // Wrap virtual files as needed
       const string extTablesPrefix = "<?php\n" +

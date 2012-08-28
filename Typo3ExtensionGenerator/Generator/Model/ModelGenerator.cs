@@ -15,19 +15,6 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       get { return "ext_tables.php, ext_tables.sql"; }
     }
 
-    /// <summary>
-    /// Retrieves a full model name for a data model.
-    /// </summary>
-    /// <example>
-    /// tx_downloads_domain_model_download
-    /// </example>
-    /// <param name="extension">The extension this data model belongs to.</param>
-    /// <param name="modelName">The name of this data model.</param>
-    /// <returns></returns>
-    public static string GetAbsoluteModelName( Extension extension, string modelName ) {
-      return string.Format( "tx_{0}_domain_model_{1}", extension.Key, modelName );
-    }
-
     public void Generate() {
 
       Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
@@ -68,7 +55,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
       const string template = "CREATE TABLE {0} (\n{1}\n);";
       foreach( DataModel dataModel in Subject.Models ) {
-        string modelName = GetAbsoluteModelName( Subject, dataModel.Name );
+        string modelName = NameHelper.GetAbsoluteModelName( Subject, dataModel );
         string sqlMembers = GenerateSqlMembers( dataModel );
         result += string.Format( template, modelName, sqlMembers ) + "\n";
       }
