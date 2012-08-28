@@ -128,7 +128,7 @@ namespace Typo3ExtensionGenerator.Parser {
       // The currently collected scope body
       string body = String.Empty;
 
-      // Sub-scopes which we'll find during parsing will be stored in this list.
+      // Sub-scopes which we'll find during parsing will be stored in this partial.
       ParsedPartial result = new ParsedPartial() {
                                                    Body   = string.Empty,
                                                    Header = string.Empty
@@ -136,28 +136,34 @@ namespace Typo3ExtensionGenerator.Parser {
           
       // How deeply nested we are into scopes
       int scopeLevel  = 0;
-      // Are we currently inside a strign?
+      // Are we currently inside a string?
       bool inString = false;
       // Is the current character escaped?
       bool isEscaped = false;
 
       // Iterate over the whole input string
+      // The whole point of this operation is to collect the full header of the partial,
+      // as well as the full body of the partial.
+      // If, while parsing the body of the partial, we find nested scopes, we'll store those to parse them later.
       while( characterPointer < element.Length ) {
         // We only check for scopes while we're not parsing within a string.
         if( !inString ) {
           if( Syntax.ScopeTerminate == element.Substring( characterPointer, Syntax.ScopeTerminate.Length ) ) {
-            // Did we find a scope terminator? (like ;)
+            // Did we find a scope terminator? Like: ;
             if( 1 == scopeLevel ) {
               // As long as we're on the first scope level, we can collect the body of scopes to parse them later.
+              // If we're deeper nested, there's no point, we'll parse those when we recurse.
               result.Partials.Add( new ParsedPartial{Body = body.Trim()} );
               result.Body += element.Substring( characterPointer, 1 );
+              // Clear buffer
               body = string.Empty;
+              // Skip ahead
               ++characterPointer;
               continue;
             }
             if( 0 == scopeLevel ) {
+              // If we're on the root level, just increase the scope pointer and skip.
               ++characterPointer;
-
               continue;
             }
           }
@@ -167,8 +173,8 @@ namespace Typo3ExtensionGenerator.Parser {
             ++scopeLevel;
 
             if( 1 == scopeLevel ) {
+              // If we're on the root level (we are, because we just increased the scopeLevel), we need to skip ahead.
               ++characterPointer;
-
               continue;
             }
 
@@ -180,26 +186,30 @@ namespace Typo3ExtensionGenerator.Parser {
               body += element.Substring( characterPointer, 1 );
               result.Partials.Add( new ParsedPartial{Body = body.Trim()} );
               result.Body += element.Substring( characterPointer, 1 );
+              // Clear buffer
               body = string.Empty;
+              // Skip ahead
               ++characterPointer;
               continue;
             }
             if( 0 == scopeLevel ) {
+              // If we're on the root level, just increase the scope pointer and skip.
               ++characterPointer;
               continue;
             }
           }
 
           if( Syntax.StringDelimiter == element.Substring( characterPointer, Syntax.StringDelimiter.Length ) ) {
-            // Did we hit a string delimiter? (like ")
+            // Did we hit a string delimiter? Like: "
             inString = true;
           }
 
         } else {
-          // We're parsing within a string
+          // This is when we're parsing within a string.
           if( Syntax.StringEscape == element.Substring( characterPointer, Syntax.StringEscape.Length ) ) {
-            // Did we find an escape sequence?
+            // Did we find an escape sequence? Like: \"
             isEscaped = true;
+            ++characterPointer;
           }
           if( !isEscaped && Syntax.StringDelimiter == element.Substring( characterPointer, Syntax.StringDelimiter.Length ) ) {
             // Did the string end?
@@ -244,7 +254,7 @@ namespace Typo3ExtensionGenerator.Parser {
         // Is the parameter set in ""?
         if( !string.IsNullOrEmpty( parsedPartial.Parameters ) && "\"" == parsedPartial.Parameters.Substring( 0, 1 ) ) {
           // Replace escaped quotes
-          parsedPartial.Parameters = parsedPartial.Parameters.Replace( "\\\"", "\"" );
+          //parsedPartial.Parameters = parsedPartial.Parameters.Replace( "\\\"", "\"" );
 
           if( "\"" != parsedPartial.Parameters.Substring( parsedPartial.Parameters.Length -1, 1 ) ) {
             throw new ParserException( string.Format( "Unmatched \" in {0}", parsedPartial.Header ) );
