@@ -75,7 +75,8 @@ namespace Typo3ExtensionGenerator.Parser {
       public const string InterfaceModelField = "interface";
 
       public static class InterfaceDirectives {
-        public const string Exclude = "exclude";
+        public const string Exclude        = "exclude";
+        public const string Representation = "through";
       }
 
       public const string TypeDeclaration = "type";

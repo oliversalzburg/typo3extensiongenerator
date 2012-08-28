@@ -37,7 +37,7 @@ namespace Typo3ExtensionGenerator.Generator {
 
       } else {
         Directory.CreateDirectory( new FileInfo( targetFilename ).DirectoryName );
-        File.WriteAllText( targetFilename, content, Encoding.UTF8 );
+        File.WriteAllText( targetFilename, content, Encoding.Default );
       }
     }
 

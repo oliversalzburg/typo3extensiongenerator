@@ -96,7 +96,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         }
       }
       String dataMembersAndKeys = string.Format(
-        "{0}\n{1}", dataMembers.ToString().Substring( 0, dataMembers.Length - 2 ),
+        "{0},\n{1}", dataMembers.ToString().Substring( 0, dataMembers.Length - 2 ),
         keys.ToString().Substring( 0, keys.Length - 2 ) );
 
       return dataMembersAndKeys;

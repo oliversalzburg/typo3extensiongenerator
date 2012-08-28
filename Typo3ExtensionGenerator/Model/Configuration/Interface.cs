@@ -16,6 +16,17 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     public string Target { get; set; }
 
     /// <summary>
+    /// This is the model our target is contained in.
+    /// </summary>
+    public DataModel ParentModel { get; set; }
+
+    /// <summary>
+    /// The name of the ParentModel.
+    /// Used so we can later look up the reference to the parsed instance.
+    /// </summary>
+    public string ParentModelTarget { get; set; }
+
+    /// <summary>
     /// The contained settings.
     /// </summary>
     public List<KeyValuePair<string, string>> Settings { get; set; }
@@ -25,6 +36,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     /// Excluded fields can only be edited by admins and specifically configured users.
     /// </summary>
     public bool Exclude { get; set; }
+
+    /// <summary>
+    /// The TCEForms user interface element that will be used to edit the target.
+    /// </summary>
+    public string DisplayType { get; set; }
 
     public Interface() {
       Settings = new List<KeyValuePair<string, string>>();

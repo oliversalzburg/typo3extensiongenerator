@@ -237,6 +237,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       
       StringBuilder finalColumns = new StringBuilder();
 
+      // Prepare data model references
+      foreach( Interface fieldInterface in Configuration.Interfaces ) {
+        fieldInterface.ParentModel = Subject.Models.Single( m => m.Name == fieldInterface.ParentModelTarget );
+      }
 
       foreach( Interface fieldInterface in Configuration.Interfaces ) {
         // Check if the target field exists
