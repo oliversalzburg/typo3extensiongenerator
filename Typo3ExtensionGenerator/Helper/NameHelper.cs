@@ -41,9 +41,23 @@ namespace Typo3ExtensionGenerator.Helper {
       return String.Format( "{0}.php", UpperCamelCase( dataModel.Name ) );
     }
 
+    /// <summary>
+    /// Converts a lowerCamelCase string to UpperCamelCase
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
     public static string UpperCamelCase( string input ) {
       return input.Substring( 0, 1 ).ToUpper()
              + Regex.Replace( input.Substring( 1 ), "_(.)", match => match.Groups[ 1 ].Captures[ 0 ].Value.ToUpper() );
+    }
+
+    /// <summary>
+    /// Converts a lowerCamelCase string to lower_underscored_case
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static string LowerUnderscoredCase( string input ) {
+      return Regex.Replace( input, "([A-Z])", match => "_" + match.Groups[ 1 ].Captures[ 0 ].Value.ToLower() );
     }
 
     /// <summary>
@@ -56,7 +70,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="model">The data model.</param>
     /// <returns></returns>
     public static string GetAbsoluteModelName( Extension extension, DataModel model ) {
-      return String.Format( "tx_{0}_domain_model_{1}", extension.Key, model.Name );
+      return String.Format( "tx_{0}_domain_model_{1}", extension.Key, LowerUnderscoredCase( model.Name ) );
     }
   }
 }
