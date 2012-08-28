@@ -134,12 +134,14 @@ namespace Typo3ExtensionGenerator.Parser {
                                                    Header = string.Empty
                                                  };
           
-      // How deeply nested we are into scopes
+      // How deeply nested we are into scopes.
       int scopeLevel  = 0;
       // Are we currently inside a string?
       bool inString = false;
       // Is the current character escaped?
       bool isEscaped = false;
+      // Are we currently inside a comment?
+      bool inComment = false;
 
       // Iterate over the whole input string
       // The whole point of this operation is to collect the full header of the partial,
@@ -148,6 +150,7 @@ namespace Typo3ExtensionGenerator.Parser {
       while( characterPointer < element.Length ) {
         // We only check for scopes while we're not parsing within a string.
         if( !inString ) {
+          // Check for scope terminator
           if( Syntax.ScopeTerminate == element.Substring( characterPointer, Syntax.ScopeTerminate.Length ) ) {
             // Did we find a scope terminator? Like: ;
             if( 1 == scopeLevel ) {
@@ -168,6 +171,7 @@ namespace Typo3ExtensionGenerator.Parser {
             }
           }
 
+          // Check for scopes
           if( Syntax.ScopeStart == element.Substring( characterPointer, Syntax.ScopeStart.Length ) ) {
             // Did we find the start of a new scope?
             ++scopeLevel;
@@ -199,9 +203,39 @@ namespace Typo3ExtensionGenerator.Parser {
             }
           }
 
+          // Check for string delimiter
           if( Syntax.StringDelimiter == element.Substring( characterPointer, Syntax.StringDelimiter.Length ) ) {
             // Did we hit a string delimiter? Like: "
             inString = true;
+          }
+
+          // Check for comment
+          try {
+            if( characterPointer + Syntax.CommentMultilineStart.Length <= element.Length && 
+              Syntax.CommentMultilineStart == element.Substring( characterPointer, Syntax.CommentMultilineStart.Length ) ) {
+              inComment = true;
+              // Skip ahead until comment is terminated
+              while( characterPointer < element.Length && inComment ) {
+                ++characterPointer;
+                if( Syntax.CommentMultilineEnd
+                    == element.Substring( characterPointer, Syntax.CommentMultilineEnd.Length ) ) {
+                  inComment = false;
+                }
+              }
+            } else if( characterPointer + Syntax.CommentSinglelineStart.Length <= element.Length && 
+              Syntax.CommentSinglelineStart == element.Substring( characterPointer, Syntax.CommentSinglelineStart.Length ) ) {
+              inComment = true;
+              // Skip ahead until comment is terminated
+              // Single line comments are terminated by newline.
+              while( characterPointer < element.Length && inComment ) {
+                ++characterPointer;
+                if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
+                  inComment = false;
+                }
+              }
+            }
+          } catch( ArgumentOutOfRangeException ) {
+            throw new ParserException( "Hit end of input while looking for end of comment." );
           }
 
         } else {
@@ -253,9 +287,6 @@ namespace Typo3ExtensionGenerator.Parser {
 
         // Is the parameter set in ""?
         if( !string.IsNullOrEmpty( parsedPartial.Parameters ) && "\"" == parsedPartial.Parameters.Substring( 0, 1 ) ) {
-          // Replace escaped quotes
-          //parsedPartial.Parameters = parsedPartial.Parameters.Replace( "\\\"", "\"" );
-
           if( "\"" != parsedPartial.Parameters.Substring( parsedPartial.Parameters.Length -1, 1 ) ) {
             throw new ParserException( string.Format( "Unmatched \" in {0}", parsedPartial.Header ) );
           }
