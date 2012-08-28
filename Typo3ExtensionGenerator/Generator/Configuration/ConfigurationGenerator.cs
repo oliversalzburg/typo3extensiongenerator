@@ -34,7 +34,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       const string template = "$TCA['{model}'] = array(\n" +
                               "  'ctrl' => array(\n" +
-                              "    'title'                    => 'LLL:EXT:downloads/Resources/Private/Language/locallang_db.xml:tx_downloads_domain_model_download',\n" +
+                              "    'title'                    => 'LLL:EXT:{extensionKey}/Resources/Private/Language/locallang_db.xml:{model}',\n" +
                               "    'label'                    => '{label}',\n" +
                               "    'label_alt'                => '{labelAlt}',\n" +
                               "{labelFunc}" +
