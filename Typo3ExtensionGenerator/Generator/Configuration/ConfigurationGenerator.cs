@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using StringLib;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -31,36 +32,47 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       StringBuilder result = new StringBuilder();
 
-      const string template = "$TCA['{0}'] = array(\n" +
+      const string template = "$TCA['{model}'] = array(\n" +
                               "  'ctrl' => array(\n" +
                               "    'title'                    => 'LLL:EXT:downloads/Resources/Private/Language/locallang_db.xml:tx_downloads_domain_model_download',\n" +
-                              "    'label'                    => '{1}',\n" +
-                              "    'label_alt'                => 'file_name',\n" +
+                              "    'label'                    => '{label}',\n" +
+                              "    'label_alt'                => '{labelAlt}',\n" +
                               "    'label_userFunc'           => 'Tx_Downloads_Hooks_Labels->getUserLabelDownload',\n" +
-                              "    'tstamp'                   => 'tstamp',\n" +
-                              "    'crdate'                   => 'crdate',\n" +
-                              "    'cruser_id'                => 'cruser_id',\n" +
                               "    'dividers2tabs'            => TRUE,\n" +
-                              "    'versioningWS'             => 2,\n" +
-                              "    'versioning_followPages'   => TRUE,\n" +
-                              "    'origUid'                  => 't3_origuid',\n" +
-                              "    'editlock'                 => 'editlock',\n" +
-                              "    'languageField'            => 'sys_language_uid',\n" +
-                              "    'transOrigPointerField'    => 'l10n_parent',\n" +
-                              "    'transOrigDiffSourceField' => 'l10n_diffsource',\n" +
-                              "    'delete'                   => 'deleted',\n" +
-                              "    'enablecolumns'            => array(\n" +
-                              "      'disabled'  => 'hidden',\n" +
-                              "      'starttime' => 'starttime',\n" +
-                              "      'endtime'   => 'endtime',\n" +
-                              "      'fe_group'  => 'fe_group'\n" +
-                              "    ),\n" +
-                              "    'dynamicConfigFile'        => t3lib_extMgm::extPath( $_EXTKEY ) . 'Configuration/TCA/Download.php',\n" +
-                              "    'iconfile'                 => t3lib_extMgm::extRelPath( $_EXTKEY ) . 'Resources/Public/Icons/tx_downloads_domain_model_download.gif',\n" +
-                              "    'thumbnail'                => 'file_name',\n" +
-                              "    'searchFields'             => 'title,file_name,qualifier'\n" +
-                              "  ),\n" +
+
+                              "{commonFields}" +
+
+                              "{versioningFields}" +
+                              
+                              "{translationFields}" +
+                              
+                              
+                              "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
+                              "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.gif',\n" +
+                              "    'thumbnail'                => '{thumbnail}',\n" +
+                              "    'searchFields'             => '{searchFields}'\n" +
+                              "  )\n" +
                               ");";
+
+      const string t3CommonFieldsTemplate = "    'tstamp'                   => 'tstamp',\n" +
+                                            "    'crdate'                   => 'crdate',\n" +
+                                            "    'cruser_id'                => 'cruser_id',\n" +
+                                            "    'delete'                   => 'deleted',\n" +
+                                            "    'enablecolumns'            => array(\n" +
+                                            "      'disabled'  => 'hidden',\n" +
+                                            "      'starttime' => 'starttime',\n" +
+                                            "      'endtime'   => 'endtime',\n" +
+                                            "      'fe_group'  => 'fe_group'\n" +
+                                            "    ),\n" +
+                                            "    'editlock'                 => 'editlock',\n";
+
+      const string t3TranslationFieldsTemplate = "    'origUid'                  => 't3_origuid',\n" +
+                                                 "    'languageField'            => 'sys_language_uid',\n" +
+                                                 "    'transOrigPointerField'    => 'l10n_parent',\n" +
+                                                 "    'transOrigDiffSourceField' => 'l10n_diffsource',\n";
+
+      const string t3VersioningFieldsTemplate = "    'versioningWS'             => 2,\n" +
+                                                "    'versioning_followPages'   => TRUE,\n";
 
       foreach( Typo3ExtensionGenerator.Model.Configuration configuration in Subject.Configurations ) {
         // First, find the data model this configuration applies to
@@ -70,7 +82,39 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         }
         configuration.Model = targetModel;
 
-        result.Append( String.Format( template, NameHelper.GetAbsoluteModelName( Subject, configuration.Model ) ) );
+        // Were the T3CommonFields included in this model?
+        string finalCommonFields = string.Empty;
+        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3CommonFields ) ) {
+          finalCommonFields = t3CommonFieldsTemplate;
+        }
+
+        // Were the T3TranslationFields included in this model?
+        string finalTranslationFields = string.Empty;
+        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3TranslationFields ) ) {
+          finalTranslationFields  = t3TranslationFieldsTemplate;
+        }
+
+        // Were the T3VersioningFields included in this model?
+        string finalVersioningFields = string.Empty;
+        if( configuration.Model.Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == Keywords.DataModelTemplates.T3VersioningFields ) ) {
+          finalVersioningFields = t3VersioningFieldsTemplate;
+        }
+
+        var dataObject = new {
+                               extensionKey = Subject.Key,
+                               model = NameHelper.GetAbsoluteModelName( Subject, configuration.Model ),
+                               label = configuration.Label,
+                               labelAlt = configuration.LabelAlternative,
+                               commonFields = finalCommonFields,
+                               translationFields = finalTranslationFields,
+                               versioningFields = finalVersioningFields,
+                               configFilename = NameHelper.GetExtbaseFileName( Subject,configuration.Model ),
+                               thumbnail = configuration.Thumbnail,
+                               searchFields = configuration.SearchFields
+                             };
+        string generatedConfiguration = template.HaackFormat( dataObject );
+
+        result.Append( generatedConfiguration + "\n" );
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );

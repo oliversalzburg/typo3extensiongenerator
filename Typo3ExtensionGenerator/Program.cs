@@ -10,7 +10,7 @@ using Typo3ExtensionGenerator.Parser;
 namespace Typo3ExtensionGenerator {
   class Program {
     static void Main( string[] args ) {
-      if( args.Count() < 1 || !File.Exists( args[ 0 ] ) ) {
+      if( !args.Any() || !File.Exists( args[ 0 ] ) ) {
         Console.Error.WriteLine( "No input file provided or file nonexistent." );
         return;
       }
@@ -30,6 +30,7 @@ namespace Typo3ExtensionGenerator {
                                                                 TargetDirectory = Path.Combine( Environment.CurrentDirectory, "output" )
                                                               };
       generator.Generate( extension );
+      Console.WriteLine( "Done." );
       
       Console.ReadLine();
     }

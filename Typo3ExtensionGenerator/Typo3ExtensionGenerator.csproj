@@ -12,6 +12,7 @@
     <AssemblyName>Typo3ExtensionGenerator</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -76,7 +77,15 @@
     <Compile Include="Resolver\Module\ModuleResolver.cs" />
     <Compile Include="Resolver\Plugin\PluginResolver.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\StringLib\StringLib.csproj">
+      <Project>{5A0ABA6B-CDEA-4B55-8BAF-D511A3BFCA40}</Project>
+      <Name>StringLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

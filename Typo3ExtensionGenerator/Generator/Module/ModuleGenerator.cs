@@ -43,7 +43,7 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
       for( int moduleIndex = 0; moduleIndex < Subject.Modules.Count; moduleIndex++ ) {
         Typo3ExtensionGenerator.Model.Module module = Subject.Modules[ moduleIndex ];
-        string moduleKey = string.Format( "tx_{0}_m{1}", Subject.Key, moduleIndex );
+        string moduleKey = string.Format( "tx_{0}_m{1}", Subject.Key, moduleIndex + 1 );
         result.Append( String.Format( template, Subject.Key, module.MainModuleName, moduleKey ) + "\n" );
       }
 
