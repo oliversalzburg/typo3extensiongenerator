@@ -71,7 +71,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       // Were the T3CommonFields included in this model?
       string finalInterfaceFields = string.Empty;
       if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
-        finalInterfaceFields += T3TranslationFields.InterfaceInfoFields + ", ";
+        finalInterfaceFields += T3CommonFields.InterfaceInfoFields + ", ";
       }
 
       // Were the T3TranslationFields included in this model?
@@ -185,6 +185,11 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       const string paletteInterfaceTemplate = "'showitem' => '{0}'";
 
       StringBuilder finalPalettes = new StringBuilder();
+
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3CommonFields ) ) {
+        finalPalettes.Append( T3CommonFields.Palette + "," );
+      }
+
       foreach( Palette palette in Configuration.Palettes ) {
         // Validate and translate fields
         string[] fields = palette.Interface.Split( new[] {','} );

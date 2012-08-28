@@ -23,5 +23,14 @@
                                              "    'editlock'                 => 'editlock'";
 
     public const string InterfaceInfoFields = "hidden, starttime, endtime, fe_group";
+
+
+    public const string Palette = "'paletteAccess' => array(\n" +
+                                  "  'showitem' => 'starttime;LLL:EXT:cms/locallang_ttc.xml:starttime_formlabel,\n" +
+                                  "      endtime;LLL:EXT:cms/locallang_ttc.xml:endtime_formlabel,\n" +
+                                  "      --linebreak--, fe_group;LLL:EXT:cms/locallang_ttc.xml:fe_group_formlabel,\n" +
+                                  "      --linebreak--,editlock,hidden',\n" +
+                                  "  'canNotCollapse' => TRUE\n" +
+                                  ")";
   }
 }
