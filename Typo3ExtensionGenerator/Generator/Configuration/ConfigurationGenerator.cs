@@ -56,7 +56,6 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               
                               "{translationFields}" +
                               
-                              
                               "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
                               "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.gif',\n" +
                               "{thumbnail}" +

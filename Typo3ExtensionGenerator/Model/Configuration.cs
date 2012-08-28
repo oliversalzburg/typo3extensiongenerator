@@ -43,5 +43,10 @@ namespace Typo3ExtensionGenerator.Model {
     /// What fields in the data model are searchable.
     /// </summary>
     public string SearchFields { get; set; }
+
+    /// <summary>
+    /// The fields that will be displayed in the Info/View Item dialog
+    /// </summary>
+    public string InterfaceInfo { get; set; }
   }
 }

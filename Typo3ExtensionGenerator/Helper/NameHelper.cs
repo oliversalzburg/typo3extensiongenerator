@@ -42,6 +42,29 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Retrieves a full model name for a data model.
+    /// </summary>
+    /// <example>
+    /// tx_downloads_domain_model_download
+    /// </example>
+    /// <param name="extension">The extension this data model belongs to.</param>
+    /// <param name="model">The data model.</param>
+    /// <returns></returns>
+    public static string GetAbsoluteModelName( Extension extension, DataModel model ) {
+      return String.Format( "tx_{0}_domain_model_{1}", extension.Key, LowerUnderscoredCase( model.Name ) );
+    }
+
+    /// <summary>
+    /// Returns the name of a property as it should appear in a SQL column name.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="column"></param>
+    /// <returns></returns>
+    public static string GetSqlColumnName( Extension extension, string column ) {
+      return LowerUnderscoredCase( column );
+    }
+
+    /// <summary>
     /// Converts a lowerCamelCase string to UpperCamelCase
     /// </summary>
     /// <param name="input"></param>
@@ -58,19 +81,6 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <returns></returns>
     public static string LowerUnderscoredCase( string input ) {
       return Regex.Replace( input, "([A-Z])", match => "_" + match.Groups[ 1 ].Captures[ 0 ].Value.ToLower() );
-    }
-
-    /// <summary>
-    /// Retrieves a full model name for a data model.
-    /// </summary>
-    /// <example>
-    /// tx_downloads_domain_model_download
-    /// </example>
-    /// <param name="extension">The extension this data model belongs to.</param>
-    /// <param name="model">The data model.</param>
-    /// <returns></returns>
-    public static string GetAbsoluteModelName( Extension extension, DataModel model ) {
-      return String.Format( "tx_{0}_domain_model_{1}", extension.Key, LowerUnderscoredCase( model.Name ) );
     }
   }
 }

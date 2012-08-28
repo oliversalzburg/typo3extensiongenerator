@@ -35,6 +35,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
 
             } else if( Keywords.ConfigurationDirectives.Thumbnail == configurationDirective.Keyword ) {
               configuration.Thumbnail = configurationDirective.Parameters;
+
+            } else if( Keywords.ConfigurationDirectives.InterfaceInfo == configurationDirective.Keyword ) {
+              configuration.InterfaceInfo = configurationDirective.Parameters;
             }
 
           }

@@ -70,6 +70,8 @@ namespace Typo3ExtensionGenerator.Parser {
 
       public const string Thumbnail = "thumbnail";
       public const string SearchFields = "searchFields";
+
+      public const string InterfaceInfo = "interfaceInfo";
     }
   }
 }

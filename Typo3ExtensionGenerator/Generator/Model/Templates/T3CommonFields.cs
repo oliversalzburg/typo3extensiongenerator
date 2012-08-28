@@ -21,5 +21,7 @@
                                              "      'fe_group'  => 'fe_group'\n" +
                                              "    ),\n" +
                                              "    'editlock'                 => 'editlock'";
+
+    public const string InterfaceInfoFields = "hidden, starttime, endtime, fe_group";
   }
 }

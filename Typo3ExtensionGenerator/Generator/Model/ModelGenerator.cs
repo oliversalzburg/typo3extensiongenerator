@@ -92,7 +92,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
               throw new ParserException( string.Format( "Data model template '{0}' is unknown", member.Value ) );
           }
         } else {
-          dataMembers.Append( string.Format( "{0} {1},\n", member.Value, TypeTranslator.ToSql( member.Key ) ) );
+          dataMembers.Append( string.Format( "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Key ) ) );
         }
       }
       String dataMembersAndKeys = string.Format(

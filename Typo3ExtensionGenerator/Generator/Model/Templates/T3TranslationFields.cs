@@ -11,5 +11,7 @@
                                              "    'languageField'            => 'sys_language_uid',\n" +
                                              "    'transOrigPointerField'    => 'l10n_parent',\n" +
                                              "    'transOrigDiffSourceField' => 'l10n_diffsource'";
+
+    public const string InterfaceInfoFields = "sys_language_uid, l10n_parent, l10n_diffsource";
   }
 }
