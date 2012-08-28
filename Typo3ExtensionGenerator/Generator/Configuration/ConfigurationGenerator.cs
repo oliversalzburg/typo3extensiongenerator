@@ -49,8 +49,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               
                               "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
                               "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.gif',\n" +
-                              "    'thumbnail'                => '{thumbnail}',\n" +
-                              "    'searchFields'             => '{searchFields}'\n" +
+                              "{thumbnail}" +
+                              "{searchFields}" +
                               "  )\n" +
                               ");";
 
@@ -116,6 +116,20 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             NameHelper.UpperCamelCase( configuration.Model.Name ) );
         }
 
+        // Is a thumbnail defined?
+        string thumbnailField = string.Empty;
+        if( !string.IsNullOrEmpty( configuration.Thumbnail ) ) {
+          thumbnailField = string.Format(
+            "    'thumbnail'                => '{0}',\n", configuration.Thumbnail );
+        }
+
+        // Are search fields defined?
+        string finalSearchFields = string.Empty;
+        if( !string.IsNullOrEmpty( configuration.SearchFields ) ) {
+          finalSearchFields = string.Format(
+            "    'searchFields'             => '{0}'\n", configuration.SearchFields );
+        }
+
         var dataObject = new {
                                extensionKey = Subject.Key,
                                model = NameHelper.GetAbsoluteModelName( Subject, configuration.Model ),
@@ -126,8 +140,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                translationFields = finalTranslationFields,
                                versioningFields = finalVersioningFields,
                                configFilename = NameHelper.GetExtbaseFileName( Subject,configuration.Model ),
-                               thumbnail = configuration.Thumbnail,
-                               searchFields = configuration.SearchFields
+                               thumbnail = thumbnailField,
+                               searchFields = finalSearchFields
                              };
         string generatedConfiguration = template.HaackFormat( dataObject );
 
