@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Helper {
@@ -9,6 +10,9 @@ namespace Typo3ExtensionGenerator.Helper {
   /// Converts between different markup types.
   /// </summary>
   public static class TypeTranslator {
+    public static bool CanTranslate( string typeDescription ) {
+      return new Regex( string.Format( "^({0}|{1}|{2})", Keywords.Types.CharacterArray, Keywords.Types.String, Keywords.Types.UnsignedInt ) ).IsMatch( typeDescription );
+    }
     /// <summary>
     /// Converts the given type description to a MySQL type.
     /// </summary>
@@ -16,15 +20,19 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <returns></returns>
     public static string ToSql( string typeDescription ) {
       switch( typeDescription ) {
-        case "string":
+        case Keywords.Types.String:
           return "TEXT";
-        case "uint":
+        case Keywords.Types.UnsignedInt:
           return "INT(11) UNSIGNED DEFAULT '0'";
         
         default:
           // Is this a char[123] type definition?
-          if( typeDescription.Substring( 0, 4 ) == "char" ) {
-            string length = typeDescription.Substring( 5, typeDescription.Length - 6 );
+          if( typeDescription.Substring( 0, Keywords.Types.CharacterArray.Length ) == Keywords.Types.CharacterArray ) {
+            // Extract size of character array
+            string length = typeDescription.Substring(
+              Keywords.Types.CharacterArray.Length + 1,
+              typeDescription.Length - ( Keywords.Types.CharacterArray.Length + 2 ) );
+
             int memberLength = 0;
             if( !int.TryParse( length, out memberLength ) ) {
               throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ) );

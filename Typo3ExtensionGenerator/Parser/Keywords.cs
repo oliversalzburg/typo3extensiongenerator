@@ -50,6 +50,12 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public const string DeclareConfiguration = "configure";
 
+    public static class Types {
+      public const string UnsignedInt = "uint";
+      public const string String = "string";
+      public const string CharacterArray = "char";
+    }
+
     /// <summary>
     /// Keywords of data model template definitions.
     /// </summary>
@@ -80,6 +86,12 @@ namespace Typo3ExtensionGenerator.Parser {
         public const string Exclude        = "exclude";
         public const string Title          = "as";
         public const string Representation = "through";
+
+        public const string Foreign        = "from";
+
+        public static class Representations {
+          public const string Dropdown = "select";
+        }
       }
 
       public const string TypeDeclaration = "type";

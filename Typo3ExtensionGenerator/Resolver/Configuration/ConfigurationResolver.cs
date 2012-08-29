@@ -47,7 +47,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
               configuration.Palettes.Add( PaletteResolver.Resolve( configurationDirective ) );
 
             } else if( Keywords.ConfigurationDirectives.InterfaceModelField == configurationDirective.Keyword ) {
-              Interface @interface = InterfaceResolver.Resolve( configurationDirective );
+              Typo3ExtensionGenerator.Model.Configuration.Interface @interface = InterfaceResolver.Resolve( configurationDirective );
               @interface.ParentModelTarget = configuration.Target;
               configuration.Interfaces.Add( @interface );
 

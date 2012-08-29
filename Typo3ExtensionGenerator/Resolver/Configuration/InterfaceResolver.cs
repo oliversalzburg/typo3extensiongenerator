@@ -4,6 +4,7 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
   public static class InterfaceResolver {
@@ -12,8 +13,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// </summary>
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The field interfaces of the data model configuration.</returns>
-    public static Interface Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      Interface @interface = new Interface {Target = parsedPartial.Parameters};
+    public static Typo3ExtensionGenerator.Model.Configuration.Interface Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+      Typo3ExtensionGenerator.Model.Configuration.Interface @interface = new Typo3ExtensionGenerator.Model.Configuration.Interface {Target = parsedPartial.Parameters};
       if( parsedPartial.Partials.Any() ) {
         foreach( ExtensionParser.ParsedPartial setting in parsedPartial.Partials ) {
           @interface.Settings.Add( new KeyValuePair<string, string>( setting.Keyword, setting.Parameters ) );
@@ -30,6 +31,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
         }
         if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representation == setting.Key ) {
           @interface.DisplayType = setting.Value;
+          //DisplayTypeResolver.Resolve( parsedPartial, @interface, setting.Value );
         }
       }
 
