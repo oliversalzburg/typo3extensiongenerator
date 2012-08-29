@@ -77,6 +77,7 @@
     <Compile Include="Parser\Syntax.cs" />
     <Compile Include="Resolver\Configuration\ConfigurationResolver.cs" />
     <Compile Include="Resolver\Configuration\InterfaceResolver.cs" />
+    <Compile Include="Resolver\Configuration\Interface\DisplayTypeResolver.cs" />
     <Compile Include="Resolver\Configuration\PaletteResolver.cs" />
     <Compile Include="Resolver\Configuration\TypeResolver.cs" />
     <Compile Include="Resolver\Extension\AuthorResolver.cs" />
