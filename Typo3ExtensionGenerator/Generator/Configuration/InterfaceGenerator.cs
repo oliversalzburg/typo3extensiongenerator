@@ -68,7 +68,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         }
       }
       // Add any additional properties to the configuration
-      configuration += subject.DisplayType.GeneratePropertyArray( SimpleContainer.Format.PhpArray) ;
+      configuration += subject.DisplayType.GeneratePropertyArray( format) ;
       // Trim trailing comma
       configuration = configuration.TrimEnd( new[] {','} );
 

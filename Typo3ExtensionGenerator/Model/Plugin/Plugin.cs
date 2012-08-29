@@ -17,6 +17,11 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
     /// The speaking title that will be displayed in the backend.
     /// </summary>
     public string Title { get; set; }
+
+    /// <summary>
+    /// The data model for the FlexForm settings in this plugin.
+    /// </summary>
+    public DataModel Model { get; set; }
     
     /// <summary>
     /// The interfaces to data model fields defined in this configuration.

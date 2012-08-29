@@ -29,8 +29,8 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
         if( dataModels.Count > 1 ) {
           throw new GeneratorException( "A plugin can only contain one model." );
         }
-        DataModel flexFormDataModel = dataModels[ 0 ];
-        flexFormDataModel.Name = "flexform";
+        plugin.Model = dataModels[ 0 ];
+        plugin.Model.Name = "flexform";
 
         // Resolve plugin
         foreach( ExtensionParser.ParsedPartial pluginParameter in pluginPartial.Partials ) {
@@ -42,7 +42,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
               InterfaceResolver.Resolve( pluginParameter );
             
             //@interface.ParentModelTarget = "flexform";
-            @interface.ParentModel = flexFormDataModel;
+            @interface.ParentModel = plugin.Model;
             plugin.Interfaces.Add( @interface );
           
           } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Action ) {

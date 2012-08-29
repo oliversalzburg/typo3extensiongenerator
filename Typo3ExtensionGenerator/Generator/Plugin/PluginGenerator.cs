@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using StringLib;
 using Typo3ExtensionGenerator.Generator.Configuration;
@@ -6,6 +7,7 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Model.Plugin;
+using Typo3ExtensionGenerator.Resolver.Model;
 using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Plugin {
@@ -72,6 +74,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         StringBuilder settings = new StringBuilder();
         StringBuilder actions  = new StringBuilder();
 
+        // Resolve the foreign key references in the flexform model
+        ForeignKeyResolver.Resolve( new List<DataModel> {plugin.Model}, Subject.Models );
+
+        // Generate the flexform XML for all interface elements.
+        // TODO: Should possibly render ALL fields in the model
         const string membersTemplate = "\n<{0}.settings><TCEforms>{1}</TCEforms></{0}.settings>";
         foreach( Interface @interface in plugin.Interfaces ) {
           string members = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.Xml );

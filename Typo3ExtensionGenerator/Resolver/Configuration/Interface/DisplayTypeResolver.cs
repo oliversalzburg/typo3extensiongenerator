@@ -23,6 +23,23 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         
         @interface.DisplayType = specializedDisplayType;
 
+      } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RecordGroup == displayType ) {
+        SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType {
+                                                                                     Name =
+                                                                                       Keywords.ConfigurationDirectives.
+                                                                                       InterfaceDirectives.
+                                                                                       Representations.RecordGroup
+                                                                                   };
+
+        specializedDisplayType.Set( "internal_type", "'db'" );
+        /*
+        specializedDisplayType.Set( "allowed", "'*'" );
+        specializedDisplayType.Set( "disallowed", "'php'" );
+        specializedDisplayType.Set( "size", "5" );
+        */
+
+        @interface.DisplayType = specializedDisplayType;
+
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RichTextArea == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType() {
                                                                                        Name =
@@ -32,8 +49,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                          Representations.TextArea
                                                                                      };
         specializedDisplayType.Set( "wizards.RTE.icon", "'wizard_rte2.gif'" );
-        specializedDisplayType.Set( "wizards.RTE.notNewRecords", "1" );
-        specializedDisplayType.Set( "wizards.RTE.RTEonly", "1" );
+        specializedDisplayType.Set( "wizards.RTE.notNewRecords", 1 );
+        specializedDisplayType.Set( "wizards.RTE.RTEonly", 1 );
         specializedDisplayType.Set( "wizards.RTE.script", "'wizard_rte.php'" );
         specializedDisplayType.Set( "wizards.RTE.title", "'LLL:EXT:cms/locallang_ttc.xml:bodytext.W.RTE'" );
         specializedDisplayType.Set( "wizards.RTE.type", "'script'" );
