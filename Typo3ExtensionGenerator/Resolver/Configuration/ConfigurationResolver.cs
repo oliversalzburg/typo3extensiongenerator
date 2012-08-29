@@ -52,7 +52,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
               @interface.ParentModelTarget = configuration.Target;
               configuration.Interfaces.Add( @interface );
 
-            } else if( Keywords.ConfigurationDirectives.Title == configurationDirective.Keyword ) {
+            } else if( Keywords.Title == configurationDirective.Keyword ) {
               configuration.Title = configurationDirective.Parameters;
 
             } 

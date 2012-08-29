@@ -17,6 +17,19 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
       List<Typo3ExtensionGenerator.Model.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin>();
       foreach( ExtensionParser.ParsedPartial pluginPartial in pluginPartials ) {
         Typo3ExtensionGenerator.Model.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin {Name = pluginPartial.Parameters};
+
+        // Resolve plugin
+        foreach( ExtensionParser.ParsedPartial pluginParameter in pluginPartial.Partials ) {
+          if( Keywords.Title == pluginParameter.Keyword ) {
+            plugin.Title = pluginParameter.Parameters;
+          }
+        }
+
+        // If no name was defined, use the common placeholder names
+        if( string.IsNullOrEmpty( plugin.Name ) ) {
+          plugin.Name = string.Format( "Pi{0}", ( plugins.Count + 1 ) );
+        }
+
         plugins.Add( plugin );
       }
 

@@ -6,6 +6,11 @@ using System.Text;
 namespace Typo3ExtensionGenerator.Parser {
   public static class Keywords {
     /// <summary>
+    /// as - Used to apply a human-readable name to an object.
+    /// </summary>
+    public const string Title = "as";
+
+    /// <summary>
     /// Used to declare the extension.
     /// </summary>
     public const string DeclareExtension = "extension";
@@ -86,11 +91,6 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public static class ConfigurationDirectives {
       /// <summary>
-      /// as
-      /// </summary>
-      public const string Title = "as";
-
-      /// <summary>
       /// label
       /// </summary>
       public const string Label = "label";
@@ -130,11 +130,6 @@ namespace Typo3ExtensionGenerator.Parser {
         /// exclude
         /// </summary>
         public const string Exclude = "exclude";
-
-        /// <summary>
-        /// as
-        /// </summary>
-        public const string Title = "as";
 
         /// <summary>
         /// through

@@ -24,7 +24,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         if( Keywords.ConfigurationDirectives.InterfaceDirectives.Exclude == setting.Key ) {
           @interface.Exclude = ParseHelper.ParseBool( setting.Value );
         }
-        if( Keywords.ConfigurationDirectives.InterfaceDirectives.Title == setting.Key ) {
+        if( Keywords.Title == setting.Key ) {
           @interface.Title = setting.Value;
         }
         if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representation == setting.Key ) {

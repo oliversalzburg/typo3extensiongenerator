@@ -40,11 +40,11 @@ namespace Typo3ExtensionGenerator.Generator {
       configurationGenerator.Generate();
 
       // Wrap virtual files as needed
-      const string extTablesPrefix = "<?php\n" +
-                                     "if( !defined( 'TYPO3_MODE' ) ) {\n" +
-                                     "	die( 'Access denied.' );\n" +
-                                     "}\n";
-      const string extTablesSuffix = "?>";
+      const string protectedPhpPrefix = "<?php\n" +
+                                        "if( !defined( 'TYPO3_MODE' ) ) {\n" +
+                                        "	die( 'Access denied.' );\n" +
+                                        "}\n";
+      const string phpSuffix = "?>";
 
       const string languageFilePrefix = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" +
                                         "<T3locallang>\n" +
@@ -64,7 +64,8 @@ namespace Typo3ExtensionGenerator.Generator {
       const string phpClassSuffix = "}\n" +
                                     "?>";
 
-      AbstractGenerator.WrapVirtual( "ext_tables.php", extTablesPrefix, extTablesSuffix );
+      AbstractGenerator.WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
+      AbstractGenerator.WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       AbstractGenerator.WrapVirtual(
         "Classes/Hooks/Labels.php",
         string.Format( phpClassPrefix, NameHelper.GetExtbaseHookClassName( extension, "Labels" ) ), phpClassSuffix );

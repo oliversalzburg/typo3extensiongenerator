@@ -14,11 +14,10 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Name { get; set; }
     
-    /*
     /// <summary>
     /// The speaking title that will be displayed in the backend.
     /// </summary>
     public string Title { get; set; }
-    */
+    
   }
 }

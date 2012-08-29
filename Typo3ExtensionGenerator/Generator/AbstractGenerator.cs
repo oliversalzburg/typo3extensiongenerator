@@ -62,7 +62,7 @@ namespace Typo3ExtensionGenerator.Generator {
     public static void FlushVirtual( string targetDirectory ) {
       foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
         string absoluteFilename = Path.Combine( targetDirectory, file.Key );
-        Directory.CreateDirectory( new FileInfo( absoluteFilename  ).DirectoryName );
+        Directory.CreateDirectory( new FileInfo( absoluteFilename ).DirectoryName );
         Console.WriteLine( "Flushing {0}...", file.Key );
         File.WriteAllText( absoluteFilename , file.Value.ToString() );
       }
