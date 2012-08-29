@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Text;
+using StringLib;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
+using Typo3ExtensionGenerator.Model.Plugin;
+using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Plugin {
   public class PluginGenerator : AbstractGenerator, IGenerator {
@@ -42,7 +45,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                      ");";
 
       for( int pluginIndex = 0; pluginIndex < Subject.Plugins.Count; pluginIndex++ ) {
-        Typo3ExtensionGenerator.Model.Plugin plugin = Subject.Plugins[ pluginIndex ];
+        Typo3ExtensionGenerator.Model.Plugin.Plugin plugin = Subject.Plugins[ pluginIndex ];
         
         string languageConstant = String.Format( "{0}_title", plugin.Name.ToLower() );
         extTables.Append( String.Format( registerPlugin, Subject.Key, NameHelper.UpperCamelCase( plugin.Name ), languageConstant ) + "\n" );
@@ -65,10 +68,68 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         // Add configurePlugin line to ext_localconf
         extLocalconf.Append( string.Format( configurePlugin, Subject.Key, NameHelper.UpperCamelCase( plugin.Name ) ) + "\n" );
 
+        // Collect FlexForms from interfaces
+        StringBuilder settings = new StringBuilder();
+        StringBuilder actions  = new StringBuilder();
+
+        const string membersTemplate = "\n<{0}.settings><TCEforms>{1}</TCEforms></{0}.settings>";
         foreach( Interface @interface in plugin.Interfaces ) {
-          string flexFormXml = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.Xml );
-          WriteFile( string.Format( "Configuration/FlexForms/flexform_{0}.xml", plugin.Name.ToLower() ), flexFormXml, true );
+          string members = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.Xml );
+
+          string setting = string.Format( membersTemplate, @interface.Target, members );
+          settings.Append( setting );
         }
+
+        const string actionTemplate = "              <label>Action</label>" +
+                                      "              <config>" +
+                                      "                <type>select</type>" +
+                                      "                <items>" +
+                                      "                  <numIndex index=\"0\">" +
+                                      "                    <numIndex index=\"0\">{title}</numIndex>" +
+                                      "                    <numIndex index=\"1\">{controllerName}->{actionName};</numIndex>" +
+                                      "                  </numIndex>" +
+                                      "                </items>" +
+                                      "              </config>";
+        foreach( Action action in plugin.Actions ) {
+          var dataObject =
+            new {
+                  title = action.Title,
+                  controllerName = NameHelper.UpperCamelCase( plugin.Name ),
+                  actionName = action.Name
+                };
+          string actionString = actionTemplate.HaackFormat( dataObject );
+          actions.Append( actionString );
+        }
+
+        string allActions = actions.ToString();
+        string allSettings = settings.ToString();
+        const string actionsTemplate = "<switchableControllerActions><TCEforms>{0}</TCEforms></switchableControllerActions>";
+        const string flexFormTemplate = "<T3DataStructure>" +
+                                        "  <meta>" +
+                                        "    <langDisable>1</langDisable>" +
+                                        "  </meta>" +
+                                        "  " +
+                                        "  <sheets>" +
+                                        "    <sDEF>" +
+                                        "      <ROOT>" +
+                                        "        <TCEforms>" +
+                                        "         <sheetTitle>General</sheetTitle>" +
+                                        "        </TCEforms>" +
+                                        "        <type>array</type>" +
+                                        "        <el>" +
+                                        "{actions}"+
+                                        "{settings}" +
+                                        "        </el>" +
+                                        "      </ROOT>" +
+                                        "    </sDEF>" +
+                                        "  </sheets>" +
+                                        "</T3DataStructure>";
+
+        var dataObjectFlexForm = new {settings = allSettings, actions = string.Format( actionsTemplate, allActions )};
+        string flexFormsXml = flexFormTemplate.HaackFormat( dataObjectFlexForm );
+
+        // Write final result to file
+        WriteFile( string.Format( "Configuration/FlexForms/flexform_{0}.xml", plugin.Name.ToLower() ), flexFormsXml, true );
       }
 
       string extTablesPhp = extTables.ToString().Substring( 0, extTables.Length - 1 );

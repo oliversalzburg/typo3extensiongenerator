@@ -28,7 +28,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The plugins defined in this extension.
     /// </summary>
-    public List<Plugin> Plugins { get; set; }
+    public List<Plugin.Plugin> Plugins { get; set; }
 
     /// <summary>
     /// The modules defined in this extension.

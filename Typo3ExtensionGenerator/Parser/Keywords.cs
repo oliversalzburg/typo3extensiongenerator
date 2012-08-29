@@ -66,6 +66,10 @@ namespace Typo3ExtensionGenerator.Parser {
       public const string CharacterArray = "char";
     }
 
+    public static class PluginDirectives {
+      public const string Action = "action";
+    }
+
     /// <summary>
     /// Keywords of data model template definitions.
     /// </summary>

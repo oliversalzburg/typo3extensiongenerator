@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 
-namespace Typo3ExtensionGenerator.Model {
+namespace Typo3ExtensionGenerator.Model.Plugin {
   /// <summary>
   /// A plugin for TYPO3.
   /// </summary>
@@ -25,8 +23,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public List<Interface> Interfaces { get; set; }
 
+    public List<Action> Actions { get; set; }
+
     public Plugin() {
       Interfaces = new List<Interface>();
+      Actions = new List<Action>();
     }
   }
 }

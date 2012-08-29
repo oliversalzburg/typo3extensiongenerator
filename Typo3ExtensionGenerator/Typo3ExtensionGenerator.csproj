@@ -69,7 +69,8 @@
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\Extension.cs" />
-    <Compile Include="Model\Plugin.cs" />
+    <Compile Include="Model\Plugin\Action.cs" />
+    <Compile Include="Model\Plugin\Plugin.cs" />
     <Compile Include="Generator\Model\Templates\T3CommonFields.cs" />
     <Compile Include="Generator\Model\Templates\T3ManagedFields.cs" />
     <Compile Include="Generator\Model\Templates\T3TranslationFields.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />
+    <Compile Include="Resolver\Plugin\ActionResolver.cs" />
     <Compile Include="Resolver\Plugin\PluginResolver.cs" />
   </ItemGroup>
   <ItemGroup>

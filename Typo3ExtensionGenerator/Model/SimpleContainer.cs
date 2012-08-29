@@ -14,7 +14,7 @@ namespace Typo3ExtensionGenerator.Model {
     }
 
     public const string PropertyTemplatePhp = "'{0}' => {1},";
-    public const string PropertyTemplateXml = "<{0}>{1}</{0}>\n";
+    public const string PropertyTemplateXml = "\n<{0}>{1}</{0}>";
 
     /// <summary>
     /// Set a given key/value in the tree hierarchy

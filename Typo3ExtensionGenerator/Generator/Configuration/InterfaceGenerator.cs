@@ -27,18 +27,29 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         "{0}.{1}", NameHelper.GetAbsoluteModelName( extension, subject.ParentModel ),
         NameHelper.LowerUnderscoredCase( subject.Target ) );
 
-      interfaceDefinition.Append(
-        string.Format(
-          propertyTemplate, "label",
+      if( format == SimpleContainer.Format.PhpArray ) {
+        interfaceDefinition.Append(
           string.Format(
-            "'LLL:EXT:{0}/Resources/Private/Language/locallang_db.xml:{1}'", extension.Key,
-            labelLanguageConstant ) ) );
+            propertyTemplate, "label",
+            string.Format(
+              "'LLL:EXT:{0}/Resources/Private/Language/locallang_db.xml:{1}'", extension.Key,
+              labelLanguageConstant ) ) );
+      } else {
+        interfaceDefinition.Append(
+          string.Format(
+            propertyTemplate, "label",
+            string.Format(
+              "LLL:EXT:{0}/Resources/Private/Language/locallang_db.xml:{1}", extension.Key,
+              labelLanguageConstant ) ) );
+      }
+
       parent.WriteFile( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", labelLanguageConstant, subject.Title ), true );
 
       // config
       string configuration = string.Empty;
       if( format == SimpleContainer.Format.PhpArray ) {
         configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType.Name + "'" );
+
       } else {
         configuration += String.Format( propertyTemplate, "type", subject.DisplayType.Name );
       }

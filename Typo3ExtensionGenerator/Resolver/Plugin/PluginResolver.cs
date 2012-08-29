@@ -2,6 +2,7 @@
 using System.Linq;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 using Typo3ExtensionGenerator.Resolver.Model;
@@ -13,15 +14,15 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
     /// </summary>
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The plauings of the extension</returns>
-    public static List<Typo3ExtensionGenerator.Model.Plugin> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+    public static List<Typo3ExtensionGenerator.Model.Plugin.Plugin> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
       IEnumerable<ExtensionParser.ParsedPartial> pluginPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.DeclarePlugin );
       if( !pluginPartials.Any() ) return null;
 
-      List<Typo3ExtensionGenerator.Model.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin>();
+      List<Typo3ExtensionGenerator.Model.Plugin.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin.Plugin>();
       foreach( ExtensionParser.ParsedPartial pluginPartial in pluginPartials ) {
         // Construct the plugin with the given name
-        Typo3ExtensionGenerator.Model.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin
-                                                      {Name = pluginPartial.Parameters};
+        Typo3ExtensionGenerator.Model.Plugin.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin.Plugin
+                                                             {Name = pluginPartial.Parameters};
 
         // Find the data models that are defined for this plugin
         List<DataModel> dataModels = ModelResolver.Resolve( pluginPartial );
@@ -33,16 +34,19 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
 
         // Resolve plugin
         foreach( ExtensionParser.ParsedPartial pluginParameter in pluginPartial.Partials ) {
-          if( Keywords.Title == pluginParameter.Keyword ) {
+          if( pluginParameter.Keyword == Keywords.Title) {
             plugin.Title = pluginParameter.Parameters;
 
-          } else if( Keywords.DefineInterface == pluginParameter.Keyword ) {
+          } else if( pluginParameter.Keyword == Keywords.DefineInterface ) {
             Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
               InterfaceResolver.Resolve( pluginParameter );
             
             //@interface.ParentModelTarget = "flexform";
             @interface.ParentModel = flexFormDataModel;
             plugin.Interfaces.Add( @interface );
+          
+          } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Action ) {
+            plugin.Actions.Add( ActionResolver.ResolveAction( pluginParameter ) );
           }
         }
 
