@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Typo3ExtensionGenerator.Generator.PrettyPrint;
 using Typo3ExtensionGenerator.Model;
 
 namespace Typo3ExtensionGenerator.Generator {
@@ -43,6 +44,7 @@ namespace Typo3ExtensionGenerator.Generator {
 
     public void WritePhpFile( string filename, string content ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
+      fileContent = LudicrousPrettyPrinter.PrettyPrint( fileContent );
       WriteFile( filename, fileContent );
     }
 
