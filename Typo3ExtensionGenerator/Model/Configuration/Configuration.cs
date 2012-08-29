@@ -35,7 +35,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     /// <summary>
     /// Should a label hook be generated for the data model?
     /// </summary>
-    public string LabelHook { get; set; }
+    public bool LabelHook { get; set; }
 
     /// <summary>
     /// What field should be used as the thumbnail for the data model?

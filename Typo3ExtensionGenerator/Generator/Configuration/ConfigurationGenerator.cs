@@ -102,11 +102,18 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
         // Is a label hook requested?
         string labelFunction = string.Empty;
-        if( !string.IsNullOrEmpty( configuration.LabelHook ) ) {
+        if( configuration.LabelHook ) {
           labelFunction = String.Format(
             "    'label_userFunc'           => '{0}->getUserLabel{1}',\n",
             NameHelper.GetExtbaseHookClassName( Subject, "labels" ),
             NameHelper.UpperCamelCase( configuration.Model.Name ) );
+
+          // Write hook
+          WriteFile(
+            "Classes/Hooks/Labels.php",
+            string.Format(
+              "public static function getUserLabel{0}( array &$params, &$pObj ) {{ return \"hooked\"; }}",
+              NameHelper.UpperCamelCase( configuration.Model.Name ) ), true );
         }
 
         // Is a thumbnail defined?

@@ -29,7 +29,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
               configuration.LabelAlternative = configurationDirective.Parameters;
 
             } else if( Keywords.ConfigurationDirectives.LabelHook == configurationDirective.Keyword ) {
-              configuration.LabelHook = "TODO to be generated!";
+              configuration.LabelHook = true;
 
             } else if( Keywords.ConfigurationDirectives.SearchFields == configurationDirective.Keyword ) {
               configuration.SearchFields = configurationDirective.Parameters;

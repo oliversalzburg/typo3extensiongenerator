@@ -7,6 +7,7 @@ using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Model;
 using Typo3ExtensionGenerator.Generator.Module;
 using Typo3ExtensionGenerator.Generator.Plugin;
+using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 
 namespace Typo3ExtensionGenerator.Generator {
@@ -58,7 +59,15 @@ namespace Typo3ExtensionGenerator.Generator {
                                         "	</data>\n" +
                                         "</T3locallang>";
 
+      const string phpClassPrefix = "<?php\n" +
+                                    "class {0} {{\n";
+      const string phpClassSuffix = "}\n" +
+                                    "?>";
+
       AbstractGenerator.WrapVirtual( "ext_tables.php", extTablesPrefix, extTablesSuffix );
+      AbstractGenerator.WrapVirtual(
+        "Classes/Hooks/Labels.php",
+        string.Format( phpClassPrefix, NameHelper.GetExtbaseHookClassName( extension, "Labels" ) ), phpClassSuffix );
       AbstractGenerator.WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
 
       // Flush virtual file system to disk
