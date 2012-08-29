@@ -13,7 +13,8 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// <summary>
     /// Generates the PHP array control structure for TYPO3
     /// </summary>
+    /// <param name="format">Should the result be in XML or a be a PHP array?</param>
     /// <returns></returns>
-    string GeneratePropertyArray();
+    string GeneratePropertyArray( SimpleContainer.Format format );
   }
 }

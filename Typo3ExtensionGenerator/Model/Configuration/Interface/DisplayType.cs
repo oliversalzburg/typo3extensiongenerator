@@ -24,7 +24,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
       Parameters = new List<KeyValuePair<string, string>>();
     }
 
-    public string GeneratePropertyArray() {
+    public string GeneratePropertyArray( SimpleContainer.Format format ) {
       return string.Empty;
     }
   }

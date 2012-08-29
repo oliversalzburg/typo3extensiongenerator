@@ -21,13 +21,13 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
       // Parse any settings we know
       for( int settingIndex = 0; settingIndex < @interface.Settings.Count; settingIndex++ ) {
         KeyValuePair<string, string> setting = @interface.Settings[ settingIndex ];
-        if( Keywords.ConfigurationDirectives.InterfaceDirectives.Exclude == setting.Key ) {
+        if( setting.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.Exclude ) {
           @interface.Exclude = ParseHelper.ParseBool( setting.Value );
-        }
-        if( Keywords.Title == setting.Key ) {
+
+        } else if( setting.Key == Keywords.Title ) {
           @interface.Title = setting.Value;
-        }
-        if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representation == setting.Key ) {
+
+        } else if( setting.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.Representation ) {
           @interface.DisplayTypeTarget = setting.Value;
           DisplayTypeResolver.Resolve( parsedPartial, @interface, setting.Value );
         }

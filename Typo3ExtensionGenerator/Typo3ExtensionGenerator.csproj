@@ -74,6 +74,7 @@
     <Compile Include="Generator\Model\Templates\T3ManagedFields.cs" />
     <Compile Include="Generator\Model\Templates\T3TranslationFields.cs" />
     <Compile Include="Generator\Model\Templates\T3VersioningFields.cs" />
+    <Compile Include="Model\SimpleContainer.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
     <Compile Include="Parser\Keywords.cs" />
     <Compile Include="Parser\ParserException.cs" />

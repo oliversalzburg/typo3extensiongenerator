@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Model.Configuration.Interface;
 
 namespace Typo3ExtensionGenerator.Model {
   /// <summary>
@@ -19,5 +20,13 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Title { get; set; }
     
+    /// <summary>
+    /// The interfaces to data model fields defined in this configuration.
+    /// </summary>
+    public List<Interface> Interfaces { get; set; }
+
+    public Plugin() {
+      Interfaces = new List<Interface>();
+    }
   }
 }

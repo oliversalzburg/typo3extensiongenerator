@@ -6,6 +6,11 @@ using System.Text;
 namespace Typo3ExtensionGenerator.Parser {
   public static class Keywords {
     /// <summary>
+    /// interface - Used to define an interface to a data field.
+    /// </summary>
+    public const string DefineInterface = "interface";
+    
+    /// <summary>
     /// as - Used to apply a human-readable name to an object.
     /// </summary>
     public const string Title = "as";
@@ -119,11 +124,6 @@ namespace Typo3ExtensionGenerator.Parser {
       /// interfaceInfo
       /// </summary>
       public const string InterfaceInfo = "interfaceInfo";
-
-      /// <summary>
-      /// interface
-      /// </summary>
-      public const string InterfaceModelField = "interface";
 
       public static class InterfaceDirectives {
         /// <summary>

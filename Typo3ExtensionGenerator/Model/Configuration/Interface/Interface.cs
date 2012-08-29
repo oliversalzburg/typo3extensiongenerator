@@ -51,7 +51,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     public string DisplayTypeTarget { get; set; }
 
     public Interface() {
-      Settings = new List<KeyValuePair<string, string>>();
+      Settings   = new List<KeyValuePair<string, string>>();
     }
   }
 }

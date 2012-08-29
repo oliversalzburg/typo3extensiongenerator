@@ -1,7 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
+using Typo3ExtensionGenerator.Resolver.Model;
 
 namespace Typo3ExtensionGenerator.Resolver.Plugin {
   public static class PluginResolver {
@@ -16,12 +19,30 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
 
       List<Typo3ExtensionGenerator.Model.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin>();
       foreach( ExtensionParser.ParsedPartial pluginPartial in pluginPartials ) {
-        Typo3ExtensionGenerator.Model.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin {Name = pluginPartial.Parameters};
+        // Construct the plugin with the given name
+        Typo3ExtensionGenerator.Model.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin
+                                                      {Name = pluginPartial.Parameters};
+
+        // Find the data models that are defined for this plugin
+        List<DataModel> dataModels = ModelResolver.Resolve( pluginPartial );
+        if( dataModels.Count > 1 ) {
+          throw new GeneratorException( "A plugin can only contain one model." );
+        }
+        DataModel flexFormDataModel = dataModels[ 0 ];
+        flexFormDataModel.Name = "flexform";
 
         // Resolve plugin
         foreach( ExtensionParser.ParsedPartial pluginParameter in pluginPartial.Partials ) {
           if( Keywords.Title == pluginParameter.Keyword ) {
             plugin.Title = pluginParameter.Parameters;
+
+          } else if( Keywords.DefineInterface == pluginParameter.Keyword ) {
+            Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
+              InterfaceResolver.Resolve( pluginParameter );
+            
+            //@interface.ParentModelTarget = "flexform";
+            @interface.ParentModel = flexFormDataModel;
+            plugin.Interfaces.Add( @interface );
           }
         }
 
