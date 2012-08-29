@@ -83,6 +83,7 @@
     <Compile Include="Resolver\Extension\AuthorResolver.cs" />
     <Compile Include="Resolver\Extension\DescriptionResolver.cs" />
     <Compile Include="Resolver\Extension\TitleResolver.cs" />
+    <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />
     <Compile Include="Resolver\Plugin\PluginResolver.cs" />

@@ -93,29 +93,20 @@ namespace Typo3ExtensionGenerator.Generator.Model {
               throw new GeneratorException( string.Format( "Data model template '{0}' is unknown", member.Value ) );
           }
         } else {
-          if( TypeTranslator.CanTranslate( member.Key ) ) {
-            // If it is a POD type, just translate it
-            dataMembers.Append(
-              string.Format(
-                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Key ) ) );
-
-          } else {
-            // It's either a reference to a foreign model or an input error
-            DataModel foreignModel = Subject.Models.SingleOrDefault( m => m.Name == member.Key );
-            if( null != foreignModel ) {
-              if( !foreignModel.UsesTemplate( Keywords.DataModelTemplates.T3ManagedFields ) ) {
-                throw new GeneratorException( string.Format( "Referenced foreign model '{0}' does not include TYPO3 Managed Fields template.", foreignModel.Name ) );
-              }
-
-              // For a foreign key, we just insert the default uint
+          if( dataModel.ForeignModels.ContainsKey( member.Key ) ) {
+            // For a foreign key, we just insert the default uint
               dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( Keywords.Types.UnsignedInt) ) );
 
-            } else {
-              throw new GeneratorException( string.Format( "Data model field type '{0}' is unknown", member.Key ) );
-            }
-
+          } else if( TypeTranslator.CanTranslate( member.Key ) ) {
+            // If it is a POD type, just translate it
+            dataMembers.Append(
+              string.Format(
+                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Key ) ) );
+          
+          } else {
+            throw new GeneratorException( string.Format( "Data model field type '{0}' is unknown", member.Key ) );
           }
         }
       }

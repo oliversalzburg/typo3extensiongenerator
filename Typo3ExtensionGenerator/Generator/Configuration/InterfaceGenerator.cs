@@ -29,8 +29,14 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             labelLanguageConstant ) ) );
       parent.WriteFile( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", labelLanguageConstant, subject.Title ), true );
 
+      // config
       string configuration = string.Empty;
       configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType + "'" );
+      if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
+        configuration += String.Format(
+          propertyTemplate, "foreign_table",
+          "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) + "'" );
+      }
       configuration = configuration.TrimEnd( new[] {','} );
 
       interfaceDefinition.Append( string.Format( propertyTemplate, "config", "array(" + configuration + ")" ) );

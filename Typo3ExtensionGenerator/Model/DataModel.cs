@@ -22,6 +22,11 @@ namespace Typo3ExtensionGenerator.Model {
     public List<KeyValuePair<string, string>> Members { get; set; }
 
     /// <summary>
+    /// The keys in this list are names of members, their values are the foreign data models they're referencing.
+    /// </summary>
+    public Dictionary<string, DataModel> ForeignModels { get; set; }
+
+    /// <summary>
     /// Determine if this model uses a specific data model template
     /// </summary>
     /// <param name="template"></param>
@@ -32,6 +37,7 @@ namespace Typo3ExtensionGenerator.Model {
 
     public DataModel() {
       Members = new List<KeyValuePair<string, string>>();
+      ForeignModels = new Dictionary<string, DataModel>();
     }
   }
 }

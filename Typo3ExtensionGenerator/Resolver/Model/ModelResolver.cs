@@ -25,6 +25,9 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
         }
       }
 
+      // Resolve any foreign key references
+      ForeignKeyResolver.Resolve( dataModels );
+
       return dataModels;
     }
   }
