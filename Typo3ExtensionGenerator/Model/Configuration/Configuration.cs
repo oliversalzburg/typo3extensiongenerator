@@ -65,12 +65,12 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     /// <summary>
     /// The interfaces to data model fields defined in this configuration.
     /// </summary>
-    public List<Interface> Interfaces { get; set; }
+    public List<Interface.Interface> Interfaces { get; set; }
 
     public Configuration() {
       Types      = new List<Type>();
       Palettes   = new List<Palette>();
-      Interfaces = new List<Interface>();
+      Interfaces = new List<Interface.Interface>();
     }
   }
 }

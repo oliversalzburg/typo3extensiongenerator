@@ -2,6 +2,7 @@
 using System.Linq;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
   public static class ConfigurationResolver {
@@ -47,7 +48,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
               configuration.Palettes.Add( PaletteResolver.Resolve( configurationDirective ) );
 
             } else if( Keywords.ConfigurationDirectives.InterfaceModelField == configurationDirective.Keyword ) {
-              Typo3ExtensionGenerator.Model.Configuration.Interface @interface = InterfaceResolver.Resolve( configurationDirective );
+              Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface = InterfaceResolver.Resolve( configurationDirective );
               @interface.ParentModelTarget = configuration.Target;
               configuration.Interfaces.Add( @interface );
 

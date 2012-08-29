@@ -6,6 +6,8 @@ using System.Text;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration;
+using Typo3ExtensionGenerator.Model.Configuration.Interface;
+using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public static class InterfaceGenerator {
@@ -31,15 +33,22 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // config
       string configuration = string.Empty;
-      configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType + "'" );
+      configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType.Name + "'" );
+      // Add foreign_table
       if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
         configuration += String.Format(
           propertyTemplate, "foreign_table",
           "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) + "'" );
       }
+      // Add any additional properties to the configuration
+      configuration += subject.DisplayType.GeneratePropertyArray();
+      // Trim trailing comma
       configuration = configuration.TrimEnd( new[] {','} );
 
+      // Add the 'config' array to the interface
       interfaceDefinition.Append( string.Format( propertyTemplate, "config", "array(" + configuration + ")" ) );
+      // Add any additional parameters set in the interface
+      interfaceDefinition.Append( subject.GeneratePropertyArray() );
 
       string finalInterface = interfaceDefinition.ToString().TrimEnd( new[] {','} );
       return finalInterface;

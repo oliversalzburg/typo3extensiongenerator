@@ -60,9 +60,24 @@ namespace Typo3ExtensionGenerator.Parser {
     /// Keywords of data model template definitions.
     /// </summary>
     public static class DataModelTemplates {
-      public const string T3ManagedFields     = "t3ManagedFields";
-      public const string T3CommonFields      = "t3CommonFields";
-      public const string T3VersioningFields  = "t3VersioningFields";
+      /// <summary>
+      /// t3ManagedFields
+      /// </summary>
+      public const string T3ManagedFields = "t3ManagedFields";
+
+      /// <summary>
+      /// t3CommonFields
+      /// </summary>
+      public const string T3CommonFields = "t3CommonFields";
+
+      /// <summary>
+      /// t3VersioningFields
+      /// </summary>
+      public const string T3VersioningFields = "t3VersioningFields";
+
+      /// <summary>
+      /// t3TranslationFields
+      /// </summary>
       public const string T3TranslationFields = "t3TranslationFields";
     }
 
@@ -70,35 +85,104 @@ namespace Typo3ExtensionGenerator.Parser {
     /// Keywords used in data model configurations.
     /// </summary>
     public static class ConfigurationDirectives {
+      /// <summary>
+      /// as
+      /// </summary>
       public const string Title = "as";
 
-      public const string Label            = "label";
-      public const string LabelAlternative = "labelAlt";
-      public const string LabelHook        = "labelHook";
+      /// <summary>
+      /// label
+      /// </summary>
+      public const string Label = "label";
 
-      public const string Thumbnail    = "thumbnail";
+      /// <summary>
+      /// labelAlt
+      /// </summary>
+      public const string LabelAlternative = "labelAlt";
+
+      /// <summary>
+      /// labelHook
+      /// </summary>
+      public const string LabelHook = "labelHook";
+
+      /// <summary>
+      /// thumbnail
+      /// </summary>
+      public const string Thumbnail = "thumbnail";
+
+      /// <summary>
+      /// searchFields
+      /// </summary>
       public const string SearchFields = "searchFields";
 
-      public const string InterfaceInfo       = "interfaceInfo";
+      /// <summary>
+      /// interfaceInfo
+      /// </summary>
+      public const string InterfaceInfo = "interfaceInfo";
+
+      /// <summary>
+      /// interface
+      /// </summary>
       public const string InterfaceModelField = "interface";
 
       public static class InterfaceDirectives {
-        public const string Exclude        = "exclude";
-        public const string Title          = "as";
+        /// <summary>
+        /// exclude
+        /// </summary>
+        public const string Exclude = "exclude";
+
+        /// <summary>
+        /// as
+        /// </summary>
+        public const string Title = "as";
+
+        /// <summary>
+        /// through
+        /// </summary>
         public const string Representation = "through";
 
-        public const string Foreign        = "from";
-
+        /// <summary>
+        /// from
+        /// </summary>
+        //public const string Foreign        = "from";
         public static class Representations {
+          /// <summary>
+          /// input
+          /// </summary>
+          public const string Textbox = "input";
+
+          /// <summary>
+          /// text
+          /// </summary>
+          public const string TextArea = "text";
+
+          /// <summary>
+          /// richtext
+          /// </summary>
+          public const string RichTextArea = "richtext";
+
+          /// <summary>
+          /// group
+          /// </summary>
+          public const string RecordGroup = "group";
+
+          /// <summary>
+          /// select
+          /// </summary>
           public const string Dropdown = "select";
+
+          /// <summary>
+          /// fileReference
+          /// </summary>
+          public const string FileReference = "fileReference";
         }
       }
 
       public const string TypeDeclaration = "type";
-      public const string InterfaceType   = "interface";
+      public const string InterfaceType = "interface";
 
       public const string PaletteDeclaration = "palette";
-      public const string InterfacePalette   = "interface";
+      public const string InterfacePalette = "interface";
     }
   }
 }
