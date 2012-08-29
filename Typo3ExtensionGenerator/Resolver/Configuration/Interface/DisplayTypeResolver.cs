@@ -9,12 +9,19 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
   public static class DisplayTypeResolver {
     public static void Resolve( ExtensionParser.ParsedPartial parsedPartial, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface, string displayType ) {
       if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.FileReference == displayType ) {
-        @interface.DisplayType = new DisplayType {
-                                                   Name =
-                                                     Keywords.ConfigurationDirectives.InterfaceDirectives.
-                                                     Representations.RecordGroup,
-                                                   InternalType = "file_reference"
-                                                 };
+        SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType {
+                                                                                     Name =
+                                                                                       Keywords.ConfigurationDirectives.
+                                                                                       InterfaceDirectives.
+                                                                                       Representations.RecordGroup
+                                                                                   };
+
+        specializedDisplayType.Set( "internal_type", "'file_reference'" );
+        specializedDisplayType.Set( "allowed", "'*'" );
+        specializedDisplayType.Set( "disallowed", "'php'" );
+        specializedDisplayType.Set( "size", "5" );
+        
+        @interface.DisplayType = specializedDisplayType;
 
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RichTextArea == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType() {

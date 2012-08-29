@@ -20,11 +20,6 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// </summary>
     public List<KeyValuePair<string, string>> Parameters { get; set; }
 
-    /// <summary>
-    /// The type that will be supplied inside the config section to TYPO3.
-    /// </summary>
-    public string InternalType { get; set; }
-
     public DisplayType() {
       Parameters = new List<KeyValuePair<string, string>>();
     }
