@@ -18,16 +18,14 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       Configuration = configuration;
     }
 
-    public string TargetFile {
-      get { return "Configuration/TCA/" + NameHelper.GetExtbaseFileName( Subject, Configuration.Model ); }
-    }
-
     public Typo3ExtensionGenerator.Model.Configuration.Configuration Configuration { get; private set; }
 
     public void Generate() {
-      Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
+      string targetFile = "Configuration/TCA/" + NameHelper.GetExtbaseFileName( Subject, Configuration.Model );
       
-      WritePhpFile( TargetFile, GeneratePhp() );
+      Console.WriteLine( string.Format( "Generating dynamic config file '{0}'...", targetFile ) );
+      
+      WritePhpFile( targetFile, GeneratePhp() );
     }
 
     /// <summary>

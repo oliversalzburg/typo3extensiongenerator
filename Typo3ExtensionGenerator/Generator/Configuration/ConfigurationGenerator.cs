@@ -14,13 +14,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationGenerator : AbstractGenerator, IGenerator {
     public ConfigurationGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
-    public string TargetFile {
-      get { return "ext_tables.php"; }
-    }
-
     public void Generate() {
-      Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
-      
       WriteFile( "ext_tables.php", GeneratePhp(), true );
       WriteConfigurationFiles();
     }
@@ -76,6 +70,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           throw new GeneratorException( string.Format( "Unable to find target data model '{0}'.", configuration.Target ) );
         }
         configuration.Model = targetModel;
+
+        Console.WriteLine( "Generating TCA for model '{0}'...", targetModel.Name );
 
         // Now flush out any language fields
         FlushLanguageFields( configuration );

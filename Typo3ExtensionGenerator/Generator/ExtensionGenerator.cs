@@ -24,9 +24,11 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="extension">The extension that should be generated.</param>
     public void Generate( Extension extension ) {
-      if( !Directory.Exists( TargetDirectory ) ) {
-        throw new GeneratorException( "The provided target directory does not exist." );
+      Console.WriteLine( "Clearing output directory..." );
+      if( Directory.Exists( TargetDirectory ) ) {
+        DirectoryHelper.DeleteDirectory( TargetDirectory, true );
       }
+      Directory.CreateDirectory( TargetDirectory );
 
       Console.WriteLine( "Generating extension..." );
 

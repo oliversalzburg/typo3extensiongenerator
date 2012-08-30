@@ -16,7 +16,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
     public void Generate() {
 
-      Console.WriteLine( string.Format( "Generating Plugins..." ) );
+      Console.WriteLine( string.Format( "Generating plugins..." ) );
 
       GeneratePhp();
     }

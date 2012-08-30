@@ -19,7 +19,7 @@ namespace Typo3ExtensionGenerator.Resources {
         Debug.Assert( resourceStream != null, "resourceStream != null" );
         string absolutePath = Path.Combine( targetDirectory, path );
         Directory.CreateDirectory( new FileInfo( absolutePath ).DirectoryName );
-        Console.WriteLine( "Flushing {0}...", path );
+        Console.WriteLine( "Flushing '{0}'...", path );
         using( Stream fileStream = new FileStream( absolutePath, FileMode.Create ) ) {
           byte[] buffer = new byte[8 * 1024];
           int length;

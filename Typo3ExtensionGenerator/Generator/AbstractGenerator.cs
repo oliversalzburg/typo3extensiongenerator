@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Typo3ExtensionGenerator.Generator.PrettyPrint;
 using Typo3ExtensionGenerator.Model;
 
@@ -44,8 +45,12 @@ namespace Typo3ExtensionGenerator.Generator {
 
     public void WritePhpFile( string filename, string content ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
-      fileContent = LudicrousPrettyPrinter.PrettyPrint( fileContent );
       WriteFile( filename, fileContent );
+
+#if DEBUG && FALSE
+      fileContent = LudicrousPrettyPrinter.PrettyPrint( fileContent );
+      WriteFile( filename + ".pp", fileContent );
+#endif
     }
 
     private void WriteVirtual( string filename, string content ) {
@@ -63,7 +68,7 @@ namespace Typo3ExtensionGenerator.Generator {
       foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
         string absoluteFilename = Path.Combine( targetDirectory, file.Key );
         Directory.CreateDirectory( new FileInfo( absoluteFilename ).DirectoryName );
-        Console.WriteLine( "Flushing {0}...", file.Key );
+        Console.WriteLine( "Flushing '{0}'...", file.Key );
         File.WriteAllText( absoluteFilename , file.Value.ToString() );
       }
     }

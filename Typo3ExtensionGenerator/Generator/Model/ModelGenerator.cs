@@ -12,14 +12,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
   public class ModelGenerator : AbstractGenerator, IGenerator {
     public ModelGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
-    public string TargetFile {
-      get { return "ext_tables.php, ext_tables.sql"; }
-    }
-
     public void Generate() {
-
-      Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
-      
       WriteFile( "ext_tables.sql", GenerateSql() );
 
       foreach( DataModel dataModel in Subject.Models ) {
@@ -27,7 +20,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string content = GenerateModelFile( dataModel );
         
         string targetFilename = Path.Combine( path, NameHelper.GetExtbaseFileName( Subject, dataModel ) );
-        Console.WriteLine( string.Format( "Generating {0}...", targetFilename ) );
+        Console.WriteLine( string.Format( "Generating '{0}'...", targetFilename ) );
         WritePhpFile( targetFilename, content );
       }
     }
@@ -54,9 +47,13 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     private string GenerateSql( ) {
       string result = string.Empty;
 
+      Console.WriteLine( "Generating SQL tables..." );
+
       const string template = "CREATE TABLE {0} (\n{1}\n);";
       foreach( DataModel dataModel in Subject.Models ) {
         string modelName = NameHelper.GetAbsoluteModelName( Subject, dataModel );
+        Console.WriteLine( "Generating SQL table '{0}'...", modelName );
+
         string sqlMembers = GenerateSqlMembers( dataModel );
         result += string.Format( template, modelName, sqlMembers ) + "\n";
       }

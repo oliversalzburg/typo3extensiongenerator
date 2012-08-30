@@ -8,13 +8,9 @@ namespace Typo3ExtensionGenerator.Generator {
   public class ExtEmconfGenerator : AbstractGenerator, IGenerator {
     public ExtEmconfGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
-    public string TargetFile {
-      get { return "ext_emconf.php"; }
-    }
-
     public void Generate() {
 
-      Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
+      Console.WriteLine( "Generating ext_emconf.php..." );
 
       string template = "$EM_CONF[$_EXTKEY] = array(\n" +
                         "  'title'            => '{0}',\n" +
@@ -49,7 +45,7 @@ namespace Typo3ExtensionGenerator.Generator {
         template, Subject.Title, Subject.Description, Subject.Author.Name, Subject.Author.Email,
         Subject.Author.Company );
 
-      WritePhpFile( TargetFile, result );
+      WritePhpFile( "ext_emconf.php", result );
     }
   }
 }

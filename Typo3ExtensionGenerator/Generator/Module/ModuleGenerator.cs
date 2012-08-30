@@ -6,15 +6,8 @@ namespace Typo3ExtensionGenerator.Generator.Module {
   public class ModuleGenerator : AbstractGenerator, IGenerator {
     public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
-    public string TargetFile {
-      get { return "ext_tables.php"; }
-    }
-
     public void Generate() {
-
-      Console.WriteLine( string.Format( "Generating {0}...", TargetFile ) );
-      
-      WriteFile( "ext_tables.php", GeneratePhp(), true );
+WriteFile( "ext_tables.php", GeneratePhp(), true );
     }
 
     /// <summary>
@@ -23,6 +16,8 @@ namespace Typo3ExtensionGenerator.Generator.Module {
     /// <returns></returns>
     private string GeneratePhp( ) {
       StringBuilder result = new StringBuilder();
+
+      Console.WriteLine( "Registering modules..." );
 
       const string template = "if( TYPO3_MODE === 'BE' ) {{\n" +
                               "  Tx_Extbase_Utility_Extension::registerModule(\n" +
@@ -43,6 +38,9 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
       for( int moduleIndex = 0; moduleIndex < Subject.Modules.Count; moduleIndex++ ) {
         Typo3ExtensionGenerator.Model.Module module = Subject.Modules[ moduleIndex ];
+
+        Console.WriteLine( "Registering module '{0}'...", module.Name );
+
         string moduleKey = string.Format( "tx_{0}_m{1}", Subject.Key, moduleIndex + 1 );
         result.Append( String.Format( template, Subject.Key, module.MainModuleName, moduleKey ) + "\n" );
       }
