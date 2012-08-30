@@ -66,6 +66,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  )\n" +
                               ");";
 
+      // Should a require_once line for the label hooks be placed into ext_tables.php?
+      bool addRequireLabelHooks = false;
+
       foreach( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration in Subject.Configurations ) {
         // First, find the data model this configuration applies to
         DataModel targetModel = Subject.Models.SingleOrDefault( m => m.Name == configuration.Target );
@@ -111,11 +114,14 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             NameHelper.UpperCamelCase( configuration.Model.Name ) );
 
           // Write hook
+          string filename = "Classes/Hooks/Labels.php";
           WriteFile(
-            "Classes/Hooks/Labels.php",
+            filename,
             string.Format(
-              "public static function getUserLabel{0}( array &$params, &$pObj ) {{ return \"hooked\"; }}",
-              NameHelper.UpperCamelCase( configuration.Model.Name ) ), true );
+              "public static function getUserLabel{0}( array &$params, &$pObj ) {{ $params[ 'title' ] = 'This title is generated in {1}'; }}",
+              NameHelper.UpperCamelCase( configuration.Model.Name ), filename ), true );
+
+          addRequireLabelHooks = true;
         }
 
         // Is a thumbnail defined?
@@ -152,6 +158,11 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
         // Flush a placdeholder icon
         ResourceHelper.FlushIcon( "document.png", OutputDirectory, string.Format( "Resources/Public/Icons/{0}.png", absoluteModelName ) );
+      }
+
+      if( addRequireLabelHooks ) {
+        string requireLabels = string.Format( "t3lib_div::requireOnce( t3lib_extMgm::extPath( '{0}' ) . 'Classes/Hooks/Labels.php' );", Subject.Key );
+        result.Append( requireLabels + "\n" );
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );
