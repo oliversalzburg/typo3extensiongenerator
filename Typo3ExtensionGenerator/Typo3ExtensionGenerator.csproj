@@ -97,13 +97,13 @@
     <Compile Include="Resolver\Plugin\PluginResolver.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\StringLib\StringLib.csproj">
-      <Project>{5A0ABA6B-CDEA-4B55-8BAF-D511A3BFCA40}</Project>
-      <Name>StringLib</Name>
-    </ProjectReference>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <ProjectReference Include="..\..\SmartFormat\src\SmartFormat\SmartFormat.csproj">
+      <Project>{83A94F48-8529-4A41-B5E1-1684827180DF}</Project>
+      <Name>SmartFormat</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

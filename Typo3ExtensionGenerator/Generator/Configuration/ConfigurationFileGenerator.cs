@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using StringLib;
+using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -60,7 +60,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                              columns = finalColumns
                            };
 
-      string generatedConfiguration = template.HaackFormat( dataObject );
+      string generatedConfiguration = template.FormatSmart( dataObject );
       return generatedConfiguration;
     }
 

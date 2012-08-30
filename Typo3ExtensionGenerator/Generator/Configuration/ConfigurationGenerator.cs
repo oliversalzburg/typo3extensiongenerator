@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using StringLib;
+using SmartFormat;
+using SmartFormat.Extensions;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -143,7 +144,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                thumbnail = thumbnailField,
                                searchFields = finalSearchFields
                              };
-        string generatedConfiguration = template.HaackFormat( dataObject );
+        string generatedConfiguration = template.FormatSmart( dataObject );
 
         result.Append( generatedConfiguration + "\n" );
       }

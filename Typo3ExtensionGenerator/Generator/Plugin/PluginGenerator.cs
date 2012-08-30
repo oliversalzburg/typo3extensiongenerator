@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using StringLib;
+using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -104,7 +104,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                   controllerName = NameHelper.UpperCamelCase( plugin.Name ),
                   actionName = action.Name
                 };
-          string actionString = actionTemplate.HaackFormat( dataObject );
+          string actionString = actionTemplate.FormatSmart( dataObject );
           actions.Append( actionString );
         }
 
@@ -133,7 +133,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                         "</T3DataStructure>";
 
         var dataObjectFlexForm = new {settings = allSettings, actions = string.Format( actionsTemplate, allActions )};
-        string flexFormsXml = flexFormTemplate.HaackFormat( dataObjectFlexForm );
+        string flexFormsXml = flexFormTemplate.FormatSmart( dataObjectFlexForm );
 
         // Write final result to file
         WriteFile( string.Format( "Configuration/FlexForms/flexform_{0}.xml", plugin.Name.ToLower() ), flexFormsXml, true );
