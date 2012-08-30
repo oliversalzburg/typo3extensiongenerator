@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Model;
@@ -9,6 +10,7 @@ using Typo3ExtensionGenerator.Generator.Module;
 using Typo3ExtensionGenerator.Generator.Plugin;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Resources;
 
 namespace Typo3ExtensionGenerator.Generator {
   class ExtensionGenerator {
@@ -39,6 +41,8 @@ namespace Typo3ExtensionGenerator.Generator {
       ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
       configurationGenerator.Generate();
 
+      ResourceHelper.FlushIcon( "box.gif", TargetDirectory, "ext_icon.gif" );
+
       // Wrap virtual files as needed
       const string protectedPhpPrefix = "<?php\n" +
                                         "if( !defined( 'TYPO3_MODE' ) ) {\n" +
@@ -64,6 +68,7 @@ namespace Typo3ExtensionGenerator.Generator {
       const string phpClassSuffix = "}\n" +
                                     "?>";
 
+      
       AbstractGenerator.WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
       AbstractGenerator.WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       AbstractGenerator.WrapVirtual(

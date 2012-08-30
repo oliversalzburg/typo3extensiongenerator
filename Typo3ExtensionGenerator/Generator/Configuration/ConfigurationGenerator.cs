@@ -8,6 +8,7 @@ using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Resources;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationGenerator : AbstractGenerator, IGenerator {
@@ -59,7 +60,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "{translationFields}" +
                               
                               "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
-                              "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.gif',\n" +
+                              "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.png',\n" +
                               "{thumbnail}" +
                               "{searchFields}" +
                               "  )\n" +
@@ -131,9 +132,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             "    'searchFields'             => '{0}'\n", configuration.SearchFields );
         }
 
+        string absoluteModelName = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
         var dataObject = new {
                                extensionKey = Subject.Key,
-                               model = NameHelper.GetAbsoluteModelName( Subject, configuration.Model ),
+                               model = absoluteModelName,
                                label = configuration.Label,
                                labelAlt = labelAlternative,
                                labelFunc = labelFunction,
@@ -147,6 +149,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         string generatedConfiguration = template.FormatSmart( dataObject );
 
         result.Append( generatedConfiguration + "\n" );
+
+        // Flush a placdeholder icon
+        ResourceHelper.FlushIcon( "document.png", OutputDirectory, string.Format( "Resources/Public/Icons/{0}.png", absoluteModelName ) );
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );

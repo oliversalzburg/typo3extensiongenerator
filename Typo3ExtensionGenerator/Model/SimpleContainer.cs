@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -25,8 +26,16 @@ namespace Typo3ExtensionGenerator.Model {
     /// <param name="path">For example: wizards.RTE.title</param>
     /// <param name="value">For example: 'LLL:EXT:cms/locallang_ttc.xml:bodytext.W.RTE'</param>
     public void Set( string path, string value ) {
-      value = Regex.Replace( value, @"^'?", "'" );
-      value = Regex.Replace( value, @"'?$", "'" );
+      if( value.First() != '\'' && value.Last() != '\'' ) {
+        value = '\'' + value + '\'';
+      }
+      if( value.Last() != '\'' ) value += '\'';
+
+      Debug.Assert( !value.StartsWith( "''" ) );
+      Debug.Assert( !value.EndsWith( "''" ) );
+      Debug.Assert( value.StartsWith( "'" ) );
+      Debug.Assert( value.EndsWith( "'" ) );
+
       InternalSet( path, value );
     }
 

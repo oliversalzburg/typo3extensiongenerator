@@ -95,6 +95,7 @@
     <Compile Include="Resolver\Module\ModuleResolver.cs" />
     <Compile Include="Resolver\Plugin\ActionResolver.cs" />
     <Compile Include="Resolver\Plugin\PluginResolver.cs" />
+    <Compile Include="Resources\ResourceHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -104,6 +105,20 @@
       <Project>{83A94F48-8529-4A41-B5E1-1684827180DF}</Project>
       <Name>SmartFormat</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\box.png" />
+    <EmbeddedResource Include="Resources\Icons\gear.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\box.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\gear.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\document.gif" />
+    <EmbeddedResource Include="Resources\Icons\document.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
