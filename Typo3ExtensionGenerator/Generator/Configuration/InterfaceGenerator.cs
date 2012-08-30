@@ -61,9 +61,16 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             propertyTemplate, "foreign_table",
             "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] )
             + "'" );
+          configuration += String.Format(
+            propertyTemplate, "allowed",
+            "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] )
+            + "'" );
         } else {
           configuration += String.Format(
             propertyTemplate, "foreign_table",
+            NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) );
+          configuration += String.Format(
+            propertyTemplate, "allowed",
             NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) );
         }
       }

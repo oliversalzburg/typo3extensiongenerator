@@ -29,7 +29,6 @@ namespace Typo3ExtensionGenerator.Model {
       if( value.First() != '\'' && value.Last() != '\'' ) {
         value = '\'' + value + '\'';
       }
-      if( value.Last() != '\'' ) value += '\'';
 
       Debug.Assert( !value.StartsWith( "''" ) );
       Debug.Assert( !value.EndsWith( "''" ) );
@@ -79,7 +78,7 @@ namespace Typo3ExtensionGenerator.Model {
           if( format == Format.Xml ) {
             Regex quoteEnclosed = new Regex( "^'.*?'$" );
             if( quoteEnclosed.IsMatch( propertyValue ) ) {
-              propertyValue = propertyValue.Substring( 1, propertyValue.Length - 3 );
+              propertyValue = propertyValue.Substring( 1, propertyValue.Length - 2 );
             }
           }
           configuration.Append( String.Format( propertyTemplate, child.Key, propertyValue ) );
