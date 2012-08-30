@@ -19,7 +19,12 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         specializedDisplayType.Set( "internal_type", "'file_reference'" );
         specializedDisplayType.Set( "allowed", "'*'" );
         specializedDisplayType.Set( "disallowed", "'php'" );
-        specializedDisplayType.Set( "size", "5" );
+        specializedDisplayType.Set( "size", 5 );
+        
+        // If this field requires anything, it should have at least 1 item.
+        if( @interface.Settings.Any( s => s.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.Requirement ) ) {
+          specializedDisplayType.Set( "minitems", 1 );  
+        }
         
         @interface.DisplayType = specializedDisplayType;
 
@@ -32,6 +37,11 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                    };
 
         specializedDisplayType.Set( "internal_type", "db" );
+
+        // If this field requires anything, it should have at least 1 item.
+        if( @interface.Settings.Any( s => s.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.Requirement ) ) {
+          specializedDisplayType.Set( "minitems", 1 );  
+        }
         
         @interface.DisplayType = specializedDisplayType;
 

@@ -141,6 +141,11 @@ namespace Typo3ExtensionGenerator.Parser {
         public const string Representation = "through";
 
         /// <summary>
+        /// require - This interface requires a certain condition to be met.
+        /// </summary>
+        public const string Requirement = "require";
+
+        /// <summary>
         /// from
         /// </summary>
         //public const string Foreign        = "from";
