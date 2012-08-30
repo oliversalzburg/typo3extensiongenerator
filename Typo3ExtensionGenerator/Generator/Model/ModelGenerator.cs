@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -27,17 +28,36 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
     private string GenerateModelFile( DataModel dataModel ) {
       const string template =
-        "class {1} extends Tx_Extbase_DomainObject_AbstractEntity {{\n" +
-        "{0}" +
+        "class {className} extends Tx_Extbase_DomainObject_AbstractEntity {{\n" +
+        "{properties}" +
+        "{gettersSetters}" +
         "}}";
         
 
       StringBuilder dataMembers = new StringBuilder();
       foreach( KeyValuePair<string, string> member in dataModel.Members ) {
-        dataMembers.Append( string.Format( "  protected ${0};\n", member.Value ) );
+        dataMembers.Append( string.Format( "protected ${0};\n", member.Value ) );
       }
 
-      return string.Format( template, dataMembers, NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel ) );
+      string accessor = "public function get{1}() {{" +
+                        "	 return $this->{0};" +
+                        "}}" +
+                        "public function set{1}( ${0} ) {{" +
+                        "	 $this->{0} = ${0};" +
+                        "}}\n";
+
+      StringBuilder accessors = new StringBuilder();
+      foreach( KeyValuePair<string, string> member in dataModel.Members ) {
+        accessors.Append( string.Format( accessor, member.Value, NameHelper.UpperCamelCase( member.Value ) ) );
+      }
+
+      var dataObject = new {
+                             className = NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel ),
+                             properties = dataMembers,
+                             gettersSetters = accessors
+                           };
+
+      return template.FormatSmart( dataObject );
     }
 
     /// <summary>
