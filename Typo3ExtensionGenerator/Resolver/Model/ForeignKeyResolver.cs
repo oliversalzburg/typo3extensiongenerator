@@ -24,13 +24,13 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
       foreach( DataModel dataModel in models ) {
 
         // Iterate over all defined fields
-        foreach( KeyValuePair<string, string> field in dataModel.Members ) {
+        foreach( DataModel.DataModelMember field in dataModel.Members ) {
 
-          string searchTerm = field.Key;
+          string searchTerm = field.Name;
 
           // Check if this is an array of references 
           Regex isArray = new Regex( @"\w+\[\d*\]" );
-          if( isArray.IsMatch( field.Key ) ) {
+          if( isArray.IsMatch( searchTerm ) ) {
             // We only care about the type, so we cut that part off the search term
             searchTerm = searchTerm.Substring( 0, searchTerm.IndexOf( '[' ) );
           }

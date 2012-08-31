@@ -16,9 +16,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                        Representations.RecordGroup
                                                                                    };
 
-        specializedDisplayType.Set( "internal_type", "'file_reference'" );
-        specializedDisplayType.Set( "allowed", "'*'" );
-        specializedDisplayType.Set( "disallowed", "'php'" );
+        specializedDisplayType.Set( "internal_type", "file_reference" );
+        specializedDisplayType.Set( "allowed", "*" );
+        specializedDisplayType.Set( "disallowed", "php" );
         specializedDisplayType.Set( "size", 5 );
         
         // If this field requires anything, it should have at least 1 item.
@@ -63,7 +63,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         @interface.DisplayType = specializedDisplayType;
 
         // Add a new property to the interface itself, to enable rich text editing.
-        @interface.Set( "defaultExtras", "'richtext[]'" );
+        @interface.Set( "defaultExtras", "richtext[]" );
 
       } else {
         // Could not determine proper display type, use user supplied intput

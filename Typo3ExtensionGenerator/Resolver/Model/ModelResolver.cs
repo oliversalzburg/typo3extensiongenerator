@@ -16,11 +16,12 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
 
       List<DataModel> dataModels = new List<DataModel>();
       foreach( ExtensionParser.ParsedPartial modelPartial in modelPartials ) {
-        DataModel dataModel = new DataModel {Name = modelPartial.Parameters};
+        DataModel dataModel = new DataModel {Name = modelPartial.Parameters, GeneratedFrom = modelPartial};
         dataModels.Add( dataModel );
         if( modelPartial.Partials.Any() ) {
           foreach( ExtensionParser.ParsedPartial dataMember in modelPartial.Partials ) {
-            dataModel.Members.Add( new KeyValuePair<string, string>( dataMember.Keyword, dataMember.Parameters ) );
+            dataModel.Members.Add(
+              new DataModel.DataModelMember {Name = dataMember.Keyword, Value = dataMember.Parameters, Line = dataMember.Line } );
           }
         }
       }

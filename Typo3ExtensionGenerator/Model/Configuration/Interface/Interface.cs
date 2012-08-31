@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// <summary>
@@ -49,6 +50,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// The TCEForms user interface element that will be used to edit the target.
     /// </summary>
     public string DisplayTypeTarget { get; set; }
+
+    /// <summary>
+    /// The ParsedPartial that was used to generate this interface.
+    /// </summary>
+    public ExtensionParser.ParsedPartial GeneratedFrom { get; set; }
 
     public Interface() {
       Settings   = new List<KeyValuePair<string, string>>();

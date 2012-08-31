@@ -35,7 +35,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         
 
       StringBuilder dataMembers = new StringBuilder();
-      foreach( KeyValuePair<string, string> member in dataModel.Members ) {
+      foreach( DataModel.DataModelMember member in dataModel.Members ) {
         dataMembers.Append( string.Format( "protected ${0};\n", member.Value ) );
       }
 
@@ -47,7 +47,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
                         "}}\n";
 
       StringBuilder accessors = new StringBuilder();
-      foreach( KeyValuePair<string, string> member in dataModel.Members ) {
+      foreach( DataModel.DataModelMember member in dataModel.Members ) {
         accessors.Append( string.Format( accessor, member.Value, NameHelper.UpperCamelCase( member.Value ) ) );
       }
 
@@ -83,9 +83,9 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     private string GenerateSqlMembers( DataModel dataModel ) {
       StringBuilder dataMembers = new StringBuilder();
       StringBuilder keys = new StringBuilder();
-      foreach( KeyValuePair<string, string> member in dataModel.Members ) {
+      foreach( DataModel.DataModelMember member in dataModel.Members ) {
         // Is this a template request or a normal data member?
-        if( Keywords.DataModelTemplate == member.Key ) {
+        if( Keywords.DataModelTemplate == member.Name ) {
           switch( member.Value ) {
             case Keywords.DataModelTemplates.T3ManagedFields:
               dataMembers.Append( T3ManagedFields.Content + ",\n" );
@@ -110,20 +110,23 @@ namespace Typo3ExtensionGenerator.Generator.Model {
               throw new GeneratorException( string.Format( "Data model template '{0}' is unknown", member.Value ) );
           }
         } else {
-          if( dataModel.ForeignModels.ContainsKey( member.Key ) ) {
+          if( dataModel.ForeignModels.ContainsKey( member.Name ) ) {
             // For a foreign key, we just insert the default uint
               dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( Keywords.Types.UnsignedInt) ) );
 
-          } else if( TypeTranslator.CanTranslate( member.Key ) ) {
+          } else if( TypeTranslator.CanTranslate( member.Name ) ) {
             // If it is a POD type, just translate it
             dataMembers.Append(
               string.Format(
-                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Key ) ) );
+                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Name ) ) );
           
           } else {
-            throw new GeneratorException( string.Format( "Data model field type '{0}' is unknown", member.Key ) );
+            throw new GeneratorException(
+              string.Format(
+                "Data model field type '{0}' in model '{1}' at line {2} is unknown.", member.Name, dataModel.Name,
+                member.Line ) );
           }
         }
       }

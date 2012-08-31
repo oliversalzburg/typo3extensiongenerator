@@ -11,7 +11,10 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The field interfaces of the data model configuration.</returns>
     public static Typo3ExtensionGenerator.Model.Configuration.Interface.Interface Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface = new Typo3ExtensionGenerator.Model.Configuration.Interface.Interface {Target = parsedPartial.Parameters};
+      Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
+        new Typo3ExtensionGenerator.Model.Configuration.Interface.Interface
+        {Target = parsedPartial.Parameters, GeneratedFrom = parsedPartial};
+
       if( parsedPartial.Partials.Any() ) {
         foreach( ExtensionParser.ParsedPartial setting in parsedPartial.Partials ) {
           @interface.Settings.Add( new KeyValuePair<string, string>( setting.Keyword, setting.Parameters ) );

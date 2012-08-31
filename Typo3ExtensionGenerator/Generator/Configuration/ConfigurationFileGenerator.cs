@@ -86,10 +86,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         string[] userDefinedInterfaceFields = Configuration.InterfaceInfo.Split( new[] {','} );
         foreach( string interfaceField in userDefinedInterfaceFields ) {
           string field = interfaceField;
-          KeyValuePair<string, string> referencedModelMember =
+          DataModel.DataModelMember referencedModelMember =
             Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
 
-          if( null == referencedModelMember.Key ) {
+          if( null == referencedModelMember.Name ) {
             throw new GeneratorException(
               string.Format(
                 "The interface field '{0}' does not exist in the data model '{1}'.", interfaceField,
@@ -134,10 +134,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         string[] userInterfaceFields = type.Interface.Split( new[] {','} );
         foreach( string userInterfaceField in userInterfaceFields ) {
           string field = userInterfaceField;
-          KeyValuePair<string, string> referencedModelMember =
+          DataModel.DataModelMember referencedModelMember =
             Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
 
-          if( null == referencedModelMember.Key ) {
+          if( null == referencedModelMember ) {
             // Not found in data model. Is it a palette maybe?
             Palette referencedPalette = Configuration.Palettes.SingleOrDefault( p => p.Name == field );
 
@@ -197,10 +197,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         string[] fields = palette.Interface.Split( new[] {','} );
         String paletteInterfaceFields = string.Empty;
         foreach( string field in fields ) {
-          KeyValuePair<string, string> referencedModelMember =
+          DataModel.DataModelMember referencedModelMember =
             Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
 
-          if( null == referencedModelMember.Key ) {
+          if( null == referencedModelMember.Name ) {
             throw new GeneratorException(
                 string.Format(
                   "The palette field '{0}' does not exist in the data model '{1}'.",
@@ -244,7 +244,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       foreach( Interface fieldInterface in Configuration.Interfaces ) {
         // Check if the target field exists
         if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
-          throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}'", fieldInterface.Target ) );
+          throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}' at line {1}", fieldInterface.Target, fieldInterface.GeneratedFrom.Line ) );
         }
         // Generate the column
         string interfaceDefinition = InterfaceGenerator.Generate( this, Subject, fieldInterface, SimpleContainer.Format.PhpArray );

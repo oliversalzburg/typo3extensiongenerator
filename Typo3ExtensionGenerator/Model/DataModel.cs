@@ -11,6 +11,16 @@ namespace Typo3ExtensionGenerator.Model {
   /// </summary>
   [Serializable]
   public class DataModel {
+    public class DataModelMember {
+      public string Name { get; set; }
+      public string Value { get; set; }
+      public int Line { get; set; }
+
+      public override string ToString() {
+        return string.Format( "{0}: {1}", Name, Value);
+      }
+    }
+
     /// <summary>
     /// The name of this data model.
     /// </summary>
@@ -19,7 +29,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The contained data members.
     /// </summary>
-    public List<KeyValuePair<string, string>> Members { get; set; }
+    public List<DataModelMember> Members { get; set; }
 
     /// <summary>
     /// The keys in this list are names of members, their values are the foreign data models they're referencing.
@@ -27,16 +37,21 @@ namespace Typo3ExtensionGenerator.Model {
     public Dictionary<string, DataModel> ForeignModels { get; set; }
 
     /// <summary>
+    /// The ParsedPartial that was used to generate this data model.
+    /// </summary>
+    public ExtensionParser.ParsedPartial GeneratedFrom { get; set; }
+
+    /// <summary>
     /// Determine if this model uses a specific data model template
     /// </summary>
     /// <param name="template"></param>
     /// <returns></returns>
     public bool UsesTemplate( string template ) {
-      return Members.Any( m => m.Key == Keywords.DataModelTemplate && m.Value == template );
+      return Members.Any( m => m.Name == Keywords.DataModelTemplate && m.Value == template );
     }
 
     public DataModel() {
-      Members = new List<KeyValuePair<string, string>>();
+      Members = new List<DataModelMember>();
       ForeignModels = new Dictionary<string, DataModel>();
     }
   }

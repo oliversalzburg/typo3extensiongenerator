@@ -57,6 +57,11 @@ namespace Typo3ExtensionGenerator.Parser {
       /// </summary>
       public List<ParsedPartial> Partials { get; set; }
 
+      /// <summary>
+      /// The line on which this partial was defined.
+      /// </summary>
+      public int Line { get; set; }
+
       public ParsedPartial() {
         Partials = new List<ParsedPartial>();
       }
@@ -122,7 +127,13 @@ namespace Typo3ExtensionGenerator.Parser {
       return result;
     }
 
-    public ParsedPartial ParsePartial( string element ) {
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="element">The element that should be parsed.</param>
+    /// <param name="lineNumber">From where to start counting line numbers.</param>
+    /// <returns></returns>
+    public ParsedPartial ParsePartial( string element, int lineNumber = 1 ) {
       // The place where we're currently at in the markup
       int characterPointer = 0;
 
@@ -132,7 +143,8 @@ namespace Typo3ExtensionGenerator.Parser {
       // Sub-scopes which we'll find during parsing will be stored in this partial.
       ParsedPartial result = new ParsedPartial() {
                                                    Body   = string.Empty,
-                                                   Header = string.Empty
+                                                   Header = string.Empty,
+                                                   Line   = lineNumber
                                                  };
           
       // How deeply nested we are into scopes.
@@ -149,6 +161,11 @@ namespace Typo3ExtensionGenerator.Parser {
       // as well as the full body of the partial.
       // If, while parsing the body of the partial, we find nested scopes, we'll store those to parse them later.
       while( characterPointer < element.Length ) {
+        // Increase line number counter
+        if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
+          ++lineNumber;
+        }
+
         // We only check for scopes while we're not parsing within a string.
         if( !inString ) {
           // Check for scope terminator
@@ -157,7 +174,7 @@ namespace Typo3ExtensionGenerator.Parser {
             if( 1 == scopeLevel ) {
               // As long as we're on the first scope level, we can collect the body of scopes to parse them later.
               // If we're deeper nested, there's no point, we'll parse those when we recurse.
-              result.Partials.Add( new ParsedPartial{Body = body.Trim()} );
+              result.Partials.Add( new ParsedPartial {Body = body.Trim(), Line = lineNumber} );
               result.Body += element.Substring( characterPointer, 1 );
               // Clear buffer
               body = string.Empty;
@@ -189,7 +206,10 @@ namespace Typo3ExtensionGenerator.Parser {
             if( 1 == scopeLevel ) {
               // Great! Another temporary scope we can store for later
               body += element.Substring( characterPointer, 1 );
-              result.Partials.Add( new ParsedPartial{Body = body.Trim()} );
+              // Calculate the line number by extracting the number of newlines in the body from the line counter.
+              int line = lineNumber - body.Trim().Count( c => c == '\n' );
+              result.Partials.Add(
+                new ParsedPartial {Body = body.Trim(), Line = line} );
               result.Body += element.Substring( characterPointer, 1 );
               // Clear buffer
               body = string.Empty;
@@ -233,6 +253,7 @@ namespace Typo3ExtensionGenerator.Parser {
                 ++characterPointer;
                 if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
                   inComment = false;
+                  ++lineNumber;
                 }
               }
             }
@@ -273,7 +294,7 @@ namespace Typo3ExtensionGenerator.Parser {
 
       // Parse all the partials
       foreach( ParsedPartial parsedPartial in result.Partials ) {
-        ParsedPartial partial = ParsePartial( parsedPartial.Body );
+        ParsedPartial partial = ParsePartial( parsedPartial.Body, parsedPartial.Line );
 
         parsedPartial.Header   = partial.Header;
         parsedPartial.Body     = partial.Body;
