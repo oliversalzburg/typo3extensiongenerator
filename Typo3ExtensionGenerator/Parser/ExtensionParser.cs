@@ -258,7 +258,7 @@ namespace Typo3ExtensionGenerator.Parser {
               }
             }
           } catch( ArgumentOutOfRangeException ) {
-            throw new ParserException( "Hit end of input while looking for end of comment." );
+            throw new ParserException( "Hit end of input while looking for end of comment.", lineNumber );
           }
 
         } else {
@@ -311,7 +311,7 @@ namespace Typo3ExtensionGenerator.Parser {
         // Is the parameter set in ""?
         if( !string.IsNullOrEmpty( parsedPartial.Parameters ) && "\"" == parsedPartial.Parameters.Substring( 0, 1 ) ) {
           if( "\"" != parsedPartial.Parameters.Substring( parsedPartial.Parameters.Length -1, 1 ) ) {
-            throw new ParserException( string.Format( "Unmatched \" in {0}", parsedPartial.Header ) );
+            throw new ParserException( string.Format( "Unmatched \" in {0}", parsedPartial.Header ), lineNumber );
           }
           parsedPartial.Parameters = parsedPartial.Parameters.Substring( 1, parsedPartial.Parameters.Length - 2 );
         }

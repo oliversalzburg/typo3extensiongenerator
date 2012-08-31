@@ -93,7 +93,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             throw new GeneratorException(
               string.Format(
                 "The interface field '{0}' does not exist in the data model '{1}'.", interfaceField,
-                Configuration.Model.Name ) );
+                Configuration.Model.Name ), Configuration.SourceLine );
           }
 
           finalInterfaceFields += NameHelper.GetSqlColumnName( Subject, interfaceField ) + ",";
@@ -110,6 +110,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
     /// <summary>
     /// Generates the 'types' array.
+    /// NOTE: This refers to these types: http://typo3.org/documentation/document-library/core-documentation/doc_core_tca/4.7.1/view/1/3/#id590907
     /// </summary>
     /// <returns></returns>
     private string GenerateTypes() {
@@ -146,7 +147,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                 string.Format(
                   "The type interface field '{0}' neither exists in the data model '{1}' nor is it a palette.",
                   userInterfaceField,
-                  Configuration.Model.Name ) );
+                  Configuration.Model.Name ), type.SourceLine );
 
             } else {
               // The field that was provided by the user is actually a palette.
@@ -200,12 +201,12 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           DataModel.DataModelMember referencedModelMember =
             Configuration.Model.Members.SingleOrDefault( m => m.Value == field );
 
-          if( null == referencedModelMember.Name ) {
+          if( null == referencedModelMember ) {
             throw new GeneratorException(
-                string.Format(
-                  "The palette field '{0}' does not exist in the data model '{1}'.",
-                  field,
-                  Configuration.Model.Name ) );
+              string.Format(
+                "The palette field '{0}' does not exist in the data model '{1}'.",
+                field,
+                Configuration.Model.Name ), palette.SourceLine );
           }
 
           paletteInterfaceFields += NameHelper.GetSqlColumnName( Subject, field ) + ",";
@@ -244,7 +245,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       foreach( Interface fieldInterface in Configuration.Interfaces ) {
         // Check if the target field exists
         if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
-          throw new GeneratorException( string.Format( "Could not generate interface for nonexistent field '{0}' at line {1}", fieldInterface.Target, fieldInterface.GeneratedFrom.Line ) );
+          throw new GeneratorException(
+            string.Format( "Could not generate interface for nonexistent field '{0}'.", fieldInterface.Target ),
+            fieldInterface.SourcePartial.Line );
         }
         // Generate the column
         string interfaceDefinition = InterfaceGenerator.Generate( this, Subject, fieldInterface, SimpleContainer.Format.PhpArray );

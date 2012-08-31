@@ -107,26 +107,30 @@ namespace Typo3ExtensionGenerator.Generator.Model {
               break;
 
             default:
-              throw new GeneratorException( string.Format( "Data model template '{0}' is unknown", member.Value ) );
+              throw new GeneratorException(
+                string.Format( "Data model template '{0}' is unknown", member.Value ),
+                dataModel.SourceLine + member.Line );
           }
         } else {
           if( dataModel.ForeignModels.ContainsKey( member.Name ) ) {
             // For a foreign key, we just insert the default uint
-              dataMembers.Append(
+            dataMembers.Append(
               string.Format(
-                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( Keywords.Types.UnsignedInt) ) );
+                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
+                TypeTranslator.ToSql( Keywords.Types.UnsignedInt, dataModel.SourceLine + member.Line ) ) );
 
           } else if( TypeTranslator.CanTranslate( member.Name ) ) {
             // If it is a POD type, just translate it
             dataMembers.Append(
               string.Format(
-                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ), TypeTranslator.ToSql( member.Name ) ) );
-          
+                "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
+                TypeTranslator.ToSql( member.Name, dataModel.SourceLine + member.Line ) ) );
+
           } else {
             throw new GeneratorException(
               string.Format(
-                "Data model field type '{0}' in model '{1}' at line {2} is unknown.", member.Name, dataModel.Name,
-                member.Line ) );
+                "Data model field type '{0}' in model '{1}' is unknown.", member.Name, dataModel.Name ),
+              dataModel.SourceLine + member.Line );
           }
         }
       }

@@ -23,7 +23,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       }
 
       Typo3ExtensionGenerator.Model.Configuration.Type parsedType =
-        new Typo3ExtensionGenerator.Model.Configuration.Type {Interface = interfacePartial.Parameters};
+        new Typo3ExtensionGenerator.Model.Configuration.Type
+        {Interface = interfacePartial.Parameters, SourceLine = parsedPartial.Line, SourcePartial = interfacePartial};
 
       return parsedType;
     }

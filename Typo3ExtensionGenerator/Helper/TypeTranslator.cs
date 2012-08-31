@@ -13,12 +13,14 @@ namespace Typo3ExtensionGenerator.Helper {
     public static bool CanTranslate( string typeDescription ) {
       return new Regex( string.Format( "^({0}|{1}|{2})", Keywords.Types.CharacterArray, Keywords.Types.String, Keywords.Types.UnsignedInt ) ).IsMatch( typeDescription );
     }
+
     /// <summary>
     /// Converts the given type description to a MySQL type.
     /// </summary>
     /// <param name="typeDescription"></param>
+    /// <param name="line">The input line number this type came from.</param>
     /// <returns></returns>
-    public static string ToSql( string typeDescription ) {
+    public static string ToSql( string typeDescription, int line ) {
       switch( typeDescription ) {
         case Keywords.Types.String:
           return "TEXT";
@@ -35,12 +37,12 @@ namespace Typo3ExtensionGenerator.Helper {
 
             int memberLength = 0;
             if( !int.TryParse( length, out memberLength ) ) {
-              throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ) );
+              throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), line );
             }
             return string.Format( "VARCHAR({0}) DEFAULT '' NOT NULL", memberLength );
 
           } else {
-            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ) );
+            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), line );
           }
           
       }

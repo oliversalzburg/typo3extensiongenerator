@@ -13,7 +13,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
     public static Typo3ExtensionGenerator.Model.Configuration.Interface.Interface Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
       Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
         new Typo3ExtensionGenerator.Model.Configuration.Interface.Interface
-        {Target = parsedPartial.Parameters, GeneratedFrom = parsedPartial};
+        {Target = parsedPartial.Parameters, SourcePartial = parsedPartial};
 
       if( parsedPartial.Partials.Any() ) {
         foreach( ExtensionParser.ParsedPartial setting in parsedPartial.Partials ) {

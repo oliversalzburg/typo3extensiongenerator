@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model {
   /// <summary>
   /// A module for TYPO3.
   /// </summary>
   [Serializable]
-  public class Module {
+  public class Module : IParserResult {
     /// <summary>
     /// What main module is this module a child of?
     /// </summary>
@@ -20,11 +21,16 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Name { get; set; }
     
-    /*
+    #region Implementation of IParserResult
     /// <summary>
-    /// The speaking title that will be displayed in the backend.
+    /// The line on which this object was originally defined in the input.
     /// </summary>
-    public string Title { get; set; }
-    */
+    public int SourceLine { get; set; }
+
+    /// <summary>
+    /// The parsed partial from which this object was generated.
+    /// </summary>
+    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    #endregion
   }
 }

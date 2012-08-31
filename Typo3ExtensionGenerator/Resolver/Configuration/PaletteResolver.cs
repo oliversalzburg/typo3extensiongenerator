@@ -22,7 +22,12 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
         return null;
       }
 
-      Palette parsedType = new Palette { Name = parsedPartial.Parameters, Interface = interfacePartial.Parameters };
+      Palette parsedType = new Palette {
+                                         Name = parsedPartial.Parameters,
+                                         Interface = interfacePartial.Parameters,
+                                         SourceLine = interfacePartial.Line,
+                                         SourcePartial = interfacePartial
+                                       };
 
       return parsedType;
     }

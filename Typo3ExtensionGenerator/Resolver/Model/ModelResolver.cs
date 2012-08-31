@@ -16,7 +16,7 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
 
       List<DataModel> dataModels = new List<DataModel>();
       foreach( ExtensionParser.ParsedPartial modelPartial in modelPartials ) {
-        DataModel dataModel = new DataModel {Name = modelPartial.Parameters, GeneratedFrom = modelPartial};
+        DataModel dataModel = new DataModel {Name = modelPartial.Parameters, SourcePartial = modelPartial};
         dataModels.Add( dataModel );
         if( modelPartial.Partials.Any() ) {
           foreach( ExtensionParser.ParsedPartial dataMember in modelPartial.Partials ) {

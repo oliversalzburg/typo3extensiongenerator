@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -111,6 +112,7 @@
     <Compile Include="Generator\Model\Templates\T3VersioningFields.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
+    <Compile Include="Parser\IParserResult.cs" />
     <Compile Include="Parser\Keywords.cs" />
     <Compile Include="Parser\ParserException.cs" />
     <Compile Include="Program.cs" />

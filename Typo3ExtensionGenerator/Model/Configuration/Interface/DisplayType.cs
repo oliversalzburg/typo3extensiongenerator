@@ -9,7 +9,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// Used to describe a user interface control in the backend
   /// </summary>
   [Serializable]
-  public class DisplayType : IDisplayType {
+  public class DisplayType : IDisplayType, IParserResult {
      /// <summary>
     /// The name of this data model.
     /// </summary>
@@ -27,5 +27,17 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     public string GeneratePropertyArray( SimpleContainer.Format format ) {
       return string.Empty;
     }
+
+    #region Implementation of IParserResult
+    /// <summary>
+    /// The line on which this object was originally defined in the input.
+    /// </summary>
+    public int SourceLine { get; set; }
+
+    /// <summary>
+    /// The parsed partial from which this object was generated.
+    /// </summary>
+    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    #endregion
   }
 }

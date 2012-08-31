@@ -8,7 +8,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// From these models, we'll generate the SQL description, the ExtBase model, ...
   /// </summary>
   [Serializable]
-  public class Interface : SimpleContainer {
+  public class Interface : SimpleContainer, IParserResult {
     /// <summary>
     /// The data model field that should be accessed by this interface.
     /// </summary>
@@ -51,13 +51,20 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// </summary>
     public string DisplayTypeTarget { get; set; }
 
-    /// <summary>
-    /// The ParsedPartial that was used to generate this interface.
-    /// </summary>
-    public ExtensionParser.ParsedPartial GeneratedFrom { get; set; }
-
     public Interface() {
       Settings   = new List<KeyValuePair<string, string>>();
     }
+
+    #region Implementation of IParserResult
+    /// <summary>
+    /// The line on which this object was originally defined in the input.
+    /// </summary>
+    public int SourceLine { get; set; }
+
+    /// <summary>
+    /// The parsed partial from which this object was generated.
+    /// </summary>
+    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    #endregion
   }
 }

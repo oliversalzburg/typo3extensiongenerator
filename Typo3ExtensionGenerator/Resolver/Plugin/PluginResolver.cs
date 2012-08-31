@@ -27,7 +27,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
         // Find the data models that are defined for this plugin
         List<DataModel> dataModels = ModelResolver.Resolve( pluginPartial );
         if( dataModels.Count > 1 ) {
-          throw new GeneratorException( "A plugin can only contain one model." );
+          throw new GeneratorException( "A plugin can only contain one model.", pluginPartial.Line );
         }
         plugin.Model = dataModels[ 0 ];
         plugin.Model.Name = "flexform";

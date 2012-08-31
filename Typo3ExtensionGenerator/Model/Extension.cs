@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model {
-  public class Extension {
+  public class Extension : IParserResult {
     /// <summary>
     /// The extension key.
     /// </summary>
@@ -44,5 +45,17 @@ namespace Typo3ExtensionGenerator.Model {
     /// The configurations for the data models.
     /// </summary>
     public List<Configuration.Configuration> Configurations { get; set; }
+
+    #region Implementation of IParserResult
+    /// <summary>
+    /// The line on which this object was originally defined in the input.
+    /// </summary>
+    public int SourceLine { get; set; }
+
+    /// <summary>
+    /// The parsed partial from which this object was generated.
+    /// </summary>
+    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    #endregion
   }
 }

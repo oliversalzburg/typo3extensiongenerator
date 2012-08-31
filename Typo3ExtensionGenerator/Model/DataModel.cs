@@ -10,7 +10,7 @@ namespace Typo3ExtensionGenerator.Model {
   /// From these models, we'll generate the SQL description, the ExtBase model, ...
   /// </summary>
   [Serializable]
-  public class DataModel {
+  public class DataModel : IParserResult {
     public class DataModelMember {
       public string Name { get; set; }
       public string Value { get; set; }
@@ -37,11 +37,6 @@ namespace Typo3ExtensionGenerator.Model {
     public Dictionary<string, DataModel> ForeignModels { get; set; }
 
     /// <summary>
-    /// The ParsedPartial that was used to generate this data model.
-    /// </summary>
-    public ExtensionParser.ParsedPartial GeneratedFrom { get; set; }
-
-    /// <summary>
     /// Determine if this model uses a specific data model template
     /// </summary>
     /// <param name="template"></param>
@@ -54,5 +49,17 @@ namespace Typo3ExtensionGenerator.Model {
       Members = new List<DataModelMember>();
       ForeignModels = new Dictionary<string, DataModel>();
     }
+
+    #region Implementation of IParserResult
+    /// <summary>
+    /// The line on which this object was originally defined in the input.
+    /// </summary>
+    public int SourceLine { get; set; }
+
+    /// <summary>
+    /// The parsed partial from which this object was generated.
+    /// </summary>
+    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    #endregion
   }
 }

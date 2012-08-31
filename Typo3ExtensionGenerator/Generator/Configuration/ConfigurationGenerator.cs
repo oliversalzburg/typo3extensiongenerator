@@ -67,7 +67,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         // First, find the data model this configuration applies to
         DataModel targetModel = Subject.Models.SingleOrDefault( m => m.Name == configuration.Target );
         if( null == targetModel ) {
-          throw new GeneratorException( string.Format( "Unable to find target data model '{0}'.", configuration.Target ) );
+          throw new GeneratorException( string.Format( "Unable to find target data model '{0}'.", configuration.Target ), configuration.SourceLine );
         }
         configuration.Model = targetModel;
 
