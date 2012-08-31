@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Configuration;
@@ -7,6 +8,7 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Model.Plugin;
+using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Resolver.Model;
 using log4net;
 using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
@@ -173,10 +175,16 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       Log.InfoFormat( "Generating controller '{0}'...", className );
 
       StringBuilder actions = new StringBuilder();
-      const string actionTemplate = "public function {0}Action() {{}}\n";
+      const string actionTemplate = "public function {0}Action({1}) {{}}\n";
 
       foreach( Action action in plugin.Actions ) {
-        actions.Append( String.Format( actionTemplate, action.Name ) );
+        // Prefix each parameter with a $ and join them together with , in between.
+        string parameters = action.Requirements.Aggregate(
+          string.Empty,
+          ( current, requirement ) =>
+          current + ( "$" + requirement + ( ( requirement != action.Requirements.Last() ) ? "," : string.Empty ) ) );
+
+        actions.Append( String.Format( actionTemplate, action.Name, parameters ) );
       }
 
       const string controllerTemplate = "class {className} extends Tx_Extbase_MVC_Controller_ActionController {{\n{controllerActions}}}";
@@ -184,7 +192,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       string controller =
         controllerTemplate.FormatSmart(
           new {
-                className = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
+                className         = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
                 controllerActions = actions.ToString()
               } );
 

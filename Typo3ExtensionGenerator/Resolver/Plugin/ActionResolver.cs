@@ -10,6 +10,9 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
       foreach( ExtensionParser.ParsedPartial actionDirective in parsedPartial.Partials ) {
         if( actionDirective.Keyword == Keywords.Title ) {
           resultingAction.Title = actionDirective.Parameters;
+
+        } else if( actionDirective.Keyword == Keywords.Requirement ) {
+          resultingAction.Requirements.AddRange( actionDirective.Parameters.Split( new[] {','} ) );
         }
       }
       

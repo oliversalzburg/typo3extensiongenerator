@@ -9,6 +9,15 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
     public string Name { get; set; }
     public string Title { get; set; }
 
+    /// <summary>
+    /// A list of parameter names that will be required to call this action.
+    /// </summary>
+    public List<string> Requirements { get; set; }
+
+    public Action() {
+      Requirements = new List<string>();
+    }
+
     #region Implementation of IParserResult
     /// <summary>
     /// The line on which this object was originally defined in the input.

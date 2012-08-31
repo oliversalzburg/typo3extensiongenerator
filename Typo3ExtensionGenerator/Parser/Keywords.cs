@@ -16,6 +16,11 @@ namespace Typo3ExtensionGenerator.Parser {
     public const string Title = "as";
 
     /// <summary>
+    /// require - This object requires a certain condition to be met.
+    /// </summary>
+    public const string Requirement = "require";
+
+    /// <summary>
     /// Used to declare the extension.
     /// </summary>
     public const string DeclareExtension = "extension";
@@ -139,11 +144,6 @@ namespace Typo3ExtensionGenerator.Parser {
         /// through
         /// </summary>
         public const string Representation = "through";
-
-        /// <summary>
-        /// require - This interface requires a certain condition to be met.
-        /// </summary>
-        public const string Requirement = "require";
 
         /// <summary>
         /// from
