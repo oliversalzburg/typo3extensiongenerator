@@ -23,10 +23,9 @@ namespace Typo3ExtensionGenerator {
       Console.WindowWidth  *= 2;
       Console.WindowHeight *= 2;
 
-      Console.Write( "Reading '{0}'...", args[ 0 ] );
+      Log.InfoFormat( "Reading '{0}'...", args[ 0 ] );
       string markup = File.ReadAllText( args[ 0 ] );
-      Console.WriteLine( "Done." );
-
+      
       try {
         Log.Info( "Parsing..." );
         ExtensionParser parser = new ExtensionParser();
@@ -34,11 +33,11 @@ namespace Typo3ExtensionGenerator {
         
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
 
-        ExtensionGenerator generator = new ExtensionGenerator() {
-                                                                  TargetDirectory =
-                                                                    Path.Combine(
-                                                                      Environment.CurrentDirectory, "output" )
-                                                                };
+        ExtensionGenerator generator = new ExtensionGenerator {
+                                                                TargetDirectory =
+                                                                  Path.Combine(
+                                                                    Environment.CurrentDirectory, "output" )
+                                                              };
         generator.Generate( extension );
 
       } catch( ParserException parserException ) {
