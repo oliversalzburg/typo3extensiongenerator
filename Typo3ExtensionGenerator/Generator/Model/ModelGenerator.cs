@@ -8,9 +8,13 @@ using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Model {
   public class ModelGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public ModelGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
@@ -21,7 +25,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string content = GenerateModelFile( dataModel );
         
         string targetFilename = Path.Combine( path, NameHelper.GetExtbaseFileName( Subject, dataModel ) );
-        Console.WriteLine( string.Format( "Generating '{0}'...", targetFilename ) );
+        Log.InfoFormat( "Generating '{0}'...", targetFilename );
         WritePhpFile( targetFilename, content );
       }
     }
@@ -67,12 +71,12 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     private string GenerateSql( ) {
       string result = string.Empty;
 
-      Console.WriteLine( "Generating SQL tables..." );
+      Log.Info( "Generating SQL tables..." );
 
       const string template = "CREATE TABLE {0} (\n{1}\n);";
       foreach( DataModel dataModel in Subject.Models ) {
         string modelName = NameHelper.GetAbsoluteModelName( Subject, dataModel );
-        Console.WriteLine( "Generating SQL table '{0}'...", modelName );
+        Log.InfoFormat( "Generating SQL table '{0}'...", modelName );
 
         string sqlMembers = GenerateSqlMembers( dataModel );
         result += string.Format( template, modelName, sqlMembers ) + "\n";

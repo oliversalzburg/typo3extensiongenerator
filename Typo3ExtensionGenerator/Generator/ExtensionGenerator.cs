@@ -11,9 +11,13 @@ using Typo3ExtensionGenerator.Generator.Plugin;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Resources;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
-  class ExtensionGenerator {
+  public class ExtensionGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     /// <summary>
     /// The directory where the generated extension should be placed.
     /// </summary>
@@ -24,13 +28,13 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="extension">The extension that should be generated.</param>
     public void Generate( Extension extension ) {
-      Console.WriteLine( "Clearing output directory..." );
+      Log.Info( "Clearing output directory..." );
       if( Directory.Exists( TargetDirectory ) ) {
         DirectoryHelper.DeleteDirectory( TargetDirectory, true );
       }
       Directory.CreateDirectory( TargetDirectory );
 
-      Console.WriteLine( "Generating extension..." );
+      Log.Info( "Generating extension..." );
 
       ExtEmconfGenerator extEmconfGenerator = new ExtEmconfGenerator( TargetDirectory, extension );
       extEmconfGenerator.Generate();

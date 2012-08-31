@@ -7,9 +7,12 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Typo3ExtensionGenerator.Generator.PrettyPrint;
 using Typo3ExtensionGenerator.Model;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
   public abstract class AbstractGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     /// <summary>
     /// The directory where our generated extension should be placed.
@@ -68,7 +71,7 @@ namespace Typo3ExtensionGenerator.Generator {
       foreach( KeyValuePair<string, StringBuilder> file in VirtualFileSystem ) {
         string absoluteFilename = Path.Combine( targetDirectory, file.Key );
         Directory.CreateDirectory( new FileInfo( absoluteFilename ).DirectoryName );
-        Console.WriteLine( "Flushing '{0}'...", file.Key );
+        Log.InfoFormat( "Flushing '{0}'...", file.Key );
         File.WriteAllText( absoluteFilename , file.Value.ToString() );
       }
     }

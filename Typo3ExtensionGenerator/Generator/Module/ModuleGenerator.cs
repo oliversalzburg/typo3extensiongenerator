@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Text;
 using Typo3ExtensionGenerator.Model;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Module {
   public class ModuleGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-WriteFile( "ext_tables.php", GeneratePhp(), true );
+      WriteFile( "ext_tables.php", GeneratePhp(), true );
     }
 
     /// <summary>
@@ -17,7 +21,7 @@ WriteFile( "ext_tables.php", GeneratePhp(), true );
     private string GeneratePhp( ) {
       StringBuilder result = new StringBuilder();
 
-      Console.WriteLine( "Registering modules..." );
+      Log.Info( "Registering modules..." );
 
       const string template = "if( TYPO3_MODE === 'BE' ) {{\n" +
                               "  Tx_Extbase_Utility_Extension::registerModule(\n" +
@@ -39,7 +43,7 @@ WriteFile( "ext_tables.php", GeneratePhp(), true );
       for( int moduleIndex = 0; moduleIndex < Subject.Modules.Count; moduleIndex++ ) {
         Typo3ExtensionGenerator.Model.Module module = Subject.Modules[ moduleIndex ];
 
-        Console.WriteLine( "Registering module '{0}'...", module.Name );
+        Log.InfoFormat( "Registering module '{0}'...", module.Name );
 
         string moduleKey = string.Format( "tx_{0}_m{1}", Subject.Key, moduleIndex + 1 );
         result.Append( String.Format( template, Subject.Key, module.MainModuleName, moduleKey ) + "\n" );

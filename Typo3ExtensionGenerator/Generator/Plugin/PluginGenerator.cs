@@ -8,15 +8,19 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Resolver.Model;
+using log4net;
 using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Plugin {
   public class PluginGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public PluginGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
 
-      Console.WriteLine( string.Format( "Generating plugins..." ) );
+      Log.Info( "Generating plugins..." );
 
       GeneratePhp();
     }

@@ -9,9 +9,13 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Resources;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public ConfigurationGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
@@ -71,7 +75,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         }
         configuration.Model = targetModel;
 
-        Console.WriteLine( "Generating TCA for model '{0}'...", targetModel.Name );
+        Log.InfoFormat( "Generating TCA for model '{0}'...", targetModel.Name );
 
         // Now flush out any language fields
         FlushLanguageFields( configuration );

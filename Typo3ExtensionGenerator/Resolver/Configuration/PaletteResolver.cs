@@ -4,9 +4,13 @@ using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
   public static class PaletteResolver {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     /// <summary>
     /// Resolves a palette definition of data model configuration of an extension from a ParsedPartial.
     /// </summary>
@@ -17,11 +21,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       ExtensionParser.ParsedPartial interfacePartial =
         parsedPartial.Partials.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfacePalette );
       if( null == interfacePartial ) {
-        Console.Error.WriteLine(
-          string.Format( "Palette does not define an interface." ) );
-        return null;
+        throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedPartial.Parameters ), parsedPartial.Line );
       }
-
+      
       Palette parsedType = new Palette {
                                          Name = parsedPartial.Parameters,
                                          Interface = interfacePartial.Parameters,

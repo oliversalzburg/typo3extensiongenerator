@@ -5,9 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Resources {
   public static class ResourceHelper {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     /// <summary>
     /// Flushes an icon to disk.
     /// </summary>
@@ -19,7 +23,7 @@ namespace Typo3ExtensionGenerator.Resources {
         Debug.Assert( resourceStream != null, "resourceStream != null" );
         string absolutePath = Path.Combine( targetDirectory, path );
         Directory.CreateDirectory( new FileInfo( absolutePath ).DirectoryName );
-        Console.WriteLine( "Flushing '{0}'...", path );
+        Log.InfoFormat( "Flushing '{0}'...", path );
         using( Stream fileStream = new FileStream( absolutePath, FileMode.Create ) ) {
           byte[] buffer = new byte[8 * 1024];
           int length;

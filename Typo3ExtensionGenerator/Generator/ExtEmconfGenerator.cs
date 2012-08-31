@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
   public class ExtEmconfGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public ExtEmconfGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
 
-      Console.WriteLine( "Generating ext_emconf.php..." );
+      Log.Info( "Generating ext_emconf.php..." );
 
       string template = "$EM_CONF[$_EXTKEY] = array(\n" +
                         "  'title'            => '{0}',\n" +

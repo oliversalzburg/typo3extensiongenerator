@@ -10,10 +10,14 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Parser;
+using log4net;
 using Type = Typo3ExtensionGenerator.Model.Configuration.Type;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public class ConfigurationFileGenerator : AbstractGenerator, IGenerator {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public ConfigurationFileGenerator( string outputDirectory, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) : base( outputDirectory, extension ) {
       Configuration = configuration;
     }
@@ -23,7 +27,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     public void Generate() {
       string targetFile = "Configuration/TCA/" + NameHelper.GetExtbaseFileName( Subject, Configuration.Model );
       
-      Console.WriteLine( string.Format( "Generating dynamic config file '{0}'...", targetFile ) );
+      Log.InfoFormat( "Generating dynamic config file '{0}'...", targetFile );
       
       WritePhpFile( targetFile, GeneratePhp() );
     }
