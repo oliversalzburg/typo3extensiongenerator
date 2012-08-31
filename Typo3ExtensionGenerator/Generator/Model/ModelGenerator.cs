@@ -21,15 +21,27 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       WriteFile( "ext_tables.sql", GenerateSql() );
 
       foreach( DataModel dataModel in Subject.Models ) {
-        const string path = "Classes/Domain/Model";
-        string content = GenerateModelFile( dataModel );
+        const string modelPath      = "Classes/Domain/Model";
+        const string repositoryPath = "Classes/Domain/Repository";
+
+        string modelFileContent      = GenerateModelFile( dataModel );
+        string repositoryFileContent = GenerateRepositoryFile( dataModel );
         
-        string targetFilename = Path.Combine( path, NameHelper.GetExtbaseFileName( Subject, dataModel ) );
-        Log.InfoFormat( "Generating '{0}'...", targetFilename );
-        WritePhpFile( targetFilename, content );
+        string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
+        Log.InfoFormat( "Generating model '{0}'...", modelFilename );
+        WritePhpFile( modelFilename, modelFileContent );
+
+        string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
+        Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
+        WritePhpFile( respositoryFilename, repositoryFileContent );
       }
     }
 
+    /// <summary>
+    /// Generate the ExtBase model file for the given data model.
+    /// </summary>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
     private string GenerateModelFile( DataModel dataModel ) {
       const string template =
         "class {className} extends Tx_Extbase_DomainObject_AbstractEntity {{\n" +
@@ -43,12 +55,12 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         dataMembers.Append( string.Format( "protected ${0};\n", member.Value ) );
       }
 
-      string accessor = "public function get{1}() {{" +
-                        "	 return $this->{0};" +
-                        "}}" +
-                        "public function set{1}( ${0} ) {{" +
-                        "	 $this->{0} = ${0};" +
-                        "}}\n";
+      const string accessor = "public function get{1}() {{" +
+                              "	 return $this->{0};" +
+                              "}}" +
+                              "public function set{1}( ${0} ) {{" +
+                              "	 $this->{0} = ${0};" +
+                              "}}\n";
 
       StringBuilder accessors = new StringBuilder();
       foreach( DataModel.DataModelMember member in dataModel.Members ) {
@@ -62,6 +74,19 @@ namespace Typo3ExtensionGenerator.Generator.Model {
                            };
 
       return template.FormatSmart( dataObject );
+    }
+
+    /// <summary>
+    /// Generates an ExtBase repository for the given data model.
+    /// This allows ExtBase controllers to retrieve data records from the database.
+    /// </summary>
+    /// <param name="model"></param>
+    /// <returns></returns>
+    private string GenerateRepositoryFile( DataModel model ) {
+      const string template = "class {className} extends Tx_Extbase_Persistence_Repository {{}}";
+
+      return
+        template.FormatSmart( new {className = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model )} );
     }
 
     /// <summary>

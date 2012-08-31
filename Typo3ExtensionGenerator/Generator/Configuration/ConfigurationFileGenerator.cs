@@ -25,7 +25,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     public Typo3ExtensionGenerator.Model.Configuration.Configuration Configuration { get; private set; }
 
     public void Generate() {
-      string targetFile = "Configuration/TCA/" + NameHelper.GetExtbaseFileName( Subject, Configuration.Model );
+      string targetFile = "Configuration/TCA/" + NameHelper.GetExtbaseDomainModelFileName( Subject, Configuration.Model );
       
       Log.InfoFormat( "Generating dynamic config file '{0}'...", targetFile );
       

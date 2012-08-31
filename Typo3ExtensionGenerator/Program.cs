@@ -18,8 +18,10 @@ namespace Typo3ExtensionGenerator {
         Log.Error( "No input file provided or file nonexistent." );
         return;
       }
-
-      DateTime startTime = DateTime.Now;
+      
+      // I hate small console windows!
+      Console.WindowWidth  *= 2;
+      Console.WindowHeight *= 2;
 
       Console.Write( "Reading '{0}'...", args[ 0 ] );
       string markup = File.ReadAllText( args[ 0 ] );

@@ -22,6 +22,36 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Generates the Extbase class name for a given data model.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseDomainModelFileName( Extension extension, DataModel dataModel ) {
+      return String.Format( "{0}.php", UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase domain model repository class name for a given data model.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseDomainModelRepositoryClassName( Extension extension, DataModel dataModel ) {
+      return String.Format( "Tx_{0}_Domain_Repository_{1}Repository", UpperCamelCase( extension.Key ), UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the Extbase class name for a given data model.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseDomainModelRepositoryFileName( Extension extension, DataModel dataModel ) {
+      return String.Format( "{0}Repository.php", UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
     /// Generates the name of a class that will be used to supply hooks.
     /// </summary>
     /// <param name="extension"></param>
@@ -31,15 +61,7 @@ namespace Typo3ExtensionGenerator.Helper {
       return String.Format( "Tx_{0}_Hooks_{1}", UpperCamelCase( extension.Key ), UpperCamelCase( category ) );
     }
 
-    /// <summary>
-    /// Generates the Extbase class name for a given data model.
-    /// </summary>
-    /// <param name="extension"></param>
-    /// <param name="dataModel"></param>
-    /// <returns></returns>
-    public static string GetExtbaseFileName( Extension extension, DataModel dataModel ) {
-      return String.Format( "{0}.php", UpperCamelCase( dataModel.Name ) );
-    }
+    
 
     /// <summary>
     /// Retrieves a full model name for a data model.

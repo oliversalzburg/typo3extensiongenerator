@@ -148,7 +148,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                commonFields = finalCommonFields,
                                translationFields = finalTranslationFields,
                                versioningFields = finalVersioningFields,
-                               configFilename = NameHelper.GetExtbaseFileName( Subject, configuration.Model ),
+                               configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
                                thumbnail = thumbnailField,
                                searchFields = finalSearchFields
                              };
