@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Model.Plugin;
 
 namespace Typo3ExtensionGenerator.Helper {
   /// <summary>
@@ -49,6 +50,26 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <returns></returns>
     public static string GetExtbaseDomainModelRepositoryFileName( Extension extension, DataModel dataModel ) {
       return String.Format( "{0}Repository.php", UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase controller class name for a given plugin.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseControllerClassName( Extension extension, Plugin plugin ) {
+      return String.Format( "Tx_{0}_Controller_{1}Controller", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the Extbase controller class name for a given plugin.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseControllerFileName( Extension extension, Plugin plugin ) {
+      return String.Format( "{0}Controller.php", UpperCamelCase( plugin.Name ) );
     }
 
     /// <summary>
