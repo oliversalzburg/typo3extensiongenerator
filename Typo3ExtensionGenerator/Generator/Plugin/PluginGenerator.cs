@@ -42,11 +42,13 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                     "  'LLL:EXT:{0}/Resources/Private/Language/locallang_be.xml:{2}'\n" +
                                     ");";
 
+      const string controllerAction = "    '{controllerName}' => '{actionName}'";
+
       const string configurePlugin = "Tx_Extbase_Utility_Extension::configurePlugin(" +
                                      "  '{extensionKey}'," +
                                      "  '{pluginName}'," +
                                      "  array(" +
-                                     "    'ControllerGoesHere' => 'actionGoesHere'" +
+                                     "{cachableActions}" +
                                      "  )," +
                                      "  array(" +
                                      "    'ControllerGoesHere' => 'uncachedActionGoesHere'" +
@@ -74,8 +76,23 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
             "t3lib_extMgm::addPiFlexFormValue('{0}', 'FILE:EXT:{1}/Configuration/FlexForms/flexform_{2}.xml');\n",
             pluginSignature, Subject.Key, plugin.Name.ToLower() ) );
 
+        // Generate allowed action combination that should be configured
+        StringBuilder actions = new StringBuilder();
+        foreach( Action action in plugin.Actions ) {
+          var actionData =
+            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionName = action.Name};
+          actions.Append( controllerAction.FormatSmart( actionData ) + "," );
+        }
+        string actionsCachable = actions.ToString();
+        actionsCachable = actionsCachable.Substring( 0, actionsCachable.Length - 1 );
+
         // Add configurePlugin line to ext_localconf
-        var configurePluginData = new { extensionKey = Subject.Key, pluginName = NameHelper.UpperCamelCase( plugin.Name ) };
+        var configurePluginData =
+          new {
+                extensionKey = Subject.Key,
+                pluginName = NameHelper.UpperCamelCase( plugin.Name ),
+                cachableActions = actionsCachable
+              };
         extLocalconf.Append( configurePlugin.FormatSmart( configurePluginData ) + "\n" );
 
         // Resolve the foreign key references in the flexform model

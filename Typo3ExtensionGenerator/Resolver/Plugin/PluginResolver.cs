@@ -46,7 +46,8 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
             plugin.Interfaces.Add( @interface );
           
           } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Action ) {
-            plugin.Actions.Add( ActionResolver.ResolveAction( pluginParameter ) );
+            Action action = ActionResolver.ResolveAction( pluginParameter );
+            plugin.Actions.Add( action );
           }
         }
 
