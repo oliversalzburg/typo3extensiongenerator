@@ -84,7 +84,7 @@
     <Compile Include="Generator\Configuration\ConfigurationFileGenerator.cs" />
     <Compile Include="Generator\Configuration\ConfigurationGenerator.cs" />
     <Compile Include="Generator\Configuration\InterfaceGenerator.cs" />
-    <Compile Include="Generator\ExtEmconfGenerator.cs" />
+    <Compile Include="Generator\ExtensionCoreGenerator.cs" />
     <Compile Include="Generator\ExtensionGenerator.cs" />
     <Compile Include="Generator\GeneratorException.cs" />
     <Compile Include="Generator\IGenerator.cs" />

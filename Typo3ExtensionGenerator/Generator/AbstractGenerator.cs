@@ -35,8 +35,17 @@ namespace Typo3ExtensionGenerator.Generator {
       Subject         = subject;
     }
 
+    /// <summary>
+    /// Writes the given content to a file.
+    /// Supports "virtual" files. Virtual files are not directly written to disk, but collect content.
+    /// They will have to be flushed at some point in the process. If a file was marked virtual once,
+    /// all future writes to that file will also be virtual.
+    /// </summary>
+    /// <param name="filename">The path of the file, relative to the extension root.</param>
+    /// <param name="content">What should be written to the file.</param>
+    /// <param name="useVirtual">Should this be written to a virtual file?</param>
     public void WriteFile( string filename, string content, bool useVirtual = false ) {
-      if( useVirtual ) {
+      if( useVirtual || IsVirtual( filename ) ) {
         WriteVirtual( filename, content );
 
       } else {
@@ -54,6 +63,10 @@ namespace Typo3ExtensionGenerator.Generator {
       fileContent = LudicrousPrettyPrinter.PrettyPrint( fileContent );
       WriteFile( filename + ".pp", fileContent );
 #endif
+    }
+
+    private bool IsVirtual( string filename ) {
+      return VirtualFileSystem.ContainsKey( filename );
     }
 
     private void WriteVirtual( string filename, string content ) {

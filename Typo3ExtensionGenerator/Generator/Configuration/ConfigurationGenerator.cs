@@ -114,7 +114,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             NameHelper.UpperCamelCase( configuration.Model.Name ) );
 
           // Write hook
-          string filename = "Classes/Hooks/Labels.php";
+          const string filename = "Classes/Hooks/Labels.php";
           WriteFile(
             filename,
             string.Format(

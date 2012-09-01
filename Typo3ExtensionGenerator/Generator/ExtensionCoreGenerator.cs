@@ -6,11 +6,14 @@ using Typo3ExtensionGenerator.Model;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
-  public class ExtEmconfGenerator : AbstractGenerator, IGenerator {
+  /// <summary>
+  /// Generates the core extension files like ext_emconf and TypoScript.
+  /// </summary>
+  public class ExtensionCoreGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public ExtEmconfGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    public ExtensionCoreGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
 
@@ -51,5 +54,6 @@ namespace Typo3ExtensionGenerator.Generator {
 
       WritePhpFile( "ext_emconf.php", result );
     }
+
   }
 }

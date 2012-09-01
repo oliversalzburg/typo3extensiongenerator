@@ -36,8 +36,8 @@ namespace Typo3ExtensionGenerator.Generator {
 
       Log.Info( "Generating extension..." );
 
-      ExtEmconfGenerator extEmconfGenerator = new ExtEmconfGenerator( TargetDirectory, extension );
-      extEmconfGenerator.Generate();
+      ExtensionCoreGenerator extensionCoreGenerator = new ExtensionCoreGenerator( TargetDirectory, extension );
+      extensionCoreGenerator.Generate();
       PluginGenerator pluginGenerator = new PluginGenerator( TargetDirectory, extension );
       pluginGenerator.Generate();
       ModuleGenerator moduleGenerator = new ModuleGenerator( TargetDirectory, extension );
@@ -47,6 +47,7 @@ namespace Typo3ExtensionGenerator.Generator {
       ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
       configurationGenerator.Generate();
 
+      // Create extension icon
       ResourceHelper.FlushIcon( "box.gif", TargetDirectory, "ext_icon.gif" );
 
       // Wrap virtual files as needed
