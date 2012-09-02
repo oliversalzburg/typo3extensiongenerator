@@ -11,6 +11,10 @@ using Typo3ExtensionGenerator.Parser;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Model {
+  /// <summary>
+  /// Generates files that are closely related to data models.
+  /// Includes ExtBase models, repositories and Fluid partials.
+  /// </summary>
   public class ModelGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -23,9 +27,11 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       foreach( DataModel dataModel in Subject.Models ) {
         const string modelPath      = "Classes/Domain/Model";
         const string repositoryPath = "Classes/Domain/Repository";
+        const string partialsPath   = "Resources/Private/Partials";
 
         string modelFileContent      = GenerateModelFile( dataModel );
         string repositoryFileContent = GenerateRepositoryFile( dataModel );
+        string fluidPartialContent   = GenerateFluidPartial( dataModel );
         
         string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating model '{0}'...", modelFilename );
@@ -34,6 +40,10 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
         WritePhpFile( respositoryFilename, repositoryFileContent );
+
+        string fluidPartialFilename = Path.Combine( partialsPath, NameHelper.GetFluidPartialFileName( Subject, dataModel ) );
+        Log.InfoFormat( "Generating Fluid partial '{0}'...", fluidPartialFilename );
+        WriteFile( fluidPartialFilename, fluidPartialContent );
       }
     }
 
@@ -48,11 +58,26 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         "{properties}" +
         "{gettersSetters}" +
         "}}";
-        
+
+
+      const string propertyTemplate = "/**\n" +
+                                      "* {0}\n" +
+                                      "* @var {1}\n" +
+                                      "*/\n" +
+                                      "protected ${0};\n";
 
       StringBuilder dataMembers = new StringBuilder();
       foreach( DataModel.DataModelMember member in dataModel.Members ) {
-        dataMembers.Append( string.Format( "protected ${0};\n", member.Value ) );
+        if( member.Name == Keywords.DataModelTemplate ) continue;
+        bool containsKey = dataModel.ForeignModels.ContainsKey( member.Name );
+        if( containsKey ) {
+          string foreignModelClassName = NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel.ForeignModels[ member.Name ] );
+          dataMembers.Append( string.Format( propertyTemplate, member.Value, foreignModelClassName ) );   
+
+        } else {
+          dataMembers.Append( string.Format( propertyTemplate, member.Value, TypeTranslator.ToPhp( member.Name, member.Line ) ) );   
+        }
+        
       }
 
       const string accessor = "public function get{1}() {{" +
@@ -87,6 +112,27 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
       return
         template.FormatSmart( new {className = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model )} );
+    }
+
+    /// <summary>
+    /// Generates a placeholder Fluid partial that will render a given data model.
+    /// </summary>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    private string GenerateFluidPartial( DataModel dataModel ) {
+      const string viewHelperNamespaceTemplate = "{{namespace downloads=Tx_Downloads_ViewHelpers}}\n";
+      const string modelTemplate               = "<div class=\"tx-downloads-item\">\n{fieldsList}</div>\n";
+      const string fieldTemplate               = "<div>{{{fieldAccessor}}}</div>\n";
+
+      StringBuilder fieldsCollector = new StringBuilder();
+      foreach( DataModel.DataModelMember member in dataModel.Members ) {
+        fieldsCollector.Append( fieldTemplate.FormatSmart( new {fieldAccessor = dataModel.Name + "." + member.Value} ) );
+      }
+      string fields = fieldsCollector.ToString();
+
+      string model = modelTemplate.FormatSmart( new {fieldsList = fields} );
+
+      return viewHelperNamespaceTemplate + model;
     }
 
     /// <summary>
@@ -133,6 +179,10 @@ namespace Typo3ExtensionGenerator.Generator.Model {
             case Keywords.DataModelTemplates.T3TranslationFields:
               dataMembers.Append( T3TranslationFields.Content + ",\n" );
               keys.Append( T3TranslationFields.Keys + ",\n" );
+              break;
+
+            case Keywords.DataModelTemplates.T3Sortable:
+              dataMembers.Append( T3Sortable.Content + ",\n" );
               break;
 
             default:

@@ -89,6 +89,7 @@
     <Compile Include="Generator\GeneratorException.cs" />
     <Compile Include="Generator\IGenerator.cs" />
     <Compile Include="Generator\Model\ModelGenerator.cs" />
+    <Compile Include="Generator\Model\Templates\T3Sortable.cs" />
     <Compile Include="Generator\Module\ModuleGenerator.cs" />
     <Compile Include="Generator\Plugin\PluginGenerator.cs" />
     <Compile Include="Generator\PrettyPrint\LudicrousPrettyPrinter.cs" />

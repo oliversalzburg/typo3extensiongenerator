@@ -12,6 +12,10 @@ using Typo3ExtensionGenerator.Resources;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
+  /// <summary>
+  /// Generates the "configuration" for an extension.
+  /// The configuration describes how the data model are to be translated between the database and TYPO3.
+  /// </summary>
   public class ConfigurationGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -56,6 +60,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "{versioningFields}" +
                               
                               "{translationFields}" +
+
+                              "{sortableFields}" +
                               
                               "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
                               "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.png',\n" +
@@ -96,6 +102,12 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         string finalVersioningFields = string.Empty;
         if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3VersioningFields ) ) {
           finalVersioningFields = T3VersioningFields.TableControlFields + ",\n";
+        }
+
+        // Were the T3VersioningFields included in this model?
+        string finalSortableFields = string.Empty;
+        if( configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3Sortable ) ) {
+          finalSortableFields = T3Sortable.TableControlFields + ",\n";
         }
 
         // Is an alternative label defined?
@@ -148,6 +160,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                commonFields = finalCommonFields,
                                translationFields = finalTranslationFields,
                                versioningFields = finalVersioningFields,
+                               sortableFields = finalSortableFields,
                                configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
                                thumbnail = thumbnailField,
                                searchFields = finalSearchFields

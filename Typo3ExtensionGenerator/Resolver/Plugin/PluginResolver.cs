@@ -48,6 +48,9 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
           } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Action ) {
             Action action = ActionResolver.ResolveAction( pluginParameter );
             plugin.Actions.Add( action );
+
+          } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Implementation ) {
+            plugin.Implementation = pluginParameter.Parameters;
           }
         }
 

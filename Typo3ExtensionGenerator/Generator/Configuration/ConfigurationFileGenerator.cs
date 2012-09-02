@@ -14,6 +14,9 @@ using log4net;
 using Type = Typo3ExtensionGenerator.Model.Configuration.Type;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
+  /// <summary>
+  /// The ConfigurationFileGenerator primarily generates the (so called) dynamic configuration files for TCA types.
+  /// </summary>
   public class ConfigurationFileGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -266,6 +269,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       }
       if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3VersioningFields ) ) {
         finalColumns.Append( T3VersioningFields.Interfaces + "," );
+      }
+      if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3Sortable ) ) {
+        finalColumns.Append( T3Sortable.Interfaces + "," );
       }
 
       string finalColumnsString = finalColumns.ToString().TrimEnd( new[] {','} );

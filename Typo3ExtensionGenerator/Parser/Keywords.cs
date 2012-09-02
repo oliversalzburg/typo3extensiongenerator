@@ -73,6 +73,11 @@ namespace Typo3ExtensionGenerator.Parser {
 
     public static class PluginDirectives {
       public const string Action = "action";
+
+      /// <summary>
+      /// represents - Used to point to a file that implements the interface of a controller.
+      /// </summary>
+      public const string Implementation = "represents";
     }
 
     /// <summary>
@@ -98,6 +103,11 @@ namespace Typo3ExtensionGenerator.Parser {
       /// t3TranslationFields
       /// </summary>
       public const string T3TranslationFields = "t3TranslationFields";
+
+      /// <summary>
+      /// t3Sortable
+      /// </summary>
+      public const string T3Sortable = "t3Sortable";
     }
 
     /// <summary>

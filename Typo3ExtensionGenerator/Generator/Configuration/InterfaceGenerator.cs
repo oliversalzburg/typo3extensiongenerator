@@ -12,7 +12,6 @@ using Typo3ExtensionGenerator.Parser;
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public static class InterfaceGenerator {
 
-
     public static string Generate( AbstractGenerator parent, Extension extension, Interface subject, SimpleContainer.Format format ) {
       string propertyTemplate = ( format == SimpleContainer.Format.PhpArray )
                                   ? SimpleContainer.PropertyTemplatePhp

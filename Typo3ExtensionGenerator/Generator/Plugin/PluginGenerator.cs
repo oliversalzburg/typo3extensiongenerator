@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using SmartFormat;
@@ -106,12 +107,56 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         // Generate the typoscript for this plugin.
         GenerateTypoScript( plugin );
+
+        // Generate Fluid templating elements
+        GenerateFluidTemplate( plugin );
       }
 
       string extTablesPhp = extTables.ToString().Substring( 0, extTables.Length - 1 );
       string extLocalconfPhp = extLocalconf.ToString().Substring( 0, extLocalconf.Length - 1 );
       WriteFile( "ext_tables.php", extTablesPhp, true );
       WriteFile( "ext_localconf.php", extLocalconfPhp, true );
+    }
+
+    private void GenerateFluidTemplate( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
+      // The default frontend layout
+      const string defaultLayoutTemplate = "{namespace d=Tx_Downloads_ViewHelpers}" +
+                                           "<d:includeFile path=\"EXT:downloads/Resources/Public/Css/downloads.css\" />" +
+                                           "<div class=\"tx-downloads\">" +
+                                           "	<f:render section=\"main\" />" +
+                                           "</div>";
+
+      const string layoutFilename = "Resources/Private/Layouts/Default.html";
+      Log.InfoFormat( "Generating default Fluid layout '{0}'...", layoutFilename );
+      WriteFile( layoutFilename, defaultLayoutTemplate );
+
+      // A generic partial that will render all the fields in a model
+      //WriteFile( "Resources/Private/Partials/Models/Download.html", string.Empty );
+
+      const string defaultTemplateTemplate = "<f:layout name=\"Default\" />" +
+                                             "<f:section name=\"main\">" +
+                                             "  <f:flashMessages class=\"flashMessages\" />" +
+                                             "  <h3>You need to create your own Fluid templates and point TYPO3 to them via TypoScript.</h3>" +
+/*
+"  <f:groupedFor each="{downloads}" as="category" groupBy="downloadCategory" groupKey="downloadCategory">"+
+"  <h2>{downloadCategory.name}</h2>"+
+"  <f:for each="{category}" as="download">"+
+"    <f:render partial="List/Download" arguments="{download: download}"/>"+
+"  </f:for>"+
+"  </f:groupedFor>"+
+*/
+                                             "</f:section>";
+
+      // Write Fluid templates for each action
+      foreach( Action action in plugin.Actions ) {
+        // The template that is used for the given action of the given controller
+        string templateFilename = string.Format(
+          "Resources/Private/Templates/{0}/{1}.html", NameHelper.UpperCamelCase( plugin.Name ),
+          NameHelper.UpperCamelCase( action.Name ) );
+
+        Log.InfoFormat( "Generating Fluid template '{0}'...", templateFilename );
+        WriteFile( templateFilename, defaultTemplateTemplate );
+      }
     }
 
     /// <summary>
@@ -197,7 +242,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       Log.InfoFormat( "Generating controller '{0}'...", className );
 
       StringBuilder actions = new StringBuilder();
-      const string actionTemplate = "public function {0}Action({1}) {{}}\n";
+      const string actionTemplate = "public function {0}Action({1}) {{ $this->getImplementation()->{0}Action({1}); }}\n";
 
       foreach( Action action in plugin.Actions ) {
         // Prefix each parameter with a $ and join them together with , in between.
@@ -209,13 +254,85 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         actions.Append( String.Format( actionTemplate, action.Name, parameters ) );
       }
 
-      const string controllerTemplate = "class {className} extends Tx_Extbase_MVC_Controller_ActionController {{\n{controllerActions}}}";
+      bool isExternallyImplemented = false;
+      string implementationClassname = string.Empty;
+      string implementationFilename = string.Empty;
+      if( !string.IsNullOrEmpty( plugin.Implementation ) ) {
+        isExternallyImplemented = true;
+        implementationClassname = NameHelper.GetExtbaseControllerImplementationClassName( Subject, plugin );
+        implementationFilename = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
+      }
+
+      if( isExternallyImplemented ) {
+        if( !File.Exists( plugin.Implementation ) ) {
+          throw new GeneratorException(
+            string.Format( "Implementation '{0}' for plugin '{1}' does not exist.", plugin.Implementation, plugin.Name ),
+            plugin.SourceLine );
+        }
+        Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
+        Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
+        string pluginImplementation = File.ReadAllText( plugin.Implementation );
+        WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation );
+      }
+
+      const string controllerImplementationTemplate = "private $implementation;\n" +
+                                                      "private function getImplementation() {{\n" +
+                                                      "  if( null == $this->implementation ) {{\n" +
+                                                      "    $this->implementation = new {implClassname}($this);\n" +
+                                                      "  }}\n" +
+                                                      "  return $this->implementation;\n" +
+                                                      "}}\n"+
+                                                      "function __construct() {{\n"+
+                                                      "}}\n";
+
+      StringBuilder propertiesList = new StringBuilder();
+      foreach( DataModel dataModel in Subject.Models ) {
+        const string memberTemplate = "/**\n" +
+                                      "* {0}Repository\n" +
+                                      "* @var {1}\n" +
+                                      "*/\n" +
+                                      "protected ${0}Repository;\n";
+
+        propertiesList.Append(
+          String.Format(
+            memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+
+        const string injectorTemplate =
+          "/**\n"+
+          "* inject{0}Repository\n"+
+          "* @param {1} ${2}Repository\n"+
+          "*/\n"+
+          "public function inject{0}Repository({1} ${2}Repository) {{\n" +
+          "  $this->{2}Repository = ${2}Repository;\n" +
+          "}}\n";
+
+        string injector = String.Format(
+          injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
+          NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
+
+        propertiesList.Append( injector );
+      }
+
+      string controllerImplementation =
+        controllerImplementationTemplate.FormatSmart(
+          new {
+                implClassname = implementationClassname,
+                className     = NameHelper.GetExtbaseControllerClassName( Subject, plugin )
+              } );
+
+      const string controllerTemplate = "class {className} extends Tx_Extbase_MVC_Controller_ActionController {{\n" +
+                                        "{controllerProperties}\n" +
+                                        "{controllerActions}\n" +
+                                        "}}\n" +
+                                        "{requireImplementation}";
 
       string controller =
         controllerTemplate.FormatSmart(
           new {
-                className         = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
-                controllerActions = actions.ToString()
+                className             = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
+                controllerProperties  = (( isExternallyImplemented ) ? controllerImplementation : string.Empty) + propertiesList,
+                controllerActions     = actions.ToString(),
+                requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
               } );
 
       WritePhpFile(

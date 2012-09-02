@@ -20,6 +20,11 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
     public string Title { get; set; }
 
     /// <summary>
+    /// The PHP class that implements the actions of our resulting ExtBase controller.
+    /// </summary>
+    public string Implementation { get; set; }
+
+    /// <summary>
     /// The data model for the FlexForm settings in this plugin.
     /// </summary>
     public DataModel Model { get; set; }

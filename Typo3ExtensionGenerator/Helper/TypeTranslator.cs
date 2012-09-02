@@ -47,5 +47,24 @@ namespace Typo3ExtensionGenerator.Helper {
           
       }
     }
+
+    public static string ToPhp( string typeDescription, int line ) {
+      switch( typeDescription ) {
+        case Keywords.Types.String:
+          return "string";
+        case Keywords.Types.UnsignedInt:
+          return "int";
+        
+        default:
+          // Is this a char[123] type definition?
+          if( typeDescription.Substring( 0, Keywords.Types.CharacterArray.Length ) == Keywords.Types.CharacterArray ) {
+            return "string";
+
+          } else {
+            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), line );
+          }
+          
+      }
+    }
   }
 }

@@ -56,10 +56,30 @@ namespace Typo3ExtensionGenerator.Helper {
     /// Generates the ExtBase controller class name for a given plugin.
     /// </summary>
     /// <param name="extension"></param>
-    /// <param name="dataModel"></param>
+    /// <param name="plugin"></param>
     /// <returns></returns>
     public static string GetExtbaseControllerClassName( Extension extension, Plugin plugin ) {
       return String.Format( "Tx_{0}_Controller_{1}Controller", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase controller class name that must be used to implement a controller for a given plugin.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="plugin"></param>
+    /// <returns></returns>
+    public static string GetExtbaseControllerImplementationClassName( Extension extension, Plugin plugin ) {
+      return String.Format( "{0}{1}ControllerImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase controller file name that must be used for the implementation of a controller for a given plugin.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="plugin"></param>
+    /// <returns></returns>
+    public static string GetExtbaseControllerImplementationFileName( Extension extension, Plugin plugin ) {
+      return String.Format( "{0}{1}ControllerImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
     }
 
     /// <summary>
@@ -82,7 +102,15 @@ namespace Typo3ExtensionGenerator.Helper {
       return String.Format( "Tx_{0}_Hooks_{1}", UpperCamelCase( extension.Key ), UpperCamelCase( category ) );
     }
 
-    
+    /// <summary>
+    /// Generates the file name for a Fluid partial.
+    /// </summary>
+    /// <param name="subject"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetFluidPartialFileName( Extension subject, DataModel dataModel ) {
+      return String.Format( "{0}.html", UpperCamelCase( dataModel.Name ) );
+    }
 
     /// <summary>
     /// Retrieves a full model name for a data model.
@@ -94,7 +122,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="model">The data model.</param>
     /// <returns></returns>
     public static string GetAbsoluteModelName( Extension extension, DataModel model ) {
-      return String.Format( "tx_{0}_domain_model_{1}", extension.Key, LowerUnderscoredCase( model.Name ) );
+      return String.Format( "tx_{0}_domain_model_{1}", extension.Key.Replace( "_", string.Empty ), model.Name.ToLower() );
     }
 
     /// <summary>
