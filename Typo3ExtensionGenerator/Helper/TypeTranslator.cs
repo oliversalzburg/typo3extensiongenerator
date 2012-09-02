@@ -23,9 +23,9 @@ namespace Typo3ExtensionGenerator.Helper {
     public static string ToSql( string typeDescription, int line ) {
       switch( typeDescription ) {
         case Keywords.Types.String:
-          return "TEXT";
+          return "text";
         case Keywords.Types.UnsignedInt:
-          return "INT(11) UNSIGNED DEFAULT '0'";
+          return "int(11) unsigned default '0'";
         
         default:
           // Is this a char[123] type definition?
@@ -39,7 +39,7 @@ namespace Typo3ExtensionGenerator.Helper {
             if( !int.TryParse( length, out memberLength ) ) {
               throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), line );
             }
-            return string.Format( "VARCHAR({0}) DEFAULT '' NOT NULL", memberLength );
+            return string.Format( "varchar({0}) default '' NOT NULL", memberLength );
 
           } else {
             throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), line );
