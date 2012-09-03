@@ -149,9 +149,14 @@ namespace Typo3ExtensionGenerator.Parser {
       /// </summary>
       public const string InterfaceInfo = "interfaceInfo";
 
+      /// <summary>
+      /// hide - This configuration is hidden. Users will not be able to create records for this model through the backend.
+      /// </summary>
+      public const string Hidden = "hide";
+
       public static class InterfaceDirectives {
         /// <summary>
-        /// exclude
+        /// exclude - This interface element is 'excluded' it can only be edited by certain people.
         /// </summary>
         public const string Exclude = "exclude";
 

@@ -51,6 +51,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                               "  'ctrl' => array(\n" +
                               "    'title'                    => 'LLL:EXT:{extensionKey}/Resources/Private/Language/locallang_db.xml:{model}',\n" +
                               "    'label'                    => '{label}',\n" +
+                              "{tableHidden}" +
                               "{labelAlt}" +
                               "{labelFunc}" +
                               "    'dividers2tabs'            => TRUE,\n" +
@@ -150,6 +151,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             "    'searchFields'             => '{0}'\n", configuration.SearchFields );
         }
 
+        string hideTable = configuration.Hidden ? "'hideTable'=>1,\n" : string.Empty;
+
         string absoluteModelName = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
         var dataObject = new {
                                extensionKey = Subject.Key,
@@ -163,7 +166,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                                sortableFields = finalSortableFields,
                                configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
                                thumbnail = thumbnailField,
-                               searchFields = finalSearchFields
+                               searchFields = finalSearchFields,
+                               tableHidden = hideTable
                              };
         string generatedConfiguration = template.FormatSmart( dataObject );
 

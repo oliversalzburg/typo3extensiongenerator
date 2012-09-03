@@ -54,6 +54,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     public string InterfaceInfo { get; set; }
 
     /// <summary>
+    /// Is the configured model hidden from backend users?
+    /// </summary>
+    public bool Hidden { get; set; }
+
+    /// <summary>
     /// The types defined in this data model configuration.
     /// </summary>
     public List<Type> Types { get; set; }

@@ -46,11 +46,15 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // config
       string configuration = string.Empty;
-      if( format == SimpleContainer.Format.PhpArray ) {
-        configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType.Name + "'" );
+      if( null != subject.DisplayType ) {
+        if( format == SimpleContainer.Format.PhpArray ) {
+          configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType.Name + "'" );
 
+        } else {
+          configuration += String.Format( propertyTemplate, "type", subject.DisplayType.Name );
+        }
       } else {
-        configuration += String.Format( propertyTemplate, "type", subject.DisplayType.Name );
+        throw new GeneratorException( string.Format( "No display type given in interface for '{0}'!", subject.Target ), subject.SourcePartial.Line );
       }
 
       // Add foreign_table

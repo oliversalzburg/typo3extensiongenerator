@@ -55,7 +55,10 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
             } else if( Keywords.Title == configurationDirective.Keyword ) {
               configuration.Title = configurationDirective.Parameters;
 
-            } 
+            } else if( Keywords.ConfigurationDirectives.Hidden == configurationDirective.Keyword ) {
+              configuration.Hidden = true;
+
+            }
           }
         }
       }
