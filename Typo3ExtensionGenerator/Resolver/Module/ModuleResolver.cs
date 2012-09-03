@@ -16,8 +16,13 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
 
       List<Typo3ExtensionGenerator.Model.Module> modules = new List<Typo3ExtensionGenerator.Model.Module>();
       foreach( ExtensionParser.ParsedPartial modulePartial in modulePartials ) {
-        Typo3ExtensionGenerator.Model.Module Module = new Typo3ExtensionGenerator.Model.Module {Name = modulePartial.Parameters};
-        modules.Add( Module );
+        Typo3ExtensionGenerator.Model.Module module = new Typo3ExtensionGenerator.Model.Module {Name = modulePartial.Parameters};
+        foreach( ExtensionParser.ParsedPartial subPartial in modulePartial.Partials ) {
+          if( subPartial.Keyword == Keywords.Category ) {
+            module.MainModuleName = subPartial.Parameters;
+          }
+        }
+        modules.Add( module );
       }
 
       return modules;
