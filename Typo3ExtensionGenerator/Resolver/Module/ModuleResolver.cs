@@ -20,6 +20,9 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
         foreach( ExtensionParser.ParsedPartial subPartial in modulePartial.Partials ) {
           if( subPartial.Keyword == Keywords.Category ) {
             module.MainModuleName = subPartial.Parameters;
+
+          } else if( subPartial.Keyword == Keywords.Title ) {
+            module.Title = subPartial.Parameters;
           }
         }
         modules.Add( module );

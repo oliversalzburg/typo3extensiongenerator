@@ -20,6 +20,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// The name of this plugin.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// The human-readable title for the module
+    /// </summary>
+    public string Title { get; set; }
     
     #region Implementation of IParserResult
     /// <summary>

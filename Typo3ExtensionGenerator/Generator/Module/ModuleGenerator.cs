@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using SmartFormat;
+using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
 
@@ -25,17 +27,17 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
       const string template = "if( TYPO3_MODE === 'BE' ) {{\n" +
                               "  Tx_Extbase_Utility_Extension::registerModule(\n" +
-                              "    '{0}',\n" +
-                              "    '{1}',\n" +
-                              "    '{2}',\n" +
+                              "    '{extensionName}',\n" +
+                              "    '{mainModuleName}',\n" +
+                              "    '{subModuleName}',\n" +
                               "    '',\n" +
                               "    array(\n" +
                               "      'TODO Import' => 'index, listCategories, listInstallNotes, enumDirectory, importEntityAsDownload',\n" +
                               "    ),\n" +
                               "    array(\n" +
                               "      'TODO access' => 'user,group',\n" +
-                              "      'icon'   => 'EXT:{0}/ext_icon.gif',\n" +
-                              "      'TODO labels' => 'LLL:EXT:{0}/Resources/Private/Language/locallang_downloadimportkey.xml',\n" +
+                              "      'icon'   => 'EXT:{extensionName}/ext_icon.gif',\n" +
+                              "      'labels' => 'LLL:EXT:{extensionName}/Resources/Private/Language/locallang_{langFileKey}.xml',\n" +
                               "    )\n" +
                               "  );\n" +
                               "}}";
@@ -45,8 +47,22 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
         Log.InfoFormat( "Registering module '{0}'...", module.Name );
 
-        string moduleKey = string.Format( "tx_{0}_m{1}", Subject.Key, moduleIndex + 1 );
-        result.Append( String.Format( template, Subject.Key, module.MainModuleName, moduleKey ) + "\n" );
+        string subKey = string.Format( "m{0}", moduleIndex + 1 );
+        string moduleKey = string.Format( "tx_{0}_{1}", Subject.Key, subKey );
+        result.Append(
+          template.FormatSmart(
+            new {
+                  extensionName = Subject.Key,
+                  mainModuleName = module.MainModuleName,
+                  subModuleName = moduleKey,
+                  langFileKey = subKey.ToLower()
+                } ) + "\n" );
+
+      // <label index="mlang_tabs_tab">Download Importer</label>
+      // <label index="mlang_labels_tabdescr">Import download records from files on the file system.</label>
+      // <label index="mlang_labels_tablabel">Create download records from files on the file system.</label>
+
+        WriteFile( string.Format( "Resources/Private/Language/locallang_{0}.xml", subKey.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ), true );
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );
