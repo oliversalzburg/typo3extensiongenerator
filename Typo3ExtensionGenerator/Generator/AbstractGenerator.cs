@@ -55,6 +55,12 @@ namespace Typo3ExtensionGenerator.Generator {
       }
     }
 
+    public void WriteFile( string filename, byte[] content ) {
+      string targetFilename = Path.Combine( OutputDirectory, filename );
+      Directory.CreateDirectory( new FileInfo( targetFilename ).DirectoryName );
+      File.WriteAllBytes( targetFilename, content );
+    }
+
     public void WritePhpFile( string filename, string content ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
       WriteFile( filename, fileContent );

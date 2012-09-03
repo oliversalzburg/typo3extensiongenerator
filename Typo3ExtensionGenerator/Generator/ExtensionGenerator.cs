@@ -46,6 +46,8 @@ namespace Typo3ExtensionGenerator.Generator {
       modelGenerator.Generate();
       ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, extension );
       configurationGenerator.Generate();
+      RequirementGenerator requirementGenerator = new RequirementGenerator( TargetDirectory, extension );
+      requirementGenerator.Generate();
 
       // Create extension icon
       ResourceHelper.FlushIcon( "box.gif", TargetDirectory, "ext_icon.gif" );
@@ -82,6 +84,8 @@ namespace Typo3ExtensionGenerator.Generator {
         "Classes/Hooks/Labels.php",
         string.Format( phpClassPrefix, NameHelper.GetExtbaseHookClassName( extension, "Labels" ) ), phpClassSuffix );
       AbstractGenerator.WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
+
+      
 
       // Flush virtual file system to disk
       AbstractGenerator.FlushVirtual( TargetDirectory );

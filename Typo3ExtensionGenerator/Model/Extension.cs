@@ -51,6 +51,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public List<Repository> Repositories { get; set; }
 
+    /// <summary>
+    /// A list of files that need to be copied to the output directory to complete the extension.
+    /// </summary>
+    public List<Requirement> Requirements { get; set; }
+
     #region Implementation of IParserResult
     /// <summary>
     /// The line on which this object was originally defined in the input.

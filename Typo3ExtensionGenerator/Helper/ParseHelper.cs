@@ -12,5 +12,17 @@ namespace Typo3ExtensionGenerator.Helper {
                 "no" == trimmed ||
                 "0" == trimmed );
     }
+
+    /// <summary>
+    /// Removes "" around a string.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public static string UnwrapString( string input ) {
+      if( input.First() == '\"' && input.Last() == '\"' ) {
+        return input.Substring( 1, input.Length - 2 );
+      }
+      return input;
+    }
   }
 }

@@ -120,6 +120,7 @@ namespace Typo3ExtensionGenerator.Parser {
                                          Modules = ModuleResolver.Resolve( partial ),
                                          Plugins = PluginResolver.Resolve( partial ),
                                          Repositories = RepositoryResolver.Resolve( partial ),
+                                         Requirements = RequirementResolver.Resolve( partial ),
                                          Title = TitleResolver.Resolve( partial )
                                        };
 

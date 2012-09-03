@@ -93,6 +93,7 @@
     <Compile Include="Generator\Module\ModuleGenerator.cs" />
     <Compile Include="Generator\Plugin\PluginGenerator.cs" />
     <Compile Include="Generator\PrettyPrint\LudicrousPrettyPrinter.cs" />
+    <Compile Include="Generator\RequirementGenerator.cs" />
     <Compile Include="Helper\DirectoryHelper.cs" />
     <Compile Include="Helper\NameHelper.cs" />
     <Compile Include="Helper\ParseHelper.cs" />
@@ -116,6 +117,7 @@
     <Compile Include="Generator\Model\Templates\T3TranslationFields.cs" />
     <Compile Include="Generator\Model\Templates\T3VersioningFields.cs" />
     <Compile Include="Model\Repository.cs" />
+    <Compile Include="Model\Requirement.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
     <Compile Include="Parser\IParserResult.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="Resolver\Extension\AuthorResolver.cs" />
     <Compile Include="Resolver\Extension\DescriptionResolver.cs" />
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
+    <Compile Include="Resolver\Extension\RequirementResolver.cs" />
     <Compile Include="Resolver\Extension\TitleResolver.cs" />
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />

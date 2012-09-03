@@ -194,11 +194,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       // The combination will always list the given action as the first (default) action; all other actions will be allowed in that combination as well.
       int actionIndex = 0;
       foreach( Action action in plugin.Actions ) {
-        string nonDefault = plugin.Actions.Where( act => act != action ).Aggregate(
-          string.Empty, ( current, act ) => current + ( controllerActionTemplate.FormatSmart(
+        string nonDefault = plugin.Actions.Where( nonDefaultAction => nonDefaultAction != action ).Aggregate(
+          string.Empty, ( current, nonDefaultAction ) => current + ( controllerActionTemplate.FormatSmart(
             new {
                   controllerName = NameHelper.UpperCamelCase( plugin.Name ),
-                  actionName = act.Name
+                  actionName = nonDefaultAction.Name
                 } ) + ";" ) );
         if( !string.IsNullOrEmpty( nonDefault ) ) {
           nonDefault = nonDefault.Substring( 0, nonDefault.Length - 1 );
