@@ -14,7 +14,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The models of the extension</returns>
     public static List<Repository> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> repositoryPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.DeclareRepository );
+      IEnumerable<ExtensionParser.ParsedPartial> repositoryPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareRepository );
       if( !repositoryPartials.Any() ) return null;
 
       List<Repository> repositories = new List<Repository>();

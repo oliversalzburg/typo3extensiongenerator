@@ -12,7 +12,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The configurations of the extension</returns>
     public static List<Typo3ExtensionGenerator.Model.Configuration.Configuration> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> configurationPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.DeclareConfiguration );
+      IEnumerable<ExtensionParser.ParsedPartial> configurationPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareConfiguration );
       if( !configurationPartials.Any() ) return null;
 
       List<Typo3ExtensionGenerator.Model.Configuration.Configuration> configurations = new List<Typo3ExtensionGenerator.Model.Configuration.Configuration>();

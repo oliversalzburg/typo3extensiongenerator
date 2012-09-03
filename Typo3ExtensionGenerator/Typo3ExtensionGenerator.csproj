@@ -131,12 +131,9 @@
     <Compile Include="Resolver\Configuration\Interface\DisplayTypeResolver.cs" />
     <Compile Include="Resolver\Configuration\PaletteResolver.cs" />
     <Compile Include="Resolver\Configuration\TypeResolver.cs" />
-    <Compile Include="Resolver\Extension\AuthorResolver.cs" />
-    <Compile Include="Resolver\Extension\CategoryResolver.cs" />
-    <Compile Include="Resolver\Extension\DescriptionResolver.cs" />
+    <Compile Include="Resolver\ExtensionResolver.cs" />
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
     <Compile Include="Resolver\Extension\RequirementResolver.cs" />
-    <Compile Include="Resolver\Extension\TitleResolver.cs" />
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />

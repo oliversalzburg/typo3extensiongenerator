@@ -15,7 +15,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The plauings of the extension</returns>
     public static List<Typo3ExtensionGenerator.Model.Plugin.Plugin> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> pluginPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.DeclarePlugin );
+      IEnumerable<ExtensionParser.ParsedPartial> pluginPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclarePlugin );
       if( !pluginPartials.Any() ) return null;
 
       List<Typo3ExtensionGenerator.Model.Plugin.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin.Plugin>();

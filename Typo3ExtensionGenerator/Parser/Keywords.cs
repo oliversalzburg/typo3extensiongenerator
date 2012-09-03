@@ -30,50 +30,58 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public const string DeclareExtension = "extension";
 
-    /// <summary>
-    /// Used to define the name of the author of the extension.
-    /// </summary>
-    public const string DefineAuthor = "author";
+    public static class ExtensionDirectives {
+      /// <summary>
+      /// author - Used to define the name of the author of the extension.
+      /// </summary>
+      public const string DefineAuthor = "author";
+
+      /// <summary>
+      /// authorEmail - Used to define the email address of the author of the extension.
+      /// </summary>
+      public const string DefineAuthorEmail = "authorEmail";
+
+      /// <summary>
+      /// authorCompany - Used to define the name of company of the author of the extension.
+      /// </summary>
+      public const string DefineAuthorCompany = "authorCompany";
+
+      /// <summary>
+      /// description - Gives a description for the extension.
+      /// </summary>
+      public const string Description = "description";
+
+      /// <summary>
+      /// plugin - Used to declare a new plugin.
+      /// </summary>
+      public const string DeclarePlugin = "plugin";
+
+      /// <summary>
+      /// module - Used to declare a new module.
+      /// </summary>
+      public const string DeclareModule = "module";
+
+      /// <summary>
+      /// model - Used to declare a new data model.
+      /// </summary>
+      public const string DeclareModel = "model";
+
+      /// <summary>
+      /// configure - Used to define a model configuration.
+      /// </summary>
+      public const string DeclareConfiguration = "configure";
+
+      /// <summary>
+      /// repository - Used to define the implementation details of an ExtBase repository.
+      /// </summary>
+      public const string DeclareRepository = "repository";
+    }
 
     /// <summary>
-    /// Used to define the email address of the author of the extension.
-    /// </summary>
-    public const string DefineAuthorEmail = "authorEmail";
-
-    /// <summary>
-    /// Used to define the name of company of the author of the extension.
-    /// </summary>
-    public const string DefineAuthorCompany = "authorCompany";
-
-    /// <summary>
-    /// Used to declare a new plugin.
-    /// </summary>
-    public const string DeclarePlugin = "plugin";
-
-    /// <summary>
-    /// Used to declare a new module.
-    /// </summary>
-    public const string DeclareModule = "module";
-
-    /// <summary>
-    /// Used to declare a new data model.
-    /// </summary>
-    public const string DeclareModel = "model";
-
-    /// <summary>
-    /// Keyword to request a template inside a data model.
+    /// template - Keyword to request a template inside a data model.
     /// </summary>
     public const string DataModelTemplate = "template";
 
-    /// <summary>
-    /// Used to define a model configuration.
-    /// </summary>
-    public const string DeclareConfiguration = "configure";
-
-    /// <summary>
-    /// repository - Used to define the implementation details of an ExtBase repository.
-    /// </summary>
-    public const string DeclareRepository = "repository";
 
     public static class Types {
       public const string UnsignedInt = "uint";

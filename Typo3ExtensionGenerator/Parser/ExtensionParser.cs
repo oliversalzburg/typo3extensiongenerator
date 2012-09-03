@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Resolver;
 using Typo3ExtensionGenerator.Resolver.Configuration;
 using Typo3ExtensionGenerator.Resolver.Extension;
 using Typo3ExtensionGenerator.Resolver.Model;
@@ -103,29 +104,7 @@ namespace Typo3ExtensionGenerator.Parser {
         throw new ParserException( "Missing extension declaration.", 1 );
       }
 
-      string extensionKey = partial.Header.Substring(
-        Keywords.DeclareExtension.Length, partial.Header.Length - Keywords.DeclareExtension.Length ).Trim();
-
-      Extension result = new Extension {
-                                         Author =
-                                           new Person() {
-                                                          Company = AuthorResolver.ResolveCompany( partial ),
-                                                          Email = AuthorResolver.ResolveEmail( partial ),
-                                                          Name = AuthorResolver.ResolveAuthor( partial )
-                                                        },
-                                         Category = CategoryResolver.Resolve( partial ),
-                                         Configurations = ConfigurationResolver.Resolve( partial ),
-                                         Description = DescriptionResolver.Resolve( partial ),
-                                         Key = extensionKey,
-                                         Models = ModelResolver.Resolve( partial ),
-                                         Modules = ModuleResolver.Resolve( partial ),
-                                         Plugins = PluginResolver.Resolve( partial ),
-                                         Repositories = RepositoryResolver.Resolve( partial ),
-                                         Requirements = RequirementResolver.Resolve( partial ),
-                                         Title = TitleResolver.Resolve( partial )
-                                       };
-
-
+      Extension result = ExtensionResolver.Resolve( partial );
 
       return result;
     }
