@@ -47,6 +47,16 @@ namespace Typo3ExtensionGenerator.Parser {
       public const string DefineAuthorCompany = "authorCompany";
 
       /// <summary>
+      /// state - Defines the state of the extension (alpha/beta/stable)
+      /// </summary>
+      public const string State = "state";
+
+      /// <summary>
+      /// version - Defines the version of the extension (1.2.3)
+      /// </summary>
+      public const string Version = "version";
+
+      /// <summary>
       /// description - Gives a description for the extension.
       /// </summary>
       public const string Description = "description";

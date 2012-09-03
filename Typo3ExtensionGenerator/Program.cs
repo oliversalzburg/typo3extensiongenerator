@@ -20,8 +20,12 @@ namespace Typo3ExtensionGenerator {
       }
       
       // I hate small console windows!
-      Console.WindowWidth  *= 2;
-      Console.WindowHeight *= 2;
+      try {
+        Console.WindowWidth *= 2;
+        Console.WindowHeight *= 2;
+      } catch( IOException ) {
+        // Maybe there is no console window (stream redirection)
+      }
 
       Log.InfoFormat( "Reading '{0}'...", args[ 0 ] );
       string markup = File.ReadAllText( args[ 0 ] );

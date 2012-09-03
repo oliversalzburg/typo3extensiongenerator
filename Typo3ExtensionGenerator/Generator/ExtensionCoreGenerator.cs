@@ -30,14 +30,14 @@ namespace Typo3ExtensionGenerator.Generator {
                         "  'shy'              => '',\n" +
                         "  'priority'         => '',\n" +
                         "  'module'           => '',\n" +
-                        "  'state'            => 'alpha',\n" +
+                        "  'state'            => '{state}',\n" +
                         "  'internal'         => '',\n" +
                         "  'uploadfolder'     => '0',\n" +
                         "  'createDirs'       => '',\n" +
                         "  'modify_tables'    => '',\n" +
                         "  'clearCacheOnLoad' => 0,\n" +
                         "  'lockType'         => '',\n" +
-                        "  'version'          => '0.0.1',\n" +
+                        "  'version'          => '{version}',\n" +
                         "  'constraints'      => array(\n" +
                         "    'depends'   => array(\n" +
                         "      'extbase' => '1.3.0',\n" +
@@ -57,7 +57,9 @@ namespace Typo3ExtensionGenerator.Generator {
               authorName = Subject.Author.Name,
               authorEmail = Subject.Author.Email,
               authorCompany = Subject.Author.Company,
-              category = Subject.Category
+              category = Subject.Category,
+              state = Subject.State,
+              version = Subject.Version
             } );
 
       WritePhpFile( "ext_emconf.php", result );

@@ -32,6 +32,16 @@ namespace Typo3ExtensionGenerator.Model {
     public Person Author { get; set; }
 
     /// <summary>
+    /// The state of the extension (alpha/beta/stable)
+    /// </summary>
+    public string State { get; set; }
+
+    /// <summary>
+    /// The version of the extension (1.2.3).
+    /// </summary>
+    public string Version { get; set; }
+
+    /// <summary>
     /// The plugins defined in this extension.
     /// </summary>
     public List<Plugin.Plugin> Plugins { get; set; }

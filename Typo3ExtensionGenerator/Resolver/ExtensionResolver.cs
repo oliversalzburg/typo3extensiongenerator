@@ -14,8 +14,12 @@ namespace Typo3ExtensionGenerator.Resolver {
       string extensionKey = parsedPartial.Header.Substring(
         Keywords.DeclareExtension.Length, parsedPartial.Header.Length - Keywords.DeclareExtension.Length ).Trim();
 
-      Typo3ExtensionGenerator.Model.Extension extension = new Typo3ExtensionGenerator.Model.Extension
-                                                          {Key = extensionKey, Author = Person.Someone};
+      Typo3ExtensionGenerator.Model.Extension extension = new Typo3ExtensionGenerator.Model.Extension {
+                                                                                                        Key = extensionKey,
+                                                                                                        Author = Person.Someone,
+                                                                                                        State = "alpha",
+                                                                                                        Version = "0.0.1"
+                                                                                                      };
 
       foreach( ExtensionParser.ParsedPartial subPartial in parsedPartial.Partials ) {
         if( subPartial.Keyword == Keywords.ExtensionDirectives.DefineAuthor ) {
@@ -30,6 +34,10 @@ namespace Typo3ExtensionGenerator.Resolver {
           extension.Description = subPartial.Parameters;
         } else if( subPartial.Keyword == Keywords.Title ) {
           extension.Title = subPartial.Parameters;
+        } else if( subPartial.Keyword == Keywords.ExtensionDirectives.State ) {
+          extension.State = subPartial.Parameters;
+        } else if( subPartial.Keyword == Keywords.ExtensionDirectives.Version ) {
+          extension.Version = subPartial.Parameters;
         }
       }
       extension.Configurations = ConfigurationResolver.Resolve( parsedPartial );
