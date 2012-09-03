@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SmartFormat;
 using Typo3ExtensionGenerator.Model;
 using log4net;
 
@@ -20,12 +21,12 @@ namespace Typo3ExtensionGenerator.Generator {
       Log.Info( "Generating ext_emconf.php..." );
 
       string template = "$EM_CONF[$_EXTKEY] = array(\n" +
-                        "  'title'            => '{0}',\n" +
-                        "  'description'      => '{1}',\n" +
-                        "  'category'         => 'fe',\n" +
-                        "  'author'           => '{2}',\n" +
-                        "  'author_email'     => '{3}',\n" +
-                        "  'author_company'   => '{4}',\n" +
+                        "  'title'            => '{title}',\n" +
+                        "  'description'      => '{description}',\n" +
+                        "  'category'         => '{category}',\n" +
+                        "  'author'           => '{authorName}',\n" +
+                        "  'author_email'     => '{authorEmail}',\n" +
+                        "  'author_company'   => '{authorCompany}',\n" +
                         "  'shy'              => '',\n" +
                         "  'priority'         => '',\n" +
                         "  'module'           => '',\n" +
@@ -48,9 +49,16 @@ namespace Typo3ExtensionGenerator.Generator {
                         "    ),\n" +
                         "  ),\n" +
                         ");";
-      string result = string.Format(
-        template, Subject.Title, Subject.Description, Subject.Author.Name, Subject.Author.Email,
-        Subject.Author.Company );
+
+      string result = template.FormatSmart(
+        new {
+              title = Subject.Title,
+              description = Subject.Description,
+              authorName = Subject.Author.Name,
+              authorEmail = Subject.Author.Email,
+              authorCompany = Subject.Author.Company,
+              category = Subject.Category
+            } );
 
       WritePhpFile( "ext_emconf.php", result );
     }

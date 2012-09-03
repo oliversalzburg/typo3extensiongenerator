@@ -132,6 +132,7 @@
     <Compile Include="Resolver\Configuration\PaletteResolver.cs" />
     <Compile Include="Resolver\Configuration\TypeResolver.cs" />
     <Compile Include="Resolver\Extension\AuthorResolver.cs" />
+    <Compile Include="Resolver\Extension\CategoryResolver.cs" />
     <Compile Include="Resolver\Extension\DescriptionResolver.cs" />
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
     <Compile Include="Resolver\Extension\RequirementResolver.cs" />

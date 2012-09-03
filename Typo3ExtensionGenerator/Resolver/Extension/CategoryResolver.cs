@@ -5,14 +5,14 @@ using System.Text;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Resolver.Extension {
-  public class TitleResolver {
+  public static class CategoryResolver {
     /// <summary>
     /// Resolves the title of an extension from a ParsedPartial.
     /// </summary>
     /// <param name="parsedPartial">The partially parsed extension.</param>
     /// <returns>The title of the extension</returns>
     public static string Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      ExtensionParser.ParsedPartial titlePartial = parsedPartial.Partials.FirstOrDefault( p => p.Keyword == Keywords.Title );
+      ExtensionParser.ParsedPartial titlePartial = parsedPartial.Partials.FirstOrDefault( p => p.Keyword == Keywords.Category );
       if( null == titlePartial ) return null;
 
       return titlePartial.Parameters;

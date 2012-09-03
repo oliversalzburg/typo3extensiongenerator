@@ -22,6 +22,11 @@ namespace Typo3ExtensionGenerator.Model {
     public string Description { get; set; }
 
     /// <summary>
+    /// The category of this extension.
+    /// </summary>
+    public string Category { get; set; }
+
+    /// <summary>
     /// The creator of this extension.
     /// </summary>
     public Person Author { get; set; }

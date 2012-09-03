@@ -113,6 +113,7 @@ namespace Typo3ExtensionGenerator.Parser {
                                                           Email = AuthorResolver.ResolveEmail( partial ),
                                                           Name = AuthorResolver.ResolveAuthor( partial )
                                                         },
+                                         Category = CategoryResolver.Resolve( partial ),
                                          Configurations = ConfigurationResolver.Resolve( partial ),
                                          Description = DescriptionResolver.Resolve( partial ),
                                          Key = extensionKey,

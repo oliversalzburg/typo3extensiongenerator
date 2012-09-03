@@ -16,6 +16,11 @@ namespace Typo3ExtensionGenerator.Parser {
     public const string Title = "as";
 
     /// <summary>
+    /// in - Defines a category for the given item.
+    /// </summary>
+    public const string Category = "in";
+
+    /// <summary>
     /// require - This object requires a certain condition to be met.
     /// </summary>
     public const string Requirement = "require";
