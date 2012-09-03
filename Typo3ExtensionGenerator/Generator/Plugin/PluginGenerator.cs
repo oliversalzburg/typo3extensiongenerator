@@ -43,7 +43,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                     "  'LLL:EXT:{0}/Resources/Private/Language/locallang_be.xml:{2}'\n" +
                                     ");";
 
-      const string controllerAction = "    '{controllerName}' => '{actionName}'";
+      const string controllerAction = "    '{controllerName}' => '{actionList}'";
 
       const string configurePlugin = "Tx_Extbase_Utility_Extension::configurePlugin(" +
                                      "  '{extensionKey}'," +
@@ -52,7 +52,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                      "{cachableActions}" +
                                      "  )," +
                                      "  array(" +
-                                     "    'ControllerGoesHere' => 'uncachedActionGoesHere'" +
+                                     "    /*'ControllerGoesHere' => 'uncachedActionGoesHere'*/" +
                                      "  )" +
                                      ");";
 
@@ -80,20 +80,23 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         // Generate allowed action combination that should be configured
         StringBuilder actions = new StringBuilder();
         foreach( Action action in plugin.Actions ) {
-          var actionData =
-            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionName = action.Name};
-          actions.Append( controllerAction.FormatSmart( actionData ) + "," );
+          actions.Append(  action.Name + "," );
         }
         string actionsCachable = actions.ToString();
         actionsCachable = actionsCachable.Substring( 0, actionsCachable.Length - 1 );
+        var controllerData =
+            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsCachable };
+        string allControllerActions = controllerAction.FormatSmart( controllerData );
+
 
         // Add configurePlugin line to ext_localconf
         var configurePluginData =
           new {
                 extensionKey = Subject.Key,
                 pluginName = NameHelper.UpperCamelCase( plugin.Name ),
-                cachableActions = actionsCachable
+                cachableActions = allControllerActions
               };
+        
         extLocalconf.Append( configurePlugin.FormatSmart( configurePluginData ) + "\n" );
 
         // Resolve the foreign key references in the flexform model
@@ -172,7 +175,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         StringBuilder actions  = new StringBuilder();
 
       // TODO: Should possibly render ALL fields in the model
-      const string membersTemplate = "\n<{0}.settings><TCEforms>{1}</TCEforms></{0}.settings>";
+      const string membersTemplate = "\n<settings.{0}><TCEforms>{1}</TCEforms></settings.{0}>";
       foreach( Interface @interface in plugin.Interfaces ) {
         string members = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.Xml );
 
@@ -181,22 +184,38 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       }
 
       // Generate actions
+      const string controllerActionTemplate = "{controllerName}->{actionName}";
       const string actionTemplate = "                  <numIndex index=\"{actIndex}\">" +
                                     "                    <numIndex index=\"0\">{title}</numIndex>" +
-                                    "                    <numIndex index=\"1\">{controllerName}->{actionName};</numIndex>" +
+                                    "                    <numIndex index=\"1\">{controllerName}->{actionName};{nonDefault}</numIndex>" +
                                     "                  </numIndex>";
 
+      // We'll generate an entry for each action in the controller.
+      // The combination will always list the given action as the first (default) action; all other actions will be allowed in that combination as well.
       int actionIndex = 0;
       foreach( Action action in plugin.Actions ) {
+        string nonDefault = plugin.Actions.Where( act => act != action ).Aggregate(
+          string.Empty, ( current, act ) => current + ( controllerActionTemplate.FormatSmart(
+            new {
+                  controllerName = NameHelper.UpperCamelCase( plugin.Name ),
+                  actionName = act.Name
+                } ) + ";" ) );
+        if( !string.IsNullOrEmpty( nonDefault ) ) {
+          nonDefault = nonDefault.Substring( 0, nonDefault.Length - 1 );
+        }
+
         var dataObject =
           new {
                 title          = action.Title,
                 controllerName = NameHelper.UpperCamelCase( plugin.Name ),
                 actionName     = action.Name,
-                actIndex       = actionIndex
+                actIndex       = actionIndex,
+                nonDefault     = nonDefault.ToString()
               };
         string actionString = actionTemplate.FormatSmart( dataObject );
         actions.Append( actionString );
+
+        
 
         ++actionIndex;
       }
@@ -242,16 +261,22 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       Log.InfoFormat( "Generating controller '{0}'...", className );
 
       StringBuilder actions = new StringBuilder();
-      const string actionTemplate = "public function {0}Action({1}) {{ $this->getImplementation()->{0}Action({1}); }}\n";
+      const string actionTemplate = "/**\n" +
+                                    "{2}" +
+                                    "*/\n" +
+                                    "public function {0}Action({1}) {{ return $this->getImplementation()->{0}Action({1}); }}\n";
 
       foreach( Action action in plugin.Actions ) {
+        string phpDoc = action.Requirements.Aggregate(
+          string.Empty, ( current, requirement ) => current + ( "* @param mixed " + requirement + "\n" ) );
+
         // Prefix each parameter with a $ and join them together with , in between.
         string parameters = action.Requirements.Aggregate(
           string.Empty,
           ( current, requirement ) =>
           current + ( "$" + requirement + ( ( requirement != action.Requirements.Last() ) ? "," : string.Empty ) ) );
 
-        actions.Append( String.Format( actionTemplate, action.Name, parameters ) );
+        actions.Append( String.Format( actionTemplate, action.Name, parameters, phpDoc ) );
       }
 
       bool isExternallyImplemented = false;
@@ -260,7 +285,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       if( !string.IsNullOrEmpty( plugin.Implementation ) ) {
         isExternallyImplemented = true;
         implementationClassname = NameHelper.GetExtbaseControllerImplementationClassName( Subject, plugin );
-        implementationFilename = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
+        implementationFilename  = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
       }
 
       if( isExternallyImplemented ) {
@@ -346,36 +371,36 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// </summary>
     /// <param name="plugin"> </param>
     private void GenerateTypoScript( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
-      const string constantsTemplate = "plugin.{pluginName} {{\n" +
+      const string constantsTemplate = "plugin.{extensioName} {{\n" +
                                        "	view {{\n" +
-                                       "		# cat=plugin.{pluginName}/file; type=string; label=Path to template root (FE)\n" +
+                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template root (FE)\n" +
                                        "		templateRootPath = EXT:{extensionKey}/Resources/Private/Templates/\n" +
-                                       "		# cat=plugin.{pluginName}/file; type=string; label=Path to template partials (FE)\n" +
+                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template partials (FE)\n" +
                                        "		partialRootPath = EXT:{extensionKey}/Resources/Private/Partials/\n" +
-                                       "		# cat=plugin.{pluginName}/file; type=string; label=Path to template layouts (FE)\n" +
+                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template layouts (FE)\n" +
                                        "		layoutRootPath = EXT:{extensionKey}/Resources/Private/Layouts/\n" +
                                        "	}}\n" +
                                        "	persistence {{\n" +
-                                       "		# cat=plugin.{pluginName}//a; type=int+; label=Default storage PID\n" +
+                                       "		# cat=plugin.{extensioName}//a; type=int+; label=Default storage PID\n" +
                                        "		storagePid = \n" +
                                        "	}}\n" +
                                        "	settings {{\n" +
-                                       "	 # cat=plugin.{pluginName}/file; type=string; label=Path to file type icons\n" +
+                                       "	 # cat=plugin.{extensioName}/file; type=string; label=Path to file type icons\n" +
                                        "    iconPath = EXT:{extensionKey}/Resources/Public/Icons/TypeIcons/\n" +
                                        "  }}\n" +
                                        "}}";
 
-      const string setupTemplate = "plugin.{pluginName} {{\n" +
+      const string setupTemplate = "plugin.{extensioName} {{\n" +
                                    "	view {{\n" +
-                                   "		templateRootPath = {{$plugin.{pluginName}.view.templateRootPath}}\n" +
-                                   "		partialRootPath  = {{$plugin.{pluginName}.view.partialRootPath}}\n" +
-                                   "		layoutRootPath   = {{$plugin.{pluginName}.view.layoutRootPath}}\n" +
+                                   "		templateRootPath = {{$plugin.{extensioName}.view.templateRootPath}}\n" +
+                                   "		partialRootPath  = {{$plugin.{extensioName}.view.partialRootPath}}\n" +
+                                   "		layoutRootPath   = {{$plugin.{extensioName}.view.layoutRootPath}}\n" +
                                    "	}}\n" +
                                    "	persistence {{\n" +
-                                   "		storagePid = {{$plugin.{pluginName}.persistence.storagePid}}\n" +
+                                   "		storagePid = {{$plugin.{extensioName}.persistence.storagePid}}\n" +
                                    "	}}\n" +
                                    "	settings {{\n" +
-                                   "	  iconPath = {{$plugin.{pluginName}.settings.iconPath}}\n" +
+                                   "	  iconPath = {{$plugin.{extensioName}.settings.iconPath}}\n" +
                                    "	  example {{\n" +
                                    "	    // Place your own TS here\n" +
                                    "	  }}\n" +
@@ -384,7 +409,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       // Just to be safe, we also go all lower-case here.
       var dataObject =
-        new {pluginName = "tx_" + plugin.Name.ToLower(), extensionKey = Subject.Key, extensionName = Subject.Title};
+        new {extensioName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(), extensionKey = Subject.Key, extensionName = Subject.Title};
 
       Log.Info( "Generating TypoScript constants..." );
       string constants = constantsTemplate.FormatSmart( dataObject );
@@ -395,7 +420,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       WriteFile( "Configuration/TypoScript/setup.txt", setup );
 
       const string typoScriptRegisterTemplate =
-        "t3lib_extMgm::addStaticFile({extensionKey}, 'Configuration/TypoScript', '{extensionName}');";
+        "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionName}');";
 
       WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
     }

@@ -9,6 +9,7 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using log4net;
+using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Model {
   /// <summary>
@@ -108,10 +109,76 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// <param name="model"></param>
     /// <returns></returns>
     private string GenerateRepositoryFile( DataModel model ) {
-      const string template = "class {className} extends Tx_Extbase_Persistence_Repository {{}}";
+      
+
+      const string repositoryImplementationTemplate = "private $implementation;\n" +
+                                                      "private function getImplementation() {{\n" +
+                                                      "  if( null == $this->implementation ) {{\n" +
+                                                      "    $this->implementation = new {implClassname}($this);\n" +
+                                                      "  }}\n" +
+                                                      "  return $this->implementation;\n" +
+                                                      "}}\n";
+
+      
+      string implementationClassname = NameHelper.GetExtbaseDomainModelRepositoryImplementationClassName( Subject, model ); 
+      string implementationFilename = NameHelper.GetExtbaseDomainModelRepositoryImplementationFileName( Subject, model );
+
+      // Did the user define additional information for our repository
+      bool isExternallyImplemented = false;
+      Repository repositoryDefinition = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == model.Name );
+      if( null != repositoryDefinition && !string.IsNullOrEmpty( repositoryDefinition.Implementation ) ) {
+        if( !File.Exists( repositoryDefinition.Implementation ) ) {
+          throw new GeneratorException(
+            string.Format(
+              "Implementation '{0}' for repository for '{1}' does not exist.", repositoryDefinition.Implementation,
+              model.Name ),
+            repositoryDefinition.SourceLine );
+        }
+
+        isExternallyImplemented = true;
+
+        Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
+        Log.InfoFormat( "Merging implementation '{0}'...", repositoryDefinition.Implementation );
+        string repositoryImplementationContent = File.ReadAllText( repositoryDefinition.Implementation );
+        WriteFile( "Classes/Domain/Repository/" + implementationFilename, repositoryImplementationContent );
+      }
+
+      // Generate methods as described in definition
+      StringBuilder actions = new StringBuilder();
+      if( null != repositoryDefinition ) {
+        const string actionTemplate = "public function {0}({1}) {{ return $this->getImplementation()->{0}({1}); }}\n";
+
+        foreach( Action action in repositoryDefinition.Methods ) {
+          // Prefix each parameter with a $ and join them together with , in between.
+          string parameters = action.Requirements.Aggregate(
+            string.Empty,
+            ( current, requirement ) =>
+            current + ( "$" + requirement + ( ( requirement != action.Requirements.Last() ) ? "," : string.Empty ) ) );
+
+          actions.Append( String.Format( actionTemplate, action.Name, parameters ) );
+        }
+      }
+
+      string repositoryImplementation =
+        repositoryImplementationTemplate.FormatSmart(
+          new {
+                implClassname = implementationClassname,
+                className     = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model )
+              } );
+
+      // Generate final class
+      const string template = "class {className} extends Tx_Extbase_Persistence_Repository {{\n" +
+                              "{repositoryMethods}\n" +
+                              "}}\n" +
+                              "{requireImplementation}";
 
       return
-        template.FormatSmart( new {className = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model )} );
+        template.FormatSmart(
+          new {
+                className = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model ),
+                repositoryMethods = repositoryImplementation + actions,
+                requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
+              } );
     }
 
     /// <summary>
@@ -120,8 +187,8 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// <param name="dataModel"></param>
     /// <returns></returns>
     private string GenerateFluidPartial( DataModel dataModel ) {
-      const string viewHelperNamespaceTemplate = "{{namespace downloads=Tx_Downloads_ViewHelpers}}\n";
-      const string modelTemplate               = "<div class=\"tx-downloads-item\">\n{fieldsList}</div>\n";
+      const string viewHelperNamespaceTemplate = "{namespace downloads=Tx_Downloads_ViewHelpers}\n";
+      const string modelTemplate               = "<div class=\"tx-{cssRoot}-item\">\n{fieldsList}</div>\n";
       const string fieldTemplate               = "<div>{{{fieldAccessor}}}</div>\n";
 
       StringBuilder fieldsCollector = new StringBuilder();
@@ -130,7 +197,9 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       }
       string fields = fieldsCollector.ToString();
 
-      string model = modelTemplate.FormatSmart( new {fieldsList = fields} );
+      string model =
+        modelTemplate.FormatSmart(
+          new {fieldsList = fields, cssRoot = NameHelper.UpperCamelCase( Subject.Key ).ToLower()} );
 
       return viewHelperNamespaceTemplate + model;
     }

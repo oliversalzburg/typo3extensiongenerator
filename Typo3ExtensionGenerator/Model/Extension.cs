@@ -46,6 +46,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public List<Configuration.Configuration> Configurations { get; set; }
 
+    /// <summary>
+    /// The ExtBase repositories used in this extension.
+    /// </summary>
+    public List<Repository> Repositories { get; set; }
+
     #region Implementation of IParserResult
     /// <summary>
     /// The line on which this object was originally defined in the input.

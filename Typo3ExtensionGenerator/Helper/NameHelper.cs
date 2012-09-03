@@ -33,7 +33,7 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
-    /// Generates the ExtBase domain model repository class name for a given data model.
+    /// Generates the ExtBase domain model repository class name for a given data model repository.
     /// </summary>
     /// <param name="extension"></param>
     /// <param name="dataModel"></param>
@@ -43,13 +43,33 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
-    /// Generates the Extbase class name for a given data model.
+    /// Generates the ExtBase domain model repository class name for a given data model that must be used for a specific implementation.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseDomainModelRepositoryImplementationClassName( Extension extension, DataModel dataModel ) {
+      return String.Format( "{0}{1}RepositoryImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the Extbase class name for a given data model repository.
     /// </summary>
     /// <param name="extension"></param>
     /// <param name="dataModel"></param>
     /// <returns></returns>
     public static string GetExtbaseDomainModelRepositoryFileName( Extension extension, DataModel dataModel ) {
       return String.Format( "{0}Repository.php", UpperCamelCase( dataModel.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the Extbase class name for a given data model repository implementation.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="dataModel"></param>
+    /// <returns></returns>
+    public static string GetExtbaseDomainModelRepositoryImplementationFileName( Extension extension, DataModel dataModel ) {
+      return String.Format( "{0}RepositoryImplementation.php", UpperCamelCase( dataModel.Name ) );
     }
 
     /// <summary>
@@ -73,16 +93,6 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
-    /// Generates the ExtBase controller file name that must be used for the implementation of a controller for a given plugin.
-    /// </summary>
-    /// <param name="extension"></param>
-    /// <param name="plugin"></param>
-    /// <returns></returns>
-    public static string GetExtbaseControllerImplementationFileName( Extension extension, Plugin plugin ) {
-      return String.Format( "{0}{1}ControllerImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
-    }
-
-    /// <summary>
     /// Generates the Extbase controller class name for a given plugin.
     /// </summary>
     /// <param name="extension"></param>
@@ -90,6 +100,16 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <returns></returns>
     public static string GetExtbaseControllerFileName( Extension extension, Plugin plugin ) {
       return String.Format( "{0}Controller.php", UpperCamelCase( plugin.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase controller file name that must be used for the implementation of a controller for a given plugin.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="plugin"></param>
+    /// <returns></returns>
+    public static string GetExtbaseControllerImplementationFileName( Extension extension, Plugin plugin ) {
+      return String.Format( "{0}{1}ControllerImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
     }
 
     /// <summary>

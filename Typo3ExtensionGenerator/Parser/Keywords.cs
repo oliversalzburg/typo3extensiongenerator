@@ -65,6 +65,11 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public const string DeclareConfiguration = "configure";
 
+    /// <summary>
+    /// repository - Used to define the implementation details of an ExtBase repository.
+    /// </summary>
+    public const string DeclareRepository = "repository";
+
     public static class Types {
       public const string UnsignedInt = "uint";
       public const string String = "string";
