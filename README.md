@@ -3,7 +3,7 @@ TYPO3 Extension Generator
 
 The **TYPO3 Extension Generator** is a tool to generate a TYPO3 extension from a laughably simple markup.
 
-![](screenshot.png)
+![](https://raw.github.com/oliversalzburg/typo3extensiongenerator/master/screenshot.png)
 
 This is the output of generating a replica of [EXT:downloads](https://github.com/oliversalzburg/downloads):
 
