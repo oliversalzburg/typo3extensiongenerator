@@ -300,6 +300,13 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
         string pluginImplementation = File.ReadAllText( plugin.Implementation );
         WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation );
+
+      } else {
+        if( plugin.Actions.Count > 0 ) {
+          Log.WarnFormat(
+            "Plugin '{0}' defines actions, but has no implementation provided. If any of these actions is invoked by TYPO3, a PHP error will be generated!",
+            plugin.Name );
+        }
       }
 
       const string controllerImplementationTemplate = "private $implementation;\n" +
