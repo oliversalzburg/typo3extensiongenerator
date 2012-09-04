@@ -59,22 +59,21 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // Add foreign_table
       if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
+        DataModel foreignModel = subject.ParentModel.ForeignModels[ subject.Target ];
+        string typename = ( String.IsNullOrEmpty( foreignModel.InternalType ) )
+                            ? NameHelper.GetAbsoluteModelName( extension, foreignModel )
+                            : foreignModel.InternalType;
+
         if( format == SimpleContainer.Format.PhpArray ) {
           configuration += String.Format(
-            propertyTemplate, "foreign_table",
-            "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] )
-            + "'" );
+            propertyTemplate, "foreign_table", "'" + typename + "'" );
           configuration += String.Format(
-            propertyTemplate, "allowed",
-            "'" + NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] )
-            + "'" );
+            propertyTemplate, "allowed", "'" + typename+ "'" );
         } else {
           configuration += String.Format(
-            propertyTemplate, "foreign_table",
-            NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) );
+            propertyTemplate, "foreign_table", typename );
           configuration += String.Format(
-            propertyTemplate, "allowed",
-            NameHelper.GetAbsoluteModelName( extension, subject.ParentModel.ForeignModels[ subject.Target ] ) );
+            propertyTemplate, "allowed", typename );
         }
       }
       // Add any additional properties to the configuration

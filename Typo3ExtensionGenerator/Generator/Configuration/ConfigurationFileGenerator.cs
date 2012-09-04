@@ -245,6 +245,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       StringBuilder finalColumns = new StringBuilder();
 
       // Prepare data model references
+      // We look up the actual DataModel instances for the previously stored target value.
       foreach( Interface fieldInterface in Configuration.Interfaces ) {
         fieldInterface.ParentModel = Subject.Models.Single( m => m.Name == fieldInterface.ParentModelTarget );
       }
