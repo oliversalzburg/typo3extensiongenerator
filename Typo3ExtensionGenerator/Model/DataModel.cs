@@ -27,6 +27,11 @@ namespace Typo3ExtensionGenerator.Model {
     public string Name { get; set; }
 
     /// <summary>
+    /// The already existing type in TYPO3 that is implemented through this type
+    /// </summary>
+    public string InternalType { get; set; }
+
+    /// <summary>
     /// The contained data members.
     /// </summary>
     public List<DataModelMember> Members { get; set; }

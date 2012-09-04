@@ -327,11 +327,22 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                       "*/\n" +
                                       "protected ${0}Repository;\n";
 
-        propertiesList.Append(
-          String.Format(
-            memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+        // Check if the repository is internally implemented.
+        // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
+        Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
+        if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+          propertiesList.Append(
+            String.Format(
+              memberTemplate, dataModel.Name, repository.InternalType ) );
 
-        const string injectorTemplate =
+        } else {
+
+          propertiesList.Append(
+            String.Format(
+              memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+        }
+
+      const string injectorTemplate =
           "/**\n"+
           "* inject{0}Repository\n"+
           "* @param {1} ${2}Repository\n"+
@@ -340,9 +351,18 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           "  $this->{2}Repository = ${2}Repository;\n" +
           "}}\n";
 
-        string injector = String.Format(
-          injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
-          NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
+        // Check again if the repository is internally implemented.
+        // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
+        string injector = string.Empty;
+        if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+          injector = String.Format(
+            injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ), repository.InternalType, dataModel.Name );
+
+        } else {
+          injector = String.Format(
+            injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
+            NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
+        }
 
         propertiesList.Append( injector );
       }

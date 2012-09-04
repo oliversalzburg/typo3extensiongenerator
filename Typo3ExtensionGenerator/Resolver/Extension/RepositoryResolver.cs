@@ -30,8 +30,12 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
             if( dataMember.Keyword == Keywords.PluginDirectives.Action ) {
               Action action = ActionResolver.ResolveAction( dataMember );
               repository.Methods.Add( action );
+
             } else if( dataMember.Keyword == Keywords.PluginDirectives.Implementation) {
               repository.Implementation = dataMember.Parameters;
+            
+            } else if( dataMember.Keyword == Keywords.InternalType ) {
+              repository.InternalType = dataMember.Parameters;
             }
           }
         }

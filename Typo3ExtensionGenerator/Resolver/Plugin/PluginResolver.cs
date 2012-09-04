@@ -41,7 +41,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
             Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
               InterfaceResolver.Resolve( pluginParameter );
             
-            //@interface.ParentModelTarget = "flexform";
+            @interface.ParentModelTarget = "flexform";
             @interface.ParentModel = plugin.Model;
             plugin.Interfaces.Add( @interface );
           

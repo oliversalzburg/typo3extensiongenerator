@@ -38,13 +38,16 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
           // Check if any of the fields references the name of another model
           DataModel foreignModel = additional.Concat( models ).SingleOrDefault( m => m.Name == searchTerm );
           if( null != foreignModel ) {
-            if( !foreignModel.UsesTemplate( Keywords.DataModelTemplates.T3ManagedFields ) ) {
+            // Does the referenced type implement the "TYPO3 managed fields"? If not, this a problem (foreign fields are referenced through the uid field that is part of those fields).
+            // If the type is "internally implemented" we ignore this (it is assumed that the internal type implements the field).
+            if( !foreignModel.UsesTemplate( Keywords.DataModelTemplates.T3ManagedFields ) && string.IsNullOrEmpty( foreignModel.InternalType ) ) {
               throw new GeneratorException(
                 string.Format(
                   "Referenced foreign model '{0}' does not include TYPO3 Managed Fields template.", foreignModel.Name ),
                 dataModel.SourceLine + field.Line );
             }
 
+            // Store the foreign model for this field
             dataModel.ForeignModels.Add( field.Value, foreignModel );
           }
         }

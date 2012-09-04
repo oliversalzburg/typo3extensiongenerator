@@ -25,6 +25,15 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     public void Generate() {
       WriteFile( "ext_tables.sql", GenerateSql() );
 
+      foreach( Repository repository in Subject.Repositories ) {
+        DataModel repositoryModel = Subject.Models.SingleOrDefault( m => m.Name == repository.TargetModelName );
+        if( null == repositoryModel ) {
+          throw new GeneratorException(
+            string.Format( "The target type '{0}' for the repository is not defined.", repository.TargetModelName ),
+            repository.SourceLine );
+        }
+      }
+
       foreach( DataModel dataModel in Subject.Models ) {
         const string modelPath      = "Classes/Domain/Model";
         const string repositoryPath = "Classes/Domain/Repository";
@@ -36,15 +45,21 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         
         string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating model '{0}'...", modelFilename );
-        WritePhpFile( modelFilename, modelFileContent );
+        if( !string.IsNullOrEmpty( modelFileContent ) ) {
+          WritePhpFile( modelFilename, modelFileContent );
+        }
 
         string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
-        WritePhpFile( respositoryFilename, repositoryFileContent );
+        if( !string.IsNullOrEmpty( repositoryFileContent ) ) {
+          WritePhpFile( respositoryFilename, repositoryFileContent );
+        }
 
         string fluidPartialFilename = Path.Combine( partialsPath, NameHelper.GetFluidPartialFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating Fluid partial '{0}'...", fluidPartialFilename );
-        WriteFile( fluidPartialFilename, fluidPartialContent );
+        if( !string.IsNullOrEmpty( fluidPartialContent) ) {
+          WriteFile( fluidPartialFilename, fluidPartialContent );
+        }
       }
     }
 
@@ -54,6 +69,11 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// <param name="dataModel"></param>
     /// <returns></returns>
     private string GenerateModelFile( DataModel dataModel ) {
+      // If this model implements an internal type, we don't need to generate anything.
+      if( !string.IsNullOrEmpty( dataModel.InternalType ) ) {
+        return string.Empty;
+      }
+
       const string template =
         "class {className} extends Tx_Extbase_DomainObject_AbstractEntity {{\n" +
         "{properties}" +
@@ -70,9 +90,14 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       StringBuilder dataMembers = new StringBuilder();
       foreach( DataModel.DataModelMember member in dataModel.Members ) {
         if( member.Name == Keywords.DataModelTemplate ) continue;
-        bool containsKey = dataModel.ForeignModels.ContainsKey( member.Name );
+        bool containsKey = dataModel.ForeignModels.ContainsKey( member.Value );
         if( containsKey ) {
-          string foreignModelClassName = NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel.ForeignModels[ member.Name ] );
+          DataModel foreignModel = dataModel.ForeignModels[ member.Value ];
+          // Make sure to use the internal type name if it is defined.
+          string foreignModelClassName = foreignModel.InternalType
+                                         ??
+                                         NameHelper.GetExtbaseDomainModelClassName(
+                                           Subject, dataModel.ForeignModels[ member.Name ] );
           dataMembers.Append( string.Format( propertyTemplate, member.Value, foreignModelClassName ) );   
 
         } else {
@@ -110,7 +135,6 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// <returns></returns>
     private string GenerateRepositoryFile( DataModel model ) {
       
-
       const string repositoryImplementationTemplate = "private $implementation;\n" +
                                                       "private function getImplementation() {{\n" +
                                                       "  if( null == $this->implementation ) {{\n" +
@@ -126,6 +150,12 @@ namespace Typo3ExtensionGenerator.Generator.Model {
       // Did the user define additional information for our repository
       bool isExternallyImplemented = false;
       Repository repositoryDefinition = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == model.Name );
+
+      // If the repository type is an internal type, no need to generate anything
+      if( null != repositoryDefinition && !string.IsNullOrEmpty( repositoryDefinition.InternalType ) ) {
+        return string.Empty;
+      }
+
       if( null != repositoryDefinition && !string.IsNullOrEmpty( repositoryDefinition.Implementation ) ) {
         if( !File.Exists( repositoryDefinition.Implementation ) ) {
           throw new GeneratorException(
@@ -215,6 +245,11 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
       const string template = "CREATE TABLE {0} (\n{1}\n);";
       foreach( DataModel dataModel in Subject.Models ) {
+        // Don't generate SQL table for internally implemented types
+        if( !string.IsNullOrEmpty( dataModel.InternalType ) ) {
+          continue;
+        }
+
         string modelName = NameHelper.GetAbsoluteModelName( Subject, dataModel );
         Log.InfoFormat( "Generating SQL table '{0}'...", modelName );
 
@@ -260,7 +295,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
                 dataModel.SourceLine + member.Line );
           }
         } else {
-          if( dataModel.ForeignModels.ContainsKey( member.Name ) ) {
+          if( dataModel.ForeignModels.ContainsKey( member.Value ) ) {
             // For a foreign key, we just insert the default uint
             dataMembers.Append(
               string.Format(

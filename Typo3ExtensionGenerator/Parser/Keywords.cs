@@ -30,6 +30,11 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public const string DeclareExtension = "extension";
 
+    /// <summary>
+    /// is - This element implements an internal type
+    /// </summary>
+    public const string InternalType = "is";
+
     public static class ExtensionDirectives {
       /// <summary>
       /// author - Used to define the name of the author of the extension.

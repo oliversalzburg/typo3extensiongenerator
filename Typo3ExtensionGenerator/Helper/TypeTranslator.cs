@@ -52,6 +52,7 @@ namespace Typo3ExtensionGenerator.Helper {
       switch( typeDescription ) {
         case Keywords.Types.String:
           return "string";
+
         case Keywords.Types.UnsignedInt:
           return "int";
         

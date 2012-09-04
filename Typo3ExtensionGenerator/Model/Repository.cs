@@ -15,6 +15,11 @@ namespace Typo3ExtensionGenerator.Model {
     public string TargetModelName { get; set; }
 
     /// <summary>
+    /// The already existing repository type in TYPO3 that is implemented through this repository.
+    /// </summary>
+    public string InternalType { get; set; }
+
+    /// <summary>
     /// The PHP class that implements the methods in our ExtBase repository.
     /// </summary>
     public string Implementation { get; set; }

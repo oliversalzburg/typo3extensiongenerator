@@ -20,8 +20,14 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
         dataModels.Add( dataModel );
         if( modelPartial.Partials.Any() ) {
           foreach( ExtensionParser.ParsedPartial dataMember in modelPartial.Partials ) {
-            dataModel.Members.Add(
-              new DataModel.DataModelMember {Name = dataMember.Keyword, Value = dataMember.Parameters, Line = dataMember.Line } );
+            if( dataMember.Keyword == Keywords.InternalType ) {
+              dataModel.InternalType = dataMember.Parameters;
+
+            } else {
+              dataModel.Members.Add(
+                new DataModel.DataModelMember
+                {Name = dataMember.Keyword, Value = dataMember.Parameters, Line = dataMember.Line} );
+            }
           }
         }
       }
