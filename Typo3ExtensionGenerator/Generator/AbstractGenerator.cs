@@ -55,10 +55,20 @@ namespace Typo3ExtensionGenerator.Generator {
       }
     }
 
-    public void WriteFile( string filename, byte[] content ) {
+    /// <summary>
+    /// Write a binary file
+    /// </summary>
+    /// <param name="filename">The name of the file.</param>
+    /// <param name="content">The content that should be written to the file.</param>
+    /// <param name="lastWriteTime">The last modified timestamp that should be used for the file.</param>
+    public void WriteFile( string filename, byte[] content, DateTime lastWriteTime ) {
       string targetFilename = Path.Combine( OutputDirectory, filename );
       Directory.CreateDirectory( new FileInfo( targetFilename ).DirectoryName );
       File.WriteAllBytes( targetFilename, content );
+      
+      // Set last modified time
+      FileInfo fileInfo = new FileInfo( targetFilename );
+      fileInfo.LastWriteTimeUtc = lastWriteTime;
     }
 
     public void WritePhpFile( string filename, string content ) {

@@ -19,9 +19,10 @@ namespace Typo3ExtensionGenerator.Generator {
     public void Generate() {
       foreach( Requirement requirement in Subject.Requirements ) {
         foreach( Requirement.RequiredFile file in requirement.Files ) {
+          DateTime lastWriteTimeUtc = new FileInfo( file.FullSourceName ).LastWriteTimeUtc;
           byte[] bytes = File.ReadAllBytes( file.FullSourceName );
           Log.InfoFormat( "Merging required file '{0}'...", file.RelativeTargetName );
-          WriteFile( file.RelativeTargetName, bytes );
+          WriteFile( file.RelativeTargetName, bytes, lastWriteTimeUtc );
         }
       }
     }
