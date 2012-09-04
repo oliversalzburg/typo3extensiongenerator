@@ -58,9 +58,11 @@ namespace Typo3ExtensionGenerator.Generator.Module {
                   langFileKey = subKey.ToLower()
                 } ) + "\n" );
 
-      // <label index="mlang_tabs_tab">Download Importer</label>
-      // <label index="mlang_labels_tabdescr">Import download records from files on the file system.</label>
-      // <label index="mlang_labels_tablabel">Create download records from files on the file system.</label>
+
+        // Valid labels that should/could be generated
+        // <label index="mlang_tabs_tab">Download Importer</label>
+        // <label index="mlang_labels_tabdescr">Import download records from files on the file system.</label>
+        // <label index="mlang_labels_tablabel">Create download records from files on the file system.</label>
 
         WriteFile( string.Format( "Resources/Private/Language/locallang_{0}.xml", subKey.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ), true );
       }

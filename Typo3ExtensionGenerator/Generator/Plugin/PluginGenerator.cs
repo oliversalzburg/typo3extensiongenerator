@@ -83,7 +83,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           actions.Append(  action.Name + "," );
         }
         string actionsCachable = actions.ToString();
-        actionsCachable = actionsCachable.Substring( 0, actionsCachable.Length - 1 );
+        actionsCachable = ( actionsCachable.Length > 0 )
+                            ? actionsCachable.Substring( 0, actionsCachable.Length - 1 )
+                            : actionsCachable;
         var controllerData =
             new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsCachable };
         string allControllerActions = controllerAction.FormatSmart( controllerData );
