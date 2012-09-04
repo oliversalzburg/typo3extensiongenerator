@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filetype binary="false" default_extension="" description="TYPO3 Extension Generator File" name="TYPO3 Extension">
+  <highlighting>
+    <options>
+      <option name="LINE_COMMENT" value="//" />
+      <option name="COMMENT_START" value="/*" />
+      <option name="COMMENT_END" value="*/" />
+      <option name="HEX_PREFIX" value="0x" />
+      <option name="NUM_POSTFIXES" value="" />
+      <option name="HAS_BRACKETS" value="false" />
+      <option name="HAS_BRACES" value="true" />
+      <option name="HAS_PARENS" value="false" />
+      <option name="HAS_STRING_ESCAPES" value="true" />
+      <option name="LINE_COMMENT_AT_START" value="false" />
+    </options>
+    <keywords ignore_case="false">
+      <keyword name="action" />
+      <keyword name="as" />
+      <keyword name="author" />
+      <keyword name="authorCompany" />
+      <keyword name="authorEmail" />
+      <keyword name="char" />
+      <keyword name="configure" />
+      <keyword name="description" />
+      <keyword name="exclude" />
+      <keyword name="extension" />
+      <keyword name="fileReference" />
+      <keyword name="group" />
+      <keyword name="hide" />
+      <keyword name="in" />
+      <keyword name="input" />
+      <keyword name="interface" />
+      <keyword name="interfaceInfo" />
+      <keyword name="label" />
+      <keyword name="labelAlt" />
+      <keyword name="labelHook" />
+      <keyword name="model" />
+      <keyword name="module" />
+      <keyword name="palette" />
+      <keyword name="plugin" />
+      <keyword name="repository" />
+      <keyword name="represents" />
+      <keyword name="require" />
+      <keyword name="richtext" />
+      <keyword name="searchFields" />
+      <keyword name="select" />
+      <keyword name="state" />
+      <keyword name="string" />
+      <keyword name="t3CommonFields" />
+      <keyword name="t3ManagedFields" />
+      <keyword name="t3Sortable" />
+      <keyword name="t3TranslationFields" />
+      <keyword name="t3VersioningFields" />
+      <keyword name="template" />
+      <keyword name="text" />
+      <keyword name="through" />
+      <keyword name="thumbnail" />
+      <keyword name="type" />
+      <keyword name="uint" />
+      <keyword name="version" />
+    </keywords>
+    <keywords2 />
+    <keywords3 />
+    <keywords4 />
+  </highlighting>
+  <extensionMap>
+    <mapping ext="extgen" />
+  </extensionMap>
+</filetype>
+
