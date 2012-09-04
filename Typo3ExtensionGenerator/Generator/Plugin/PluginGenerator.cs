@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using SmartFormat;
 using SmartFormat.Core;
 using Typo3ExtensionGenerator.Generator.Configuration;
@@ -296,9 +297,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
             string.Format( "Implementation '{0}' for plugin '{1}' does not exist.", plugin.Implementation, plugin.Name ),
             plugin.SourceLine );
         }
-        Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
         Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
         string pluginImplementation = File.ReadAllText( plugin.Implementation );
+        if( !Regex.IsMatch( pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
+          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );  
+        }
         WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation );
 
       } else {

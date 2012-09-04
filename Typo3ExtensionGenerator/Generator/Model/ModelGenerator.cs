@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
@@ -167,9 +168,12 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
         isExternallyImplemented = true;
 
-        Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
         Log.InfoFormat( "Merging implementation '{0}'...", repositoryDefinition.Implementation );
         string repositoryImplementationContent = File.ReadAllText( repositoryDefinition.Implementation );
+        if( !Regex.IsMatch( repositoryImplementationContent, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
+          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
+        }
+
         WriteFile( "Classes/Domain/Repository/" + implementationFilename, repositoryImplementationContent );
       }
 
