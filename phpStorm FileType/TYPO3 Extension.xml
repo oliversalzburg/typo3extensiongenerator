@@ -57,6 +57,7 @@
       <keyword name="thumbnail" />
       <keyword name="type" />
       <keyword name="uint" />
+      <keyword name="uncachable" />
       <keyword name="version" />
     </keywords>
     <keywords2 />

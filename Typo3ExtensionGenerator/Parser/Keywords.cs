@@ -105,7 +105,15 @@ namespace Typo3ExtensionGenerator.Parser {
     }
 
     public static class PluginDirectives {
+      /// <summary>
+      /// action - Declares an action in a plugin.
+      /// </summary>
       public const string Action = "action";
+
+      /// <summary>
+      /// uncachable - Marks a controller action as uncachable.
+      /// </summary>
+      public const string Uncachable = "uncachable";
 
       /// <summary>
       /// represents - Used to point to a file that implements the interface of a controller.

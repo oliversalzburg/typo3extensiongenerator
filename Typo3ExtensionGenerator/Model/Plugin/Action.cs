@@ -6,8 +6,20 @@ using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model.Plugin {
   public class Action : IParserResult {
+    /// <summary>
+    /// The name of the action.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// A human-readable title for the action.
+    /// </summary>
     public string Title { get; set; }
+
+    /// <summary>
+    /// Should this action be marked as uncachable?
+    /// </summary>
+    public bool Uncachable { get; set; }
 
     /// <summary>
     /// A list of parameter names that will be required to call this action.

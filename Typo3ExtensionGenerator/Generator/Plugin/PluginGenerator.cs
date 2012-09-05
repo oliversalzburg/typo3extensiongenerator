@@ -27,14 +27,14 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       Log.Info( "Generating plugins..." );
 
-      GeneratePhp();
+      GeneratePlugin();
     }
 
     /// <summary>
-    /// Generates the PHP statements to register the plugins.
+    /// Generates the plugins.
     /// </summary>
     /// <returns></returns>
-    private void GeneratePhp( ) {
+    private void GeneratePlugin( ) {
       StringBuilder extTables = new StringBuilder();
       StringBuilder extLocalconf = new StringBuilder();
 
@@ -53,7 +53,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                      "{cachableActions}" +
                                      "  )," +
                                      "  array(" +
-                                     "    /*'ControllerGoesHere' => 'uncachedActionGoesHere'*/" +
+                                     "{unCachableActions}" +
                                      "  )" +
                                      ");";
 
@@ -80,16 +80,30 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         // Generate allowed action combination that should be configured
         StringBuilder actions = new StringBuilder();
+        StringBuilder uncachableActions = new StringBuilder();
         foreach( Action action in plugin.Actions ) {
-          actions.Append(  action.Name + "," );
+          if( action.Uncachable ) {
+            uncachableActions.Append(  action.Name + "," );
+          } else {
+            actions.Append( action.Name + "," );
+          }
         }
+        
         string actionsCachable = actions.ToString();
         actionsCachable = ( actionsCachable.Length > 0 )
                             ? actionsCachable.Substring( 0, actionsCachable.Length - 1 )
                             : actionsCachable;
+        string actionsUncachable = uncachableActions.ToString();
+        actionsUncachable = ( actionsUncachable.Length > 0 )
+                            ? actionsUncachable.Substring( 0, actionsUncachable.Length - 1 )
+                            : actionsUncachable;
         var controllerData =
             new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsCachable };
+        var uncachableControllerData =
+            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsUncachable };
+
         string allControllerActions = controllerAction.FormatSmart( controllerData );
+        string allUncachableControllerActions = controllerAction.FormatSmart( uncachableControllerData );
 
 
         // Add configurePlugin line to ext_localconf
@@ -97,7 +111,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           new {
                 extensionKey = Subject.Key,
                 pluginName = NameHelper.UpperCamelCase( plugin.Name ),
-                cachableActions = allControllerActions
+                cachableActions = allControllerActions,
+                unCachableActions = allUncachableControllerActions,
               };
         
         extLocalconf.Append( configurePlugin.FormatSmart( configurePluginData ) + "\n" );
