@@ -13,6 +13,24 @@ namespace Typo3ExtensionGenerator.Helper {
   /// </summary>
   public static class NameHelper {
     /// <summary>
+    /// Generates the class name that must be used to implement the label hooks for this extension.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <returns></returns>
+    public static string GetLabelHooksImplementationClassName( Extension extension ) {
+      return String.Format( "{0}HooksLabelsImplementation", UpperCamelCase( extension.Key ) );
+    }
+
+    /// <summary>
+    /// Generates the file name that must be used to implement the label hooks for this extension.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <returns></returns>
+    public static string GetLabelHooksImplementationFileName( Extension extension ) {
+      return String.Format( "{0}HooksLabelsImplementation.php", UpperCamelCase( extension.Key ) );
+    }
+
+    /// <summary>
     /// Generates the ExtBase domain model class name for a given data model.
     /// </summary>
     /// <param name="extension"></param>

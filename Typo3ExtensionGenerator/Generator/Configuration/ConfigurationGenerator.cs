@@ -121,6 +121,12 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         // Is a label hook requested?
         string labelFunction = string.Empty;
         if( configuration.LabelHook ) {
+          bool isExternallyImplemented = true;
+          if( string.IsNullOrEmpty( Subject.LabelHookImplementation ) ) {
+            Log.WarnFormat( "Label hook requested for '{0}', but the label hook implementation is missing.", configuration );
+            isExternallyImplemented = false;
+          }
+
           labelFunction = String.Format(
             "    'label_userFunc'           => '{0}->getUserLabel{1}',\n",
             NameHelper.GetExtbaseHookClassName( Subject, "labels" ),
@@ -128,11 +134,9 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
           // Write hook
           const string filename = "Classes/Hooks/Labels.php";
-          WriteFile(
-            filename,
-            string.Format(
-              "public static function getUserLabel{0}( array &$params, &$pObj ) {{ $params[ 'title' ] = 'This title is generated in {1}'; }}",
-              NameHelper.UpperCamelCase( configuration.Model.Name ), filename ), true );
+          string internallyImplemented = string.Format( "public static function getUserLabel{0}( array &$params, &$pObj ) {{ $params[ 'title' ] = 'This title is generated in {1}'; }}", NameHelper.UpperCamelCase( configuration.Model.Name ), filename );
+          string externallyImplemented = string.Format( "public static function getUserLabel{0}( array &$params, &$pObj ) {{ return {1}::getUserLabel{0}( $params, $pObj ); }}", NameHelper.UpperCamelCase( configuration.Model.Name ), NameHelper.GetLabelHooksImplementationClassName( Subject ) );
+          WriteFile( filename, ( isExternallyImplemented ) ? externallyImplemented : internallyImplemented, true );
 
           addRequireLabelHooks = true;
         }

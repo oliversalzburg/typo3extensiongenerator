@@ -24,6 +24,7 @@ namespace Typo3ExtensionGenerator.Helper {
       switch( typeDescription ) {
         case Keywords.Types.String:
           return "text";
+
         case Keywords.Types.UnsignedInt:
           return "int(11) unsigned default '0'";
         

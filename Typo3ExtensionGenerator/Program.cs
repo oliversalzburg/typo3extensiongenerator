@@ -35,6 +35,8 @@ namespace Typo3ExtensionGenerator {
     private static string InputFile { get; set; }
 
     private static void Main( string[] args ) {
+      DateTime start = DateTime.Now;
+
       if( ParseCommandLine( args ) ) return;
 
       if( string.IsNullOrEmpty( OutputDirectory ) ) {
@@ -69,12 +71,16 @@ namespace Typo3ExtensionGenerator {
         
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
 
-        ExtensionGenerator generator = new ExtensionGenerator {
-                                                                TargetDirectory =
-                                                                  Path.Combine(
-                                                                    Environment.CurrentDirectory, OutputDirectory )
-                                                              };
-        generator.Generate( extension );
+        ExtensionGenerator generator = new ExtensionGenerator( OutputDirectory, extension ) {
+                                                                                              TargetDirectory =
+                                                                                                Path.Combine(
+                                                                                                  Environment.
+                                                                                                    CurrentDirectory,
+                                                                                                  OutputDirectory )
+                                                                                            };
+
+        generator.Generate();
+        Console.WriteLine( "Finished after {0}", DateTime.Now.Subtract( start ) );
 
       } catch( ParserException parserException ) {
         Log.Error( parserException );
@@ -84,7 +90,7 @@ namespace Typo3ExtensionGenerator {
       }
     }
 
-        /// <summary>
+    /// <summary>
     /// Parses command line parameters.
     /// </summary>
     /// <param name="args">The command line parameters passed to the program.</param>

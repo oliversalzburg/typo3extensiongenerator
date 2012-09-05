@@ -24,20 +24,30 @@ namespace Typo3ExtensionGenerator.Resolver {
       foreach( ExtensionParser.ParsedPartial subPartial in parsedPartial.Partials ) {
         if( subPartial.Keyword == Keywords.ExtensionDirectives.DefineAuthor ) {
           extension.Author.Name = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.ExtensionDirectives.DefineAuthorCompany ) {
           extension.Author.Company = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.ExtensionDirectives.DefineAuthorEmail ) {
           extension.Author.Email = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.Category ) {
           extension.Category = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.ExtensionDirectives.Description ) {
           extension.Description = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.Title ) {
           extension.Title = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.ExtensionDirectives.State ) {
           extension.State = subPartial.Parameters;
+
         } else if( subPartial.Keyword == Keywords.ExtensionDirectives.Version ) {
           extension.Version = subPartial.Parameters;
+
+        } else if( subPartial.Keyword == Keywords.ConfigurationDirectives.LabelHook ) {
+          extension.LabelHookImplementation = subPartial.Parameters;
         }
       }
       extension.Configurations = ConfigurationResolver.Resolve( parsedPartial );

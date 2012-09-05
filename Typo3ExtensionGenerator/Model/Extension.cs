@@ -42,6 +42,11 @@ namespace Typo3ExtensionGenerator.Model {
     public string Version { get; set; }
 
     /// <summary>
+    /// The file that contains the implementation of our label hooks.
+    /// </summary>
+    public string LabelHookImplementation { get; set; }
+
+    /// <summary>
     /// The plugins defined in this extension.
     /// </summary>
     public List<Plugin.Plugin> Plugins { get; set; }
