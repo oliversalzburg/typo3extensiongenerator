@@ -42,6 +42,10 @@ namespace Typo3ExtensionGenerator.Model {
       InternalSet( path, value.ToString( CultureInfo.InvariantCulture ) );
     }
 
+    public void Set( string path, bool value ) {
+      InternalSet( path, ( ( value ) ? "1" : "0" ).ToString( CultureInfo.InvariantCulture ) );
+    }
+
     private void InternalSet( string path, string value ) {
       string[] pathParts = path.Split( new[] {'.'} );
       SimpleContainer currentContainer = this;

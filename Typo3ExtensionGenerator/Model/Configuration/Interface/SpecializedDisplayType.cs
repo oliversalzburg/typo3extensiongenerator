@@ -9,6 +9,13 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// The SpecializedDisplayType derives from the SimpleContainer to allow for easy property collection.
   /// </summary>
   public class SpecializedDisplayType : SimpleContainer, IDisplayType, IParserResult {
+    #region Implementation of IDisplayType
+    /// <summary>
+    /// The data model that is displayed through this display type.
+    /// </summary>
+    public DataModel ParentModel { get; set; }
+    #endregion
+
     #region Implementation of IParserResult
     /// <summary>
     /// The line on which this object was originally defined in the input.
@@ -20,5 +27,6 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// </summary>
     public ExtensionParser.ParsedPartial SourcePartial { get; set; }
     #endregion
+    
   }
 }

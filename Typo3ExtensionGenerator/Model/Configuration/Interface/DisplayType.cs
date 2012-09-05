@@ -20,6 +20,13 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// </summary>
     public List<KeyValuePair<string, string>> Parameters { get; set; }
 
+    #region Implementation of IDisplayType
+    /// <summary>
+    /// The data model that is displayed through this display type.
+    /// </summary>
+    public DataModel ParentModel { get; set; }
+    #endregion
+
     public DisplayType() {
       Parameters = new List<KeyValuePair<string, string>>();
     }

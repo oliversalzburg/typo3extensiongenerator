@@ -87,6 +87,7 @@
     <Compile Include="Generator\Configuration\ConfigurationFileGenerator.cs" />
     <Compile Include="Generator\Configuration\ConfigurationGenerator.cs" />
     <Compile Include="Generator\Configuration\InterfaceGenerator.cs" />
+    <Compile Include="Generator\Configuration\Interface\DisplayTypeGenerator.cs" />
     <Compile Include="Generator\ExtensionCoreGenerator.cs" />
     <Compile Include="Generator\ExtensionGenerator.cs" />
     <Compile Include="Generator\GeneratorException.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Model\Configuration\Interface\IDisplayType.cs" />
     <Compile Include="Model\Configuration\Interface\Interface.cs" />
     <Compile Include="Model\Configuration\Interface\DisplayType.cs" />
+    <Compile Include="Model\Configuration\Interface\RecordGroupDisplayType.cs" />
     <Compile Include="Model\Configuration\Interface\SpecializedDisplayType.cs" />
     <Compile Include="Model\Configuration\Palette.cs" />
     <Compile Include="Model\Configuration\Type.cs" />

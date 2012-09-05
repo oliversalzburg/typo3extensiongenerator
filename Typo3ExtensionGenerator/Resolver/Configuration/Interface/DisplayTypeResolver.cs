@@ -13,7 +13,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                      Name =
                                                                                        Keywords.ConfigurationDirectives.
                                                                                        InterfaceDirectives.
-                                                                                       Representations.RecordGroup
+                                                                                       Representations.RecordGroup,
+                                                                                       SourceLine = @interface.SourceLine
                                                                                    };
 
         specializedDisplayType.Set( "internal_type", "file_reference" );
@@ -25,27 +26,42 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         // If this field requires anything, it should have at least 1 item.
         if( @interface.Settings.Any( s => s.Key == Keywords.Requirement ) ) {
           specializedDisplayType.Set( "minitems", 1 );
+        } else {
+          specializedDisplayType.Set( "minitems", 0 );
         }
         
         @interface.DisplayType = specializedDisplayType;
 
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RecordGroup == displayType ) {
-        SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType {
+        RecordGroupDisplayType recordGroupDisplayType = new RecordGroupDisplayType {
                                                                                      Name =
                                                                                        Keywords.ConfigurationDirectives.
                                                                                        InterfaceDirectives.
-                                                                                       Representations.RecordGroup
+                                                                                       Representations.RecordGroup,
+                                                                                       SourceLine = @interface.SourceLine
                                                                                    };
 
-        specializedDisplayType.Set( "internal_type", "db" );
-        specializedDisplayType.Set( "maxitems", 99 );
+        // Show records next to select box
+        recordGroupDisplayType.ShowThumbnails = true;
+        // Increase list length
+        recordGroupDisplayType.Lines = 10;
+        // Increase list width
+        recordGroupDisplayType.SelectedListStyle = "width:400px";
+        // Don't allow duplicates
+        recordGroupDisplayType.AllowDuplicates = false;
+        // Set item limit
+        recordGroupDisplayType.MaxItems = 99;
 
         // If this field requires anything, it should have at least 1 item.
         if( @interface.Settings.Any( s => s.Key == Keywords.Requirement ) ) {
-          specializedDisplayType.Set( "minitems", 1 );  
+          recordGroupDisplayType.MinItems = 1;
+        } else {
+          recordGroupDisplayType.MinItems = 0;
         }
+
+        recordGroupDisplayType.Set( "wizards.RTE.type", "suggest" );
         
-        @interface.DisplayType = specializedDisplayType;
+        @interface.DisplayType = recordGroupDisplayType;
 
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RichTextArea == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType() {
@@ -53,8 +69,10 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                          Keywords.
                                                                                          ConfigurationDirectives.
                                                                                          InterfaceDirectives.
-                                                                                         Representations.TextArea
+                                                                                         Representations.TextArea,
+                                                                                       SourceLine = @interface.SourceLine
                                                                                      };
+
         specializedDisplayType.Set( "wizards.RTE.icon", "wizard_rte2.gif" );
         specializedDisplayType.Set( "wizards.RTE.notNewRecords", 1 );
         specializedDisplayType.Set( "wizards.RTE.RTEonly", 1 );

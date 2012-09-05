@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
+using Typo3ExtensionGenerator.Generator.Configuration.Interface;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
-using Typo3ExtensionGenerator.Model.Configuration;
-using Typo3ExtensionGenerator.Model.Configuration.Interface;
-using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
   public static class InterfaceGenerator {
 
-    public static string Generate( AbstractGenerator parent, Extension extension, Interface subject, SimpleContainer.Format format ) {
+    public static string Generate( AbstractGenerator parent, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface subject, SimpleContainer.Format format ) {
       string propertyTemplate = ( format == SimpleContainer.Format.PhpArray )
                                   ? SimpleContainer.PropertyTemplatePhp
                                   : SimpleContainer.PropertyTemplateXml;
@@ -46,7 +41,34 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // config
       string configuration = string.Empty;
+
+      // Add foreign_table
+      if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
+        DataModel foreignModel = subject.ParentModel.ForeignModels[ subject.Target ];
+        string typename = ( String.IsNullOrEmpty( foreignModel.InternalType ) )
+                            ? NameHelper.GetAbsoluteModelName( extension, foreignModel )
+                            : foreignModel.InternalType;
+
+        subject.DisplayType.ParentModel = foreignModel;
+
+        if( format == SimpleContainer.Format.PhpArray ) {
+          configuration += String.Format(
+            propertyTemplate, "foreign_table", "'" + typename + "'" );
+          configuration += String.Format(
+            propertyTemplate, "allowed", "'" + typename+ "'" );
+
+        } else {
+          configuration += String.Format(
+            propertyTemplate, "foreign_table", typename );
+          configuration += String.Format(
+            propertyTemplate, "allowed", typename );
+        }
+      }
+
       if( null != subject.DisplayType ) {
+        // Add any additional properties to the configuration
+        configuration += DisplayTypeGenerator.GeneratePropertyArray( extension, subject.DisplayType, format );
+        
         if( format == SimpleContainer.Format.PhpArray ) {
           configuration += String.Format( propertyTemplate, "type", "'" + subject.DisplayType.Name + "'" );
 
@@ -57,27 +79,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         throw new GeneratorException( string.Format( "No display type given in interface for '{0}'!", subject.Target ), subject.SourcePartial.Line );
       }
 
-      // Add foreign_table
-      if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
-        DataModel foreignModel = subject.ParentModel.ForeignModels[ subject.Target ];
-        string typename = ( String.IsNullOrEmpty( foreignModel.InternalType ) )
-                            ? NameHelper.GetAbsoluteModelName( extension, foreignModel )
-                            : foreignModel.InternalType;
-
-        if( format == SimpleContainer.Format.PhpArray ) {
-          configuration += String.Format(
-            propertyTemplate, "foreign_table", "'" + typename + "'" );
-          configuration += String.Format(
-            propertyTemplate, "allowed", "'" + typename+ "'" );
-        } else {
-          configuration += String.Format(
-            propertyTemplate, "foreign_table", typename );
-          configuration += String.Format(
-            propertyTemplate, "allowed", typename );
-        }
-      }
-      // Add any additional properties to the configuration
-      configuration += subject.DisplayType.GeneratePropertyArray( format) ;
+      
       // Trim trailing comma
       configuration = configuration.TrimEnd( new[] {','} );
 

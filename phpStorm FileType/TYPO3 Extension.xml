@@ -14,13 +14,9 @@
       <option name="LINE_COMMENT_AT_START" value="false" />
     </options>
     <keywords ignore_case="false">
-      <keyword name="action" />
-      <keyword name="as" />
       <keyword name="author" />
       <keyword name="authorCompany" />
       <keyword name="authorEmail" />
-      <keyword name="char" />
-      <keyword name="configure" />
       <keyword name="description" />
       <keyword name="exclude" />
       <keyword name="extension" />
@@ -29,23 +25,16 @@
       <keyword name="hide" />
       <keyword name="in" />
       <keyword name="input" />
-      <keyword name="interface" />
       <keyword name="interfaceInfo" />
       <keyword name="label" />
       <keyword name="labelAlt" />
       <keyword name="labelHook" />
-      <keyword name="model" />
-      <keyword name="module" />
       <keyword name="palette" />
-      <keyword name="plugin" />
-      <keyword name="repository" />
       <keyword name="represents" />
-      <keyword name="require" />
       <keyword name="richtext" />
       <keyword name="searchFields" />
       <keyword name="select" />
       <keyword name="state" />
-      <keyword name="string" />
       <keyword name="t3CommonFields" />
       <keyword name="t3ManagedFields" />
       <keyword name="t3Sortable" />
@@ -53,16 +42,30 @@
       <keyword name="t3VersioningFields" />
       <keyword name="template" />
       <keyword name="text" />
-      <keyword name="through" />
       <keyword name="thumbnail" />
       <keyword name="type" />
-      <keyword name="uint" />
       <keyword name="uncachable" />
       <keyword name="version" />
     </keywords>
-    <keywords2 />
-    <keywords3 />
-    <keywords4 />
+    <keywords2>
+      <keyword name="action" />
+      <keyword name="as" />
+      <keyword name="interface" />
+      <keyword name="through" />
+    </keywords2>
+    <keywords3>
+      <keyword name="configure" />
+      <keyword name="model" />
+      <keyword name="module" />
+      <keyword name="plugin" />
+      <keyword name="repository" />
+      <keyword name="require" />
+    </keywords3>
+    <keywords4>
+      <keyword name="char" />
+      <keyword name="string" />
+      <keyword name="uint" />
+    </keywords4>
   </highlighting>
   <extensionMap>
     <mapping ext="extgen" />

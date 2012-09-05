@@ -246,11 +246,11 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // Prepare data model references
       // We look up the actual DataModel instances for the previously stored target value.
-      foreach( Interface fieldInterface in Configuration.Interfaces ) {
+      foreach( Typo3ExtensionGenerator.Model.Configuration.Interface.Interface fieldInterface in Configuration.Interfaces ) {
         fieldInterface.ParentModel = Subject.Models.Single( m => m.Name == fieldInterface.ParentModelTarget );
       }
 
-      foreach( Interface fieldInterface in Configuration.Interfaces ) {
+      foreach( Typo3ExtensionGenerator.Model.Configuration.Interface.Interface fieldInterface in Configuration.Interfaces ) {
         // Check if the target field exists
         if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
           throw new GeneratorException(
