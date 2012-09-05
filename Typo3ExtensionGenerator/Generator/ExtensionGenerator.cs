@@ -56,7 +56,7 @@ namespace Typo3ExtensionGenerator.Generator {
       // Create extension icon
       ResourceHelper.FlushIcon( "box.gif", TargetDirectory, "ext_icon.gif" );
 
-      // Wrap virtual files as needed
+      
       const string languageFilePrefix = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" +
                                         "<T3locallang>\n" +
                                         "	<meta type=\"array\">\n" +
@@ -70,7 +70,7 @@ namespace Typo3ExtensionGenerator.Generator {
                                         "	</data>\n" +
                                         "</T3locallang>";
 
-      AbstractGenerator.WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
+      WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
 
       const string protectedPhpPrefix = "<?php\n" +
                                         "if( !defined( 'TYPO3_MODE' ) ) {\n" +
@@ -83,13 +83,20 @@ namespace Typo3ExtensionGenerator.Generator {
       const string phpClassSuffix = "}\n" +
                                     "?>";
 
-      AbstractGenerator.WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
-      WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
-
       // Label hooks
       WriteLabelHooks( phpClassSuffix );
 
+      // Write TypoScript include statements
+      var dataObject =
+        new {extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(), extensionKey = Subject.Key, extensionTitle = Subject.Title};
+      const string typoScriptRegisterTemplate =
+        "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";
 
+      WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
+
+      // Wrap virtual files as needed
+      WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
+      WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       // Flush virtual file system to disk
       AbstractGenerator.FlushVirtual( TargetDirectory );
     }

@@ -20,10 +20,11 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         specializedDisplayType.Set( "allowed", "*" );
         specializedDisplayType.Set( "disallowed", "php" );
         specializedDisplayType.Set( "size", 5 );
+        specializedDisplayType.Set( "maxitems", 99 );
         
         // If this field requires anything, it should have at least 1 item.
         if( @interface.Settings.Any( s => s.Key == Keywords.Requirement ) ) {
-          specializedDisplayType.Set( "minitems", 1 );  
+          specializedDisplayType.Set( "minitems", 1 );
         }
         
         @interface.DisplayType = specializedDisplayType;
@@ -37,6 +38,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                    };
 
         specializedDisplayType.Set( "internal_type", "db" );
+        specializedDisplayType.Set( "maxitems", 99 );
 
         // If this field requires anything, it should have at least 1 item.
         if( @interface.Settings.Any( s => s.Key == Keywords.Requirement ) ) {

@@ -403,36 +403,36 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// </summary>
     /// <param name="plugin"> </param>
     private void GenerateTypoScript( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
-      const string constantsTemplate = "plugin.{extensioName} {{\n" +
+      const string constantsTemplate = "plugin.{extensionName} {{\n" +
                                        "	view {{\n" +
-                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template root (FE)\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template root (FE)\n" +
                                        "		templateRootPath = EXT:{extensionKey}/Resources/Private/Templates/\n" +
-                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template partials (FE)\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template partials (FE)\n" +
                                        "		partialRootPath = EXT:{extensionKey}/Resources/Private/Partials/\n" +
-                                       "		# cat=plugin.{extensioName}/file; type=string; label=Path to template layouts (FE)\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template layouts (FE)\n" +
                                        "		layoutRootPath = EXT:{extensionKey}/Resources/Private/Layouts/\n" +
                                        "	}}\n" +
                                        "	persistence {{\n" +
-                                       "		# cat=plugin.{extensioName}//a; type=int+; label=Default storage PID\n" +
+                                       "		# cat=plugin.{extensionName}//a; type=int+; label=Default storage PID\n" +
                                        "		storagePid = \n" +
                                        "	}}\n" +
                                        "	settings {{\n" +
-                                       "	 # cat=plugin.{extensioName}/file; type=string; label=Path to file type icons\n" +
+                                       "	 # cat=plugin.{extensionName}/file; type=string; label=Path to file type icons\n" +
                                        "    iconPath = EXT:{extensionKey}/Resources/Public/Icons/TypeIcons/\n" +
                                        "  }}\n" +
                                        "}}";
 
-      const string setupTemplate = "plugin.{extensioName} {{\n" +
+      const string setupTemplate = "plugin.{extensionName} {{\n" +
                                    "	view {{\n" +
-                                   "		templateRootPath = {{$plugin.{extensioName}.view.templateRootPath}}\n" +
-                                   "		partialRootPath  = {{$plugin.{extensioName}.view.partialRootPath}}\n" +
-                                   "		layoutRootPath   = {{$plugin.{extensioName}.view.layoutRootPath}}\n" +
+                                   "		templateRootPath = {{$plugin.{extensionName}.view.templateRootPath}}\n" +
+                                   "		partialRootPath  = {{$plugin.{extensionName}.view.partialRootPath}}\n" +
+                                   "		layoutRootPath   = {{$plugin.{extensionName}.view.layoutRootPath}}\n" +
                                    "	}}\n" +
                                    "	persistence {{\n" +
-                                   "		storagePid = {{$plugin.{extensioName}.persistence.storagePid}}\n" +
+                                   "		storagePid = {{$plugin.{extensionName}.persistence.storagePid}}\n" +
                                    "	}}\n" +
                                    "	settings {{\n" +
-                                   "	  iconPath = {{$plugin.{extensioName}.settings.iconPath}}\n" +
+                                   "	  iconPath = {{$plugin.{extensionName}.settings.iconPath}}\n" +
                                    "	  example {{\n" +
                                    "	    // Place your own TS here\n" +
                                    "	  }}\n" +
@@ -441,7 +441,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       // Just to be safe, we also go all lower-case here.
       var dataObject =
-        new {extensioName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(), extensionKey = Subject.Key, extensionName = Subject.Title};
+        new {extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(), extensionKey = Subject.Key};
 
       Log.Info( "Generating TypoScript constants..." );
       string constants = constantsTemplate.FormatSmart( dataObject );
@@ -451,10 +451,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       string setup = setupTemplate.FormatSmart( dataObject );
       WriteFile( "Configuration/TypoScript/setup.txt", setup );
 
-      const string typoScriptRegisterTemplate =
-        "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionName}');";
-
-      WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
+      // TODO: Write plugin-specific TS files
+      //const string typoScriptRegisterTemplate = "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";
+      //WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
     }
   }
 }
