@@ -178,7 +178,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         result.Append( generatedConfiguration + "\n" );
 
         // Flush a placdeholder icon
-        ResourceHelper.FlushIcon( "document.png", OutputDirectory, string.Format( "Resources/Public/Icons/{0}.png", absoluteModelName ) );
+        ResourceHelper.FlushIcon( "document.png", this, string.Format( "Resources/Public/Icons/{0}.png", absoluteModelName ) );
       }
 
       if( addRequireLabelHooks ) {

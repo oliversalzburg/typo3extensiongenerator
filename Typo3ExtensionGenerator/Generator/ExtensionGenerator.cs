@@ -54,7 +54,7 @@ namespace Typo3ExtensionGenerator.Generator {
       requirementGenerator.Generate();
 
       // Create extension icon
-      ResourceHelper.FlushIcon( "box.gif", TargetDirectory, "ext_icon.gif" );
+      ResourceHelper.FlushIcon( "box.gif", this, "ext_icon.gif" );
 
       
       const string languageFilePrefix = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>\n" +
@@ -98,7 +98,7 @@ namespace Typo3ExtensionGenerator.Generator {
       WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
       WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       // Flush virtual file system to disk
-      AbstractGenerator.FlushVirtual( TargetDirectory );
+      FlushVirtual( TargetDirectory );
     }
 
     /// <summary>

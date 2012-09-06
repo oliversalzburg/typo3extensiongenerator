@@ -71,6 +71,7 @@ namespace Typo3ExtensionGenerator {
         
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
 
+        string cacheFile = Path.Combine( Environment.CurrentDirectory, extension.Key + ".cache" );
         ExtensionGenerator generator = new ExtensionGenerator( OutputDirectory, extension ) {
                                                                                               TargetDirectory =
                                                                                                 Path.Combine(
@@ -78,8 +79,10 @@ namespace Typo3ExtensionGenerator {
                                                                                                     CurrentDirectory,
                                                                                                   OutputDirectory )
                                                                                             };
-
+        AbstractGenerator.StartCachingSession( cacheFile );
         generator.Generate();
+        AbstractGenerator.EndCachingSession( cacheFile );
+
         Console.WriteLine( "Finished after {0}", DateTime.Now.Subtract( start ) );
 
       } catch( ParserException parserException ) {
