@@ -92,7 +92,7 @@ namespace Typo3ExtensionGenerator.Generator {
       const string typoScriptRegisterTemplate =
         "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";
 
-      WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
+      WriteVirtual( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ) );
 
       // Wrap virtual files as needed
       WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
@@ -141,12 +141,13 @@ namespace Typo3ExtensionGenerator.Generator {
 
       Log.InfoFormat( "Merging label hook implementation '{0}'...", Subject.LabelHookImplementation );
       string pluginImplementation = File.ReadAllText( Subject.LabelHookImplementation );
+      DateTime lastWriteTimeUtc = new FileInfo( Subject.LabelHookImplementation ).LastWriteTimeUtc;
       if(
         !Regex.IsMatch(
           pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
         Log.WarnFormat( "The class name of your label hooks implementation MUST be '{0}'!", implementationClassname );
       }
-      WriteFile( "Classes/Hooks/" + implementationFilename, pluginImplementation );
+      WriteFile( "Classes/Hooks/" + implementationFilename, pluginImplementation, lastWriteTimeUtc );
     }
   }
 }

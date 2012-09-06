@@ -62,7 +62,7 @@ namespace Typo3ExtensionGenerator.Generator {
               version = Subject.Version
             } );
 
-      WritePhpFile( "ext_emconf.php", result );
+      WritePhpFile( "ext_emconf.php", result, DateTime.UtcNow );
     }
 
   }

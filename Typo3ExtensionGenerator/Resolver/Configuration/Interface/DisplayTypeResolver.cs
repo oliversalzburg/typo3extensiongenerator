@@ -59,6 +59,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
           recordGroupDisplayType.MinItems = 0;
         }
 
+        // The model type for the suggest wizard is resolved during generation later.
         recordGroupDisplayType.Set( "wizards.RTE.type", "suggest" );
         
         @interface.DisplayType = recordGroupDisplayType;

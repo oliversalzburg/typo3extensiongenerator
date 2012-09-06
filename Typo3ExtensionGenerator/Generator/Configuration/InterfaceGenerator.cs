@@ -37,7 +37,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
               labelLanguageConstant ) ) );
       }
 
-      parent.WriteFile( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", labelLanguageConstant, subject.Title ), true );
+      parent.WriteVirtual( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", labelLanguageConstant, subject.Title ) );
 
       // config
       string configuration = string.Empty;

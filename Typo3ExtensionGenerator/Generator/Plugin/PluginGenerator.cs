@@ -64,7 +64,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         extTables.Append( String.Format( registerPlugin, Subject.Key, NameHelper.UpperCamelCase( plugin.Name ), languageConstant ) + "\n" );
 
         // Also write label string to language file
-        WriteFile( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, plugin.Title ), true );
+        WriteVirtual( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, plugin.Title ) );
 
         // Generate the plugin signature which will be used in the tt_content table and as a flexform ID.
         string pluginSignature = String.Format( "{0}_{1}", NameHelper.UpperCamelCase( Subject.Key ).ToLower(), plugin.Name.ToLower() );
@@ -135,8 +135,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       string extTablesPhp = extTables.ToString().Substring( 0, extTables.Length - 1 );
       string extLocalconfPhp = extLocalconf.ToString().Substring( 0, extLocalconf.Length - 1 );
-      WriteFile( "ext_tables.php", extTablesPhp, true );
-      WriteFile( "ext_localconf.php", extLocalconfPhp, true );
+      WriteVirtual( "ext_tables.php", extTablesPhp );
+      WriteVirtual( "ext_localconf.php", extLocalconfPhp );
     }
 
     private void GenerateFluidTemplate( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
@@ -149,7 +149,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       const string layoutFilename = "Resources/Private/Layouts/Default.html";
       Log.InfoFormat( "Generating default Fluid layout '{0}'...", layoutFilename );
-      WriteFile( layoutFilename, defaultLayoutTemplate );
+      WriteFile( layoutFilename, defaultLayoutTemplate, DateTime.UtcNow );
 
       // A generic partial that will render all the fields in a model
       //WriteFile( "Resources/Private/Partials/Models/Download.html", string.Empty );
@@ -176,7 +176,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           NameHelper.UpperCamelCase( action.Name ) );
 
         Log.InfoFormat( "Generating Fluid template '{0}'...", templateFilename );
-        WriteFile( templateFilename, defaultTemplateTemplate );
+        WriteFile( templateFilename, defaultTemplateTemplate, DateTime.UtcNow );
       }
     }
 
@@ -267,7 +267,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       string flexFormsXml = flexFormTemplate.FormatSmart( dataObjectFlexForm );
 
       // Write final result to file
-      WriteFile( string.Format( "Configuration/FlexForms/flexform_{0}.xml", plugin.Name.ToLower() ), flexFormsXml, true );
+      WriteVirtual( string.Format( "Configuration/FlexForms/flexform_{0}.xml", plugin.Name.ToLower() ), flexFormsXml );
     }
 
     /// <summary>
@@ -317,7 +317,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         if( !Regex.IsMatch( pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
           Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );  
         }
-        WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation );
+        WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation, DateTime.UtcNow );
 
       } else {
         if( plugin.Actions.Count > 0 ) {
@@ -409,7 +409,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       WritePhpFile(
         string.Format( "Classes/Controller/{0}", NameHelper.GetExtbaseControllerFileName( Subject, plugin ) ),
-        controller );
+        controller, DateTime.UtcNow );
     }
 
 
@@ -460,11 +460,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
       Log.Info( "Generating TypoScript constants..." );
       string constants = constantsTemplate.FormatSmart( dataObject );
-      WriteFile( "Configuration/TypoScript/constants.txt", constants );
+      WriteFile( "Configuration/TypoScript/constants.txt", constants, DateTime.UtcNow );
 
       Log.Info( "Generating TypoScript setup..." );
       string setup = setupTemplate.FormatSmart( dataObject );
-      WriteFile( "Configuration/TypoScript/setup.txt", setup );
+      WriteFile( "Configuration/TypoScript/setup.txt", setup, DateTime.UtcNow );
 
       // TODO: Write plugin-specific TS files
       //const string typoScriptRegisterTemplate = "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";

@@ -23,7 +23,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     public ConfigurationGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-      WriteFile( "ext_tables.php", GeneratePhp(), true );
+      WriteVirtual( "ext_tables.php", GeneratePhp() );
       WriteConfigurationFiles();
     }
 
@@ -136,7 +136,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           const string filename = "Classes/Hooks/Labels.php";
           string internallyImplemented = string.Format( "public static function getUserLabel{0}( array &$params, &$pObj ) {{ $params[ 'title' ] = 'This title is generated in {1}'; }}", NameHelper.UpperCamelCase( configuration.Model.Name ), filename );
           string externallyImplemented = string.Format( "public static function getUserLabel{0}( array &$params, &$pObj ) {{ return {1}::getUserLabel{0}( $params, $pObj ); }}", NameHelper.UpperCamelCase( configuration.Model.Name ), NameHelper.GetLabelHooksImplementationClassName( Subject ) );
-          WriteFile( filename, ( isExternallyImplemented ) ? externallyImplemented : internallyImplemented, true );
+          WriteVirtual( filename, ( isExternallyImplemented ) ? externallyImplemented : internallyImplemented );
 
           addRequireLabelHooks = true;
         }
@@ -192,7 +192,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     private void FlushLanguageFields( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) {
       string languageConstant = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
 
-      WriteFile( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, configuration.Title ), true );
+      WriteVirtual( "Resources/Private/Language/locallang_db.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, configuration.Title ) );
     }
   }
 }

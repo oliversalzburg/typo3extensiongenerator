@@ -24,7 +24,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     public ModelGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-      WriteFile( "ext_tables.sql", GenerateSql() );
+      WriteFile( "ext_tables.sql", GenerateSql(), DateTime.UtcNow );
 
       foreach( Repository repository in Subject.Repositories ) {
         DataModel repositoryModel = Subject.Models.SingleOrDefault( m => m.Name == repository.TargetModelName );
@@ -47,19 +47,19 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating model '{0}'...", modelFilename );
         if( !string.IsNullOrEmpty( modelFileContent ) ) {
-          WritePhpFile( modelFilename, modelFileContent );
+          WritePhpFile( modelFilename, modelFileContent, DateTime.UtcNow );
         }
 
         string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
         if( !string.IsNullOrEmpty( repositoryFileContent ) ) {
-          WritePhpFile( respositoryFilename, repositoryFileContent );
+          WritePhpFile( respositoryFilename, repositoryFileContent, DateTime.UtcNow );
         }
 
         string fluidPartialFilename = Path.Combine( partialsPath, NameHelper.GetFluidPartialFileName( Subject, dataModel ) );
         Log.InfoFormat( "Generating Fluid partial '{0}'...", fluidPartialFilename );
         if( !string.IsNullOrEmpty( fluidPartialContent) ) {
-          WriteFile( fluidPartialFilename, fluidPartialContent );
+          WriteFile( fluidPartialFilename, fluidPartialContent, DateTime.UtcNow );
         }
       }
     }
@@ -170,11 +170,12 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
         Log.InfoFormat( "Merging implementation '{0}'...", repositoryDefinition.Implementation );
         string repositoryImplementationContent = File.ReadAllText( repositoryDefinition.Implementation );
+        DateTime lastWriteTimeUtc = new FileInfo( repositoryDefinition.Implementation ).LastWriteTimeUtc;
         if( !Regex.IsMatch( repositoryImplementationContent, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
           Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
         }
 
-        WriteFile( "Classes/Domain/Repository/" + implementationFilename, repositoryImplementationContent );
+        WriteFile( "Classes/Domain/Repository/" + implementationFilename, repositoryImplementationContent, lastWriteTimeUtc );
       }
 
       // Generate methods as described in definition

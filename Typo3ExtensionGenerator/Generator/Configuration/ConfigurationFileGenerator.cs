@@ -32,7 +32,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       
       Log.InfoFormat( "Generating dynamic config file '{0}'...", targetFile );
       
-      WritePhpFile( targetFile, GeneratePhp() );
+      WritePhpFile( targetFile, GeneratePhp(), DateTime.UtcNow );
     }
 
     /// <summary>

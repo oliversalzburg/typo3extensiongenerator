@@ -13,7 +13,7 @@ namespace Typo3ExtensionGenerator.Generator.Module {
     public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-      WriteFile( "ext_tables.php", GeneratePhp(), true );
+      WriteVirtual( "ext_tables.php", GeneratePhp() );
     }
 
     /// <summary>
@@ -64,7 +64,7 @@ namespace Typo3ExtensionGenerator.Generator.Module {
         // <label index="mlang_labels_tabdescr">Import download records from files on the file system.</label>
         // <label index="mlang_labels_tablabel">Create download records from files on the file system.</label>
 
-        WriteFile( string.Format( "Resources/Private/Language/locallang_{0}.xml", subKey.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ), true );
+        WriteVirtual( string.Format( "Resources/Private/Language/locallang_{0}.xml", subKey.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ) );
       }
 
       return result.ToString().Substring( 0, result.Length - 1 );

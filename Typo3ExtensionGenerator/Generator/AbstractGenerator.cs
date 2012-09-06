@@ -43,9 +43,9 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="filename">The path of the file, relative to the extension root.</param>
     /// <param name="content">What should be written to the file.</param>
-    /// <param name="useVirtual">Should this be written to a virtual file?</param>
-    public void WriteFile( string filename, string content, bool useVirtual = false ) {
-      if( useVirtual || IsVirtual( filename ) ) {
+    /// <param name="lastWriteTime">The last modified timestamp that should be used for the file.</param>
+    public void WriteFile( string filename, string content, DateTime lastWriteTime ) {
+      if( IsVirtual( filename ) ) {
         WriteVirtual( filename, content );
 
       } else {
@@ -60,20 +60,20 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="filename">The name of the file.</param>
     /// <param name="content">The content that should be written to the file.</param>
-    /// <param name="lastWriteTime">The last modified timestamp that should be used for the file.</param>
-    public void WriteFile( string filename, byte[] content, DateTime lastWriteTime ) {
+    /// <param name="lastWriteTimeUtc">The last modified timestamp that should be used for the file.</param>
+    public void WriteFile( string filename, byte[] content, DateTime lastWriteTimeUtc ) {
       string targetFilename = Path.Combine( OutputDirectory, filename );
       Directory.CreateDirectory( new FileInfo( targetFilename ).DirectoryName );
       File.WriteAllBytes( targetFilename, content );
       
       // Set last modified time
       FileInfo fileInfo = new FileInfo( targetFilename );
-      fileInfo.LastWriteTimeUtc = lastWriteTime;
+      fileInfo.LastWriteTimeUtc = lastWriteTimeUtc;
     }
 
-    public void WritePhpFile( string filename, string content ) {
+    public void WritePhpFile( string filename, string content, DateTime lastWriteTimeUtc ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
-      WriteFile( filename, fileContent );
+      WriteFile( filename, fileContent, lastWriteTimeUtc );
 
 #if DEBUG && FALSE
       fileContent = LudicrousPrettyPrinter.PrettyPrint( fileContent );
@@ -85,7 +85,7 @@ namespace Typo3ExtensionGenerator.Generator {
       return VirtualFileSystem.ContainsKey( filename );
     }
 
-    private void WriteVirtual( string filename, string content ) {
+    public void WriteVirtual( string filename, string content ) {
       if( !VirtualFileSystem.ContainsKey( filename ) ) {
         VirtualFileSystem[ filename ] = new StringBuilder();
       }

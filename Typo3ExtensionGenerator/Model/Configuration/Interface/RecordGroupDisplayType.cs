@@ -8,7 +8,7 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// <summary>
   /// The SpecializedDisplayType derives from the SimpleContainer to allow for easy property collection.
   /// </summary>
-  public class RecordGroupDisplayType : SpecializedDisplayType, IDisplayType, IParserResult {
+  public class RecordGroupDisplayType : SpecializedDisplayType, IDisplayType {
     /// <summary>
     /// Should thumbnails be shown for the selected records?
     /// </summary>
@@ -48,9 +48,6 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     }
 
     public new string GeneratePropertyArray( Format format ) {
-      
-
-
       return base.GeneratePropertyArray( format );
     }
   }
