@@ -72,7 +72,7 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <param name="content">The content that should be written to the file.</param>
     /// <param name="lastWriteTimeUtc">The last modified timestamp that should be used for the file.</param>
     public void WriteFile( string filename, byte[] content, DateTime lastWriteTimeUtc ) {
-      InternalWrite( OutputDirectory,filename,content,lastWriteTimeUtc );
+      InternalWrite( OutputDirectory, filename, content, lastWriteTimeUtc );
     }
 
     public void WritePhpFile( string filename, string content, DateTime lastWriteTimeUtc ) {
@@ -121,7 +121,7 @@ namespace Typo3ExtensionGenerator.Generator {
       Directory.CreateDirectory( new FileInfo( absoluteFilename ).DirectoryName );
 
       if( UsedCachedStorage ) {
-        lastWriteTimeUtc = UpdateCacheEntry( filename, CalculateMd5Hash( content ), lastWriteTimeUtc );
+        lastWriteTimeUtc = UpdateCacheEntry( filename, CalculateMd5Hash, content, lastWriteTimeUtc );
       }
       File.WriteAllText( absoluteFilename, content );
 
@@ -143,7 +143,7 @@ namespace Typo3ExtensionGenerator.Generator {
       Directory.CreateDirectory( new FileInfo( absoluteFilename ).DirectoryName );
 
       if( UsedCachedStorage ) {
-        lastWriteTimeUtc = UpdateCacheEntry( filename, CalculateMd5Hash( content ), lastWriteTimeUtc );
+        lastWriteTimeUtc = UpdateCacheEntry( filename, CalculateMd5Hash, content, lastWriteTimeUtc );
       }
       File.WriteAllBytes( absoluteFilename, content );
 
@@ -152,7 +152,9 @@ namespace Typo3ExtensionGenerator.Generator {
       fileInfo.LastWriteTimeUtc = lastWriteTimeUtc;
     }
 
-    private static DateTime UpdateCacheEntry( string filename, string contentHash, DateTime lastWriteTimeUtc ) {
+    private static DateTime UpdateCacheEntry<T>( string filename, Func<T,string> hashCalculator, T content, DateTime lastWriteTimeUtc ) {
+      
+
       // Do we have a cache yet?
       if( null == Cache ) {
         // Create it.
@@ -160,6 +162,10 @@ namespace Typo3ExtensionGenerator.Generator {
       }
       // Is this file in the cache?
       if( Cache.ContainsKey( filename ) ) {
+        // If no newer write time was given, no need to do any further testing.
+        if( Cache[ filename ].LastWriteTimeUtc == lastWriteTimeUtc ) return lastWriteTimeUtc;
+
+        string contentHash = hashCalculator( content );
         // If the file contents are still identical, we re-use the old timestamp
         if( Cache[ filename ].Md5 == contentHash ) {
           lastWriteTimeUtc = Cache[ filename ].LastWriteTimeUtc;
@@ -172,7 +178,8 @@ namespace Typo3ExtensionGenerator.Generator {
       } else {
         // Add it to the cache
         Log.WarnFormat( "NEW cache entry '{0}'.", filename );
-        Cache[ filename ] = new CacheEntry {Md5 = contentHash, LastWriteTimeUtc = lastWriteTimeUtc};
+        // We don't store a hash on the first detection. The next write will be an update to the timestamp, that will cause a hash to be generated and stored.
+        Cache[ filename ] = new CacheEntry {LastWriteTimeUtc = lastWriteTimeUtc};
       }
       return lastWriteTimeUtc;
     }
