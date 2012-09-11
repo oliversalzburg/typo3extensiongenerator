@@ -29,7 +29,13 @@ namespace Typo3ExtensionGenerator.Model {
     public Repository() {
       Methods = new List<Plugin.Action>();
     }
+
     #region Implementation of IParserResult
+    /// <summary>
+    /// The file in which the line was located.
+    /// </summary>
+    public string SourceFile { get; set; }
+
     /// <summary>
     /// The line on which this object was originally defined in the input.
     /// </summary>
