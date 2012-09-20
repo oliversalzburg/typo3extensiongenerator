@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using SmartFormat;
 using Typo3ExtensionGenerator.Helper;
@@ -13,14 +14,16 @@ namespace Typo3ExtensionGenerator.Generator.Module {
     public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-      WriteVirtual( "ext_tables.php", GeneratePhp() );
+      GenerateModules();
     }
 
     /// <summary>
     /// Generates the PHP statements to register the modules.
     /// </summary>
     /// <returns></returns>
-    private string GeneratePhp( ) {
+    private void GenerateModules() {
+      if( null == Subject.Modules || !Subject.Modules.Any() ) return;
+
       StringBuilder result = new StringBuilder();
 
       Log.Info( "Registering modules..." );
@@ -67,7 +70,8 @@ namespace Typo3ExtensionGenerator.Generator.Module {
         WriteVirtual( string.Format( "Resources/Private/Language/locallang_{0}.xml", subKey.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ) );
       }
 
-      return result.ToString().Substring( 0, result.Length - 1 );
+      string modules = result.ToString().Substring( 0, result.Length - 1 );
+      WriteVirtual( "ext_tables.php", modules );
     }    
   }
 }

@@ -34,7 +34,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// Generates the plugins.
     /// </summary>
     /// <returns></returns>
-    private void GeneratePlugin( ) {
+    private void GeneratePlugin() {
+      if( null == Subject.Plugins || !Subject.Plugins.Any() ) return;
+
       StringBuilder extTables = new StringBuilder();
       StringBuilder extLocalconf = new StringBuilder();
 

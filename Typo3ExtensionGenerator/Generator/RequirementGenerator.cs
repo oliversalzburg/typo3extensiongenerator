@@ -17,6 +17,8 @@ namespace Typo3ExtensionGenerator.Generator {
     public RequirementGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
+      if( null == Subject.Requirements || !Subject.Requirements.Any() ) return;
+
       foreach( Requirement requirement in Subject.Requirements ) {
         foreach( Requirement.RequiredFile file in requirement.Files ) {
           DateTime lastWriteTimeUtc = new FileInfo( file.FullSourceName ).LastWriteTimeUtc;
