@@ -38,6 +38,8 @@ namespace Typo3ExtensionGenerator.Parser {
       bool isEscaped = false;
       // Are we currently inside a comment?
       bool inComment = false;
+      // The line where a comment was started
+      int commentStart = 0;
 
       // Iterate over the whole input string
       // The whole point of this operation is to collect the full header of the partial,
@@ -117,15 +119,24 @@ namespace Typo3ExtensionGenerator.Parser {
           try {
             if( characterPointer + Syntax.CommentMultilineStart.Length <= element.Length && 
               Syntax.CommentMultilineStart == element.Substring( characterPointer, Syntax.CommentMultilineStart.Length ) ) {
-              inComment = true;
+              
+              inComment    = true;
+              commentStart = lineNumber;
               // Skip ahead until comment is terminated
               while( characterPointer < element.Length && inComment ) {
                 ++characterPointer;
                 if( Syntax.CommentMultilineEnd
                     == element.Substring( characterPointer, Syntax.CommentMultilineEnd.Length ) ) {
                   characterPointer += Syntax.CommentMultilineEnd.Length;
-                  inComment = false;
+                  
+                  inComment    = false;
+                  commentStart = 0;
                 }
+                // We still need to remember to increase line numbers
+                if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
+                  ++lineNumber;
+                }
+
               }
             } else if( characterPointer + Syntax.CommentSinglelineStart.Length <= element.Length && 
               Syntax.CommentSinglelineStart == element.Substring( characterPointer, Syntax.CommentSinglelineStart.Length ) ) {
@@ -135,13 +146,15 @@ namespace Typo3ExtensionGenerator.Parser {
               while( characterPointer < element.Length && inComment ) {
                 ++characterPointer;
                 if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
-                  inComment = false;
+                  
+                  inComment    = false;
+                  commentStart = 0;
                   ++lineNumber;
                 }
               }
             }
           } catch( ArgumentOutOfRangeException ) {
-            throw new ParserException( "Hit end of input while looking for end of comment.", lineNumber );
+            throw new ParserException( string.Format( "Hit end of input while looking for end of comment which started on line {0}.", commentStart ), lineNumber );
           }
 
         } else {
