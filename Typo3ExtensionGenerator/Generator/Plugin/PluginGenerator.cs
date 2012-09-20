@@ -312,7 +312,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         if( !File.Exists( plugin.Implementation ) ) {
           throw new GeneratorException(
             string.Format( "Implementation '{0}' for plugin '{1}' does not exist.", plugin.Implementation, plugin.Name ),
-            plugin.SourceLine );
+            plugin.SourceFragment.SourceDocument );
         }
         Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
         string pluginImplementation = File.ReadAllText( plugin.Implementation );

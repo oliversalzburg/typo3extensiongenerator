@@ -45,7 +45,7 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
               throw new GeneratorException(
                 string.Format(
                   "Referenced foreign model '{0}' does not include TYPO3 Managed Fields template.", foreignModel.Name ),
-                dataModel.SourceLine + field.Line );
+                dataModel.SourceFragment.SourceDocument );
             }
 
             // Store the foreign model for this field

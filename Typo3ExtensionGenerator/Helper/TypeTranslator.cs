@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Parser.Document;
 
 namespace Typo3ExtensionGenerator.Helper {
   /// <summary>
@@ -19,9 +20,9 @@ namespace Typo3ExtensionGenerator.Helper {
     /// Converts the given type description to a MySQL type.
     /// </summary>
     /// <param name="typeDescription"></param>
-    /// <param name="line">The input line number this type came from.</param>
+    /// <param name="source">The virtual document the parameter was defined in.</param>
     /// <returns></returns>
-    public static string ToSql( string typeDescription, int line ) {
+    public static string ToSql( string typeDescription, VirtualDocument source ) {
       switch( typeDescription ) {
         case Keywords.Types.String:
           return "text";
@@ -39,18 +40,18 @@ namespace Typo3ExtensionGenerator.Helper {
 
             int memberLength = 0;
             if( !int.TryParse( length, out memberLength ) ) {
-              throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), line );
+              throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), source );
             }
             return string.Format( "varchar({0}) default '' NOT NULL", memberLength );
 
           } else {
-            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), line );
+            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
           }
           
       }
     }
 
-    public static string ToPhp( string typeDescription, int line ) {
+    public static string ToPhp( string typeDescription, VirtualDocument source ) {
       switch( typeDescription ) {
         case Keywords.Types.String:
           return "string";
@@ -64,7 +65,7 @@ namespace Typo3ExtensionGenerator.Helper {
             return "string";
 
           } else {
-            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), line );
+            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
           }
           
       }

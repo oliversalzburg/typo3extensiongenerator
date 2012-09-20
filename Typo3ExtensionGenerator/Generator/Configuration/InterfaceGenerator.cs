@@ -76,7 +76,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           configuration += String.Format( propertyTemplate, "type", subject.DisplayType.Name );
         }
       } else {
-        throw new GeneratorException( string.Format( "No display type given in interface for '{0}'!", subject.Target ), subject.SourceFragment.Line );
+        throw new GeneratorException( string.Format( "No display type given in interface for '{0}'!", subject.Target ), subject.SourceFragment.SourceDocument );
       }
 
       

@@ -22,13 +22,12 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       Fragment interfacePartial =
         parsedFragment.Fragments.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfacePalette );
       if( null == interfacePartial ) {
-        throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.Line );
+        throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.SourceDocument );
       }
       
       Palette parsedType = new Palette {
                                          Name = parsedFragment.Parameters,
                                          Interface = interfacePartial.Parameters,
-                                         SourceLine = interfacePartial.Line,
                                          SourceFragment = interfacePartial
                                        };
 

@@ -10,16 +10,6 @@ namespace Typo3ExtensionGenerator.Parser {
   /// </summary>
   public interface IParserResult {
     /// <summary>
-    /// The file in which the line was located.
-    /// </summary>
-    string SourceFile { get; set; }
-
-    /// <summary>
-    /// The line on which this object was originally defined in the input.
-    /// </summary>
-    int SourceLine { get; set; }
-
-    /// <summary>
     /// The parsed fragment from which this object was generated.
     /// </summary>
     Fragment SourceFragment { get; set; }

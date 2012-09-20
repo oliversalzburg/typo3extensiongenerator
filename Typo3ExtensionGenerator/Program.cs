@@ -71,7 +71,7 @@ namespace Typo3ExtensionGenerator {
         Extension extension = parser.Parse( markup );
 
         if( extension.Key.IndexOfAny( new[]{'\r','\n','\t',' '} ) > -1 ) {
-          throw new ParserException( "Illegal extension key. Can't contain whitespace.", extension.SourceLine );
+          throw new ParserException( "Illegal extension key. Can't contain whitespace.", extension.SourceFragment.SourceDocument );
         }
         
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );

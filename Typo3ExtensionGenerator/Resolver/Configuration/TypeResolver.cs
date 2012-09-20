@@ -22,12 +22,12 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       Fragment interfacePartial =
         parsedFragment.Fragments.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfaceType );
       if( null == interfacePartial ) {
-        throw new ParserException( string.Format( "Type '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.Line );
+        throw new ParserException( string.Format( "Type '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.SourceDocument );
       }
 
       Typo3ExtensionGenerator.Model.Configuration.Type parsedType =
         new Typo3ExtensionGenerator.Model.Configuration.Type
-        {Interface = interfacePartial.Parameters, SourceLine = parsedFragment.Line, SourceFragment = interfacePartial};
+        {Interface = interfacePartial.Parameters, SourceFragment = interfacePartial};
 
       return parsedType;
     }

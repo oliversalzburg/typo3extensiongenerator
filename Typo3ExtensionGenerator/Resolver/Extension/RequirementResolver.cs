@@ -23,8 +23,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
       foreach( Fragment requirementPartial in requirementPartials ) {
         Requirement requirement = new Requirement {
                                                     SourceFolder = requirementPartial.Parameters,
-                                                    SourceFragment = requirementPartial,
-                                                    SourceLine = requirementPartial.Line
+                                                    SourceFragment = requirementPartial
                                                   };
         requirements.Add( requirement );
 
@@ -40,7 +39,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
         if( !Directory.Exists( requirement.SourceFolder ) ) {
           throw new GeneratorException(
             string.Format( "The given requirement root '{0}' does not exist.", requirement.SourceFolder ),
-            requirement.SourceLine );
+            requirement.SourceFragment.SourceDocument );
         }
 
         // Find files in the requirement root

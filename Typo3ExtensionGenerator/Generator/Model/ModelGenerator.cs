@@ -33,7 +33,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
           if( null == repositoryModel ) {
             throw new GeneratorException(
               string.Format( "The target type '{0}' for the repository is not defined.", repository.TargetModelName ),
-              repository.SourceLine );
+              repository.SourceFragment.SourceDocument);
           }
         }
       }
@@ -102,12 +102,11 @@ namespace Typo3ExtensionGenerator.Generator.Model {
           // Make sure to use the internal type name if it is defined.
           string foreignModelClassName = foreignModel.InternalType
                                          ??
-                                         NameHelper.GetExtbaseDomainModelClassName(
-                                           Subject, dataModel.ForeignModels[ member.Name ] );
+                                         NameHelper.GetExtbaseDomainModelClassName( Subject, dataModel.ForeignModels[ member.Name ] );
           dataMembers.Append( string.Format( propertyTemplate, member.Value, foreignModelClassName ) );   
 
         } else {
-          dataMembers.Append( string.Format( propertyTemplate, member.Value, TypeTranslator.ToPhp( member.Name, member.Line ) ) );   
+          dataMembers.Append( string.Format( propertyTemplate, member.Value, TypeTranslator.ToPhp( member.Name, dataModel.SourceFragment.SourceDocument ) ) );   
         }
         
       }
@@ -168,7 +167,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
             string.Format(
               "Implementation '{0}' for repository for '{1}' does not exist.", repositoryDefinition.Implementation,
               model.Name ),
-            repositoryDefinition.SourceLine );
+            repositoryDefinition.SourceFragment.SourceDocument );
         }
 
         isExternallyImplemented = true;
@@ -305,7 +304,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
             default:
               throw new GeneratorException(
                 string.Format( "Data model template '{0}' is unknown", member.Value ),
-                dataModel.SourceLine + member.Line );
+                dataModel.SourceFragment.SourceDocument );
           }
         } else {
           if( dataModel.ForeignModels.ContainsKey( member.Value ) ) {
@@ -313,20 +312,19 @@ namespace Typo3ExtensionGenerator.Generator.Model {
             dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
-                TypeTranslator.ToSql( Keywords.Types.UnsignedInt, dataModel.SourceLine + member.Line ) ) );
+                TypeTranslator.ToSql( Keywords.Types.UnsignedInt, dataModel.SourceFragment.SourceDocument ) ) );
 
           } else if( TypeTranslator.CanTranslate( member.Name ) ) {
             // If it is a POD type, just translate it
             dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
-                TypeTranslator.ToSql( member.Name, dataModel.SourceLine + member.Line ) ) );
+                TypeTranslator.ToSql( member.Name, dataModel.SourceFragment.SourceDocument ) ) );
 
           } else {
             throw new GeneratorException(
-              string.Format(
-                "Data model field type '{0}' in model '{1}' is unknown.", member.Name, dataModel.Name ),
-              dataModel.SourceLine + member.Line );
+              string.Format( "Data model field type '{0}' in model '{1}' is unknown.", member.Name, dataModel.Name ),
+              dataModel.SourceFragment.SourceDocument );
           }
         }
       }

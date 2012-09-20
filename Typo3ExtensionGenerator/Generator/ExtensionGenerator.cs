@@ -111,7 +111,7 @@ namespace Typo3ExtensionGenerator.Generator {
       if( !File.Exists( Subject.LabelHookImplementation ) ) {
         throw new GeneratorException(
           string.Format( "Label hook implementation '{0}' does not exist.", Subject.LabelHookImplementation ),
-          Subject.SourceLine );
+          Subject.SourceFragment.SourceDocument );
       }
       const string externalImplementationTemplate = "private $implementation;\n" +
                                                     "private function getImplementation() {{\n" +

@@ -101,7 +101,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
             throw new GeneratorException(
               string.Format(
                 "The interface field '{0}' does not exist in the data model '{1}'.", interfaceField,
-                Configuration.Model.Name ), Configuration.SourceLine );
+                Configuration.Model.Name ), Configuration.SourceFragment.SourceDocument );
           }
 
           finalInterfaceFields += NameHelper.GetSqlColumnName( Subject, interfaceField ) + ",";
@@ -155,7 +155,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
                 string.Format(
                   "The type interface field '{0}' neither exists in the data model '{1}' nor is it a palette.",
                   userInterfaceField,
-                  Configuration.Model.Name ), type.SourceLine );
+                  Configuration.Model.Name ), type.SourceFragment.SourceDocument );
 
             } else {
               // The field that was provided by the user is actually a palette.
@@ -214,7 +214,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
               string.Format(
                 "The palette field '{0}' does not exist in the data model '{1}'.",
                 field,
-                Configuration.Model.Name ), palette.SourceLine );
+                Configuration.Model.Name ), palette.SourceFragment.SourceDocument );
           }
 
           paletteInterfaceFields += NameHelper.GetSqlColumnName( Subject, field ) + ",";
@@ -256,7 +256,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
           throw new GeneratorException(
             string.Format( "Could not generate interface for nonexistent field '{0}'.", fieldInterface.Target ),
-            fieldInterface.SourceFragment.Line );
+            fieldInterface.SourceFragment.SourceDocument );
         }
         // Generate the column
         string interfaceDefinition = InterfaceGenerator.Generate( this, Subject, fieldInterface, SimpleContainer.Format.PhpArray );

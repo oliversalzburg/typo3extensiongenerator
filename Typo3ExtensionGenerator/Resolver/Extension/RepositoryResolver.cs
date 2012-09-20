@@ -23,7 +23,6 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
         Repository repository = new Repository {
                                                  TargetModelName = repositoryPartial.Parameters,
                                                  SourceFragment = repositoryPartial,
-                                                 SourceLine = repositoryPartial.Line
                                                };
         repositories.Add( repository );
         if( repositoryPartial.Fragments.Any() ) {

@@ -26,8 +26,7 @@ namespace Typo3ExtensionGenerator.Resolver.Model {
 
             } else {
               dataModel.Members.Add(
-                new DataModel.DataModelMember
-                {Name = dataMember.Keyword, Value = dataMember.Parameters, Line = dataMember.Line} );
+                new DataModel.DataModelMember {Name = dataMember.Keyword, Value = dataMember.Parameters} );
             }
           }
         }

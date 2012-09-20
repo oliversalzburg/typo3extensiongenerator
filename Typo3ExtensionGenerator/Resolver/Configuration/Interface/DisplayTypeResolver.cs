@@ -15,7 +15,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                        Keywords.ConfigurationDirectives.
                                                                                        InterfaceDirectives.
                                                                                        Representations.RecordGroup,
-                                                                                       SourceLine = @interface.SourceLine
+                                                                                       SourceFragment = parsedFragment
                                                                                    };
 
         specializedDisplayType.Set( "internal_type", "file_reference" );
@@ -39,7 +39,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                        Keywords.ConfigurationDirectives.
                                                                                        InterfaceDirectives.
                                                                                        Representations.RecordGroup,
-                                                                                       SourceLine = @interface.SourceLine
+                                                                                       SourceFragment = parsedFragment
                                                                                    };
 
         // Show records next to select box
@@ -72,7 +72,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
                                                                                          ConfigurationDirectives.
                                                                                          InterfaceDirectives.
                                                                                          Representations.TextArea,
-                                                                                       SourceLine = @interface.SourceLine
+                                                                                       SourceFragment = parsedFragment
                                                                                      };
 
         specializedDisplayType.Set( "wizards.RTE.icon", "wizard_rte2.gif" );
