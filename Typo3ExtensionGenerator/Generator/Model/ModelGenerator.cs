@@ -25,42 +25,46 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     public ModelGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-      WriteFile( "ext_tables.sql", GenerateSql(), DateTime.UtcNow );
+      GenerateSql();
 
-      foreach( Repository repository in Subject.Repositories ) {
-        DataModel repositoryModel = Subject.Models.SingleOrDefault( m => m.Name == repository.TargetModelName );
-        if( null == repositoryModel ) {
-          throw new GeneratorException(
-            string.Format( "The target type '{0}' for the repository is not defined.", repository.TargetModelName ),
-            repository.SourceLine );
+      if( null != Subject.Repositories ) {
+        foreach( Repository repository in Subject.Repositories ) {
+          DataModel repositoryModel = Subject.Models.SingleOrDefault( m => m.Name == repository.TargetModelName );
+          if( null == repositoryModel ) {
+            throw new GeneratorException(
+              string.Format( "The target type '{0}' for the repository is not defined.", repository.TargetModelName ),
+              repository.SourceLine );
+          }
         }
       }
 
-      foreach( DataModel dataModel in Subject.Models ) {
-        const string modelPath      = "Classes/Domain/Model";
-        const string repositoryPath = "Classes/Domain/Repository";
-        const string partialsPath   = "Resources/Private/Partials";
+      if( null != Subject.Models ) {
+        foreach( DataModel dataModel in Subject.Models ) {
+          const string modelPath      = "Classes/Domain/Model";
+          const string repositoryPath = "Classes/Domain/Repository";
+          const string partialsPath   = "Resources/Private/Partials";
 
-        string modelFileContent      = GenerateModelFile( dataModel );
-        string repositoryFileContent = GenerateRepositoryFile( dataModel );
-        string fluidPartialContent   = GenerateFluidPartial( dataModel );
-        
-        string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
-        Log.InfoFormat( "Generating model '{0}'...", modelFilename );
-        if( !string.IsNullOrEmpty( modelFileContent ) ) {
-          WritePhpFile( modelFilename, modelFileContent, DateTime.UtcNow );
-        }
+          string modelFileContent      = GenerateModelFile( dataModel );
+          string repositoryFileContent = GenerateRepositoryFile( dataModel );
+          string fluidPartialContent   = GenerateFluidPartial( dataModel );
 
-        string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
-        Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
-        if( !string.IsNullOrEmpty( repositoryFileContent ) ) {
-          WritePhpFile( respositoryFilename, repositoryFileContent, DateTime.UtcNow );
-        }
+          string modelFilename = Path.Combine( modelPath, NameHelper.GetExtbaseDomainModelFileName( Subject, dataModel ) );
+          Log.InfoFormat( "Generating model '{0}'...", modelFilename );
+          if( !string.IsNullOrEmpty( modelFileContent ) ) {
+            WritePhpFile( modelFilename, modelFileContent, DateTime.UtcNow );
+          }
 
-        string fluidPartialFilename = Path.Combine( partialsPath, NameHelper.GetFluidPartialFileName( Subject, dataModel ) );
-        Log.InfoFormat( "Generating Fluid partial '{0}'...", fluidPartialFilename );
-        if( !string.IsNullOrEmpty( fluidPartialContent) ) {
-          WriteFile( fluidPartialFilename, fluidPartialContent, DateTime.UtcNow );
+          string respositoryFilename = Path.Combine( repositoryPath, NameHelper.GetExtbaseDomainModelRepositoryFileName( Subject, dataModel ) );
+          Log.InfoFormat( "Generating repository '{0}'...", respositoryFilename );
+          if( !string.IsNullOrEmpty( repositoryFileContent ) ) {
+            WritePhpFile( respositoryFilename, repositoryFileContent, DateTime.UtcNow );
+          }
+
+          string fluidPartialFilename = Path.Combine( partialsPath, NameHelper.GetFluidPartialFileName( Subject, dataModel ) );
+          Log.InfoFormat( "Generating Fluid partial '{0}'...", fluidPartialFilename );
+          if( !string.IsNullOrEmpty( fluidPartialContent ) ) {
+            WriteFile( fluidPartialFilename, fluidPartialContent, DateTime.UtcNow );
+          }
         }
       }
     }
@@ -244,7 +248,9 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// Generates the SQL statements for the data model tables
     /// </summary>
     /// <returns></returns>
-    private string GenerateSql( ) {
+    private void GenerateSql( ) {
+      if( null == Subject.Models || !Subject.Models.Any() ) return;
+
       string result = string.Empty;
 
       Log.Info( "Generating SQL tables..." );
@@ -262,7 +268,8 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string sqlMembers = GenerateSqlMembers( dataModel );
         result += string.Format( template, modelName, sqlMembers ) + "\n";
       }
-      return result;
+
+      WriteFile( "ext_tables.sql", result, DateTime.UtcNow );
     }
 
     private string GenerateSqlMembers( DataModel dataModel ) {
