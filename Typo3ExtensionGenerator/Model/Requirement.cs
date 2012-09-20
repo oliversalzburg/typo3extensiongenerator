@@ -44,9 +44,9 @@ namespace Typo3ExtensionGenerator.Model {
     public int SourceLine { get; set; }
 
     /// <summary>
-    /// The parsed partial from which this object was generated.
+    /// The fragment from which this object was generated.
     /// </summary>
-    public ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    public Fragment SourceFragment { get; set; }
     #endregion
   }
 }

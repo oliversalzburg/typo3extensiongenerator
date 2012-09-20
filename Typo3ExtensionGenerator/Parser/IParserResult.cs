@@ -5,7 +5,8 @@ using System.Text;
 
 namespace Typo3ExtensionGenerator.Parser {
   /// <summary>
-  /// An IParserResult describes an object that was produced by parsing an exception.
+  /// An IParserResult describes an object that was produced by parsing an element.
+  /// It is primarily used to enforce implementation of the source line and file attributes.
   /// </summary>
   public interface IParserResult {
     /// <summary>
@@ -19,8 +20,8 @@ namespace Typo3ExtensionGenerator.Parser {
     int SourceLine { get; set; }
 
     /// <summary>
-    /// The parsed partial from which this object was generated.
+    /// The parsed fragment from which this object was generated.
     /// </summary>
-    ExtensionParser.ParsedPartial SourcePartial { get; set; }
+    Fragment SourceFragment { get; set; }
   }
 }

@@ -4,6 +4,7 @@ using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 using Typo3ExtensionGenerator.Resolver.Model;
 
@@ -12,14 +13,14 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
     /// <summary>
     /// Resolves the plugins of an extension from a ParsedPartial.
     /// </summary>
-    /// <param name="parsedPartial">The partially parsed extension.</param>
+    /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The plauings of the extension</returns>
-    public static List<Typo3ExtensionGenerator.Model.Plugin.Plugin> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> pluginPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclarePlugin );
+    public static List<Typo3ExtensionGenerator.Model.Plugin.Plugin> Resolve( Fragment parsedFragment ) {
+      IEnumerable<Fragment> pluginPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclarePlugin );
       if( !pluginPartials.Any() ) return null;
 
       List<Typo3ExtensionGenerator.Model.Plugin.Plugin> plugins = new List<Typo3ExtensionGenerator.Model.Plugin.Plugin>();
-      foreach( ExtensionParser.ParsedPartial pluginPartial in pluginPartials ) {
+      foreach( Fragment pluginPartial in pluginPartials ) {
         // Construct the plugin with the given name
         Typo3ExtensionGenerator.Model.Plugin.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin.Plugin
                                                              {Name = pluginPartial.Parameters};
@@ -33,7 +34,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
         plugin.Model.Name = "flexform";
 
         // Resolve plugin
-        foreach( ExtensionParser.ParsedPartial pluginParameter in pluginPartial.Partials ) {
+        foreach( Fragment pluginParameter in pluginPartial.Fragments ) {
           if( pluginParameter.Keyword == Keywords.Title) {
             plugin.Title = pluginParameter.Parameters;
 

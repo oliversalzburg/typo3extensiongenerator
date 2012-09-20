@@ -2,24 +2,25 @@
 using System.Linq;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 
 namespace Typo3ExtensionGenerator.Resolver.Model {
   public static class ModelResolver {
     /// <summary>
     /// Resolves the models of an extension from a ParsedPartial.
     /// </summary>
-    /// <param name="parsedPartial">The partially parsed extension.</param>
+    /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The models of the extension</returns>
-    public static List<DataModel> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> modelPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareModel );
+    public static List<DataModel> Resolve( Fragment parsedFragment ) {
+      IEnumerable<Fragment> modelPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareModel );
       if( !modelPartials.Any() ) return null;
 
       List<DataModel> dataModels = new List<DataModel>();
-      foreach( ExtensionParser.ParsedPartial modelPartial in modelPartials ) {
-        DataModel dataModel = new DataModel {Name = modelPartial.Parameters, SourcePartial = modelPartial};
+      foreach( Fragment modelPartial in modelPartials ) {
+        DataModel dataModel = new DataModel {Name = modelPartial.Parameters, SourceFragment = modelPartial};
         dataModels.Add( dataModel );
-        if( modelPartial.Partials.Any() ) {
-          foreach( ExtensionParser.ParsedPartial dataMember in modelPartial.Partials ) {
+        if( modelPartial.Fragments.Any() ) {
+          foreach( Fragment dataMember in modelPartial.Fragments ) {
             if( dataMember.Keyword == Keywords.InternalType ) {
               dataModel.InternalType = dataMember.Parameters;
 

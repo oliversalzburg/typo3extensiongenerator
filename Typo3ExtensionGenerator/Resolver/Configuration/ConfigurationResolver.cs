@@ -2,6 +2,7 @@
 using System.Linq;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
@@ -9,18 +10,18 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// <summary>
     /// Resolves the configurations of data models of an extension from a ParsedPartial.
     /// </summary>
-    /// <param name="parsedPartial">The partially parsed extension.</param>
+    /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The configurations of the extension</returns>
-    public static List<Typo3ExtensionGenerator.Model.Configuration.Configuration> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> configurationPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareConfiguration );
+    public static List<Typo3ExtensionGenerator.Model.Configuration.Configuration> Resolve( Fragment parsedFragment ) {
+      IEnumerable<Fragment> configurationPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclareConfiguration );
       if( !configurationPartials.Any() ) return null;
 
       List<Typo3ExtensionGenerator.Model.Configuration.Configuration> configurations = new List<Typo3ExtensionGenerator.Model.Configuration.Configuration>();
-      foreach( ExtensionParser.ParsedPartial configurationPartial in configurationPartials ) {
+      foreach( Fragment configurationPartial in configurationPartials ) {
         Typo3ExtensionGenerator.Model.Configuration.Configuration configuration = new Typo3ExtensionGenerator.Model.Configuration.Configuration { Target = configurationPartial.Parameters };
         configurations.Add( configuration );
-        if( configurationPartial.Partials.Any() ) {
-          foreach( ExtensionParser.ParsedPartial configurationDirective in configurationPartial.Partials ) {
+        if( configurationPartial.Fragments.Any() ) {
+          foreach( Fragment configurationDirective in configurationPartial.Fragments ) {
             
             // Find configuration directives
             if( Keywords.ConfigurationDirectives.Label == configurationDirective.Keyword ) {

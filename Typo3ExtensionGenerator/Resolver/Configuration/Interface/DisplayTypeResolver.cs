@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
   public static class DisplayTypeResolver {
-    public static void Resolve( ExtensionParser.ParsedPartial parsedPartial, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface, string displayType ) {
+    public static void Resolve( Fragment parsedFragment, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface, string displayType ) {
       if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.FileReference == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType {
                                                                                      Name =

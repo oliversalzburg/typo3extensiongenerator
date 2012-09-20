@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 
 namespace Typo3ExtensionGenerator.Resolver.Model {
   /// <summary>

@@ -5,6 +5,7 @@ using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Model;
 
 namespace Typo3ExtensionGenerator.Resolver.Extension {
@@ -12,23 +13,23 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
     /// <summary>
     /// Resolves the models of an extension from a ParsedPartial.
     /// </summary>
-    /// <param name="parsedPartial">The partially parsed extension.</param>
+    /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The models of the extension</returns>
-    public static List<Requirement> Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
-      IEnumerable<ExtensionParser.ParsedPartial> requirementPartials = parsedPartial.Partials.Where( p => p.Keyword == Keywords.Requirement );
+    public static List<Requirement> Resolve( Fragment parsedFragment ) {
+      IEnumerable<Fragment> requirementPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.Requirement );
       if( !requirementPartials.Any() ) return null;
 
       List<Requirement> requirements = new List<Requirement>();
-      foreach( ExtensionParser.ParsedPartial requirementPartial in requirementPartials ) {
+      foreach( Fragment requirementPartial in requirementPartials ) {
         Requirement requirement = new Requirement {
                                                     SourceFolder = requirementPartial.Parameters,
-                                                    SourcePartial = requirementPartial,
+                                                    SourceFragment = requirementPartial,
                                                     SourceLine = requirementPartial.Line
                                                   };
         requirements.Add( requirement );
 
-        if( requirementPartial.Partials.Any() ) {
-          foreach( ExtensionParser.ParsedPartial fileFilter in requirementPartial.Partials ) {
+        if( requirementPartial.Fragments.Any() ) {
+          foreach( Fragment fileFilter in requirementPartial.Fragments ) {
             requirement.SourceFilter.Add( ParseHelper.UnwrapString( fileFilter.Keyword ) );
           }
         }

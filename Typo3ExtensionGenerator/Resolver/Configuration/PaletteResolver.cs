@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
@@ -14,21 +15,21 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
     /// <summary>
     /// Resolves a palette definition of data model configuration of an extension from a ParsedPartial.
     /// </summary>
-    /// <param name="parsedPartial">The partially parsed extension.</param>
+    /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The palette defintion.</returns>
-    public static Palette Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+    public static Palette Resolve( Fragment parsedFragment ) {
       // Check if the palette defines an interface
-      ExtensionParser.ParsedPartial interfacePartial =
-        parsedPartial.Partials.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfacePalette );
+      Fragment interfacePartial =
+        parsedFragment.Fragments.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfacePalette );
       if( null == interfacePartial ) {
-        throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedPartial.Parameters ), parsedPartial.Line );
+        throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.Line );
       }
       
       Palette parsedType = new Palette {
-                                         Name = parsedPartial.Parameters,
+                                         Name = parsedFragment.Parameters,
                                          Interface = interfacePartial.Parameters,
                                          SourceLine = interfacePartial.Line,
-                                         SourcePartial = interfacePartial
+                                         SourceFragment = interfacePartial
                                        };
 
       return parsedType;

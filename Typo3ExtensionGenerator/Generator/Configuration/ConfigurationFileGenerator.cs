@@ -10,6 +10,7 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using log4net;
 using Type = Typo3ExtensionGenerator.Model.Configuration.Type;
 
@@ -255,7 +256,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         if( !Configuration.Model.Members.Any( m => m.Value == fieldInterface.Target ) ) {
           throw new GeneratorException(
             string.Format( "Could not generate interface for nonexistent field '{0}'.", fieldInterface.Target ),
-            fieldInterface.SourcePartial.Line );
+            fieldInterface.SourceFragment.Line );
         }
         // Generate the column
         string interfaceDefinition = InterfaceGenerator.Generate( this, Subject, fieldInterface, SimpleContainer.Format.PhpArray );

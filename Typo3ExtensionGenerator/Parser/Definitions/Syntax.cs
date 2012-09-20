@@ -1,4 +1,7 @@
-﻿namespace Typo3ExtensionGenerator.Parser {
+﻿namespace Typo3ExtensionGenerator.Parser.Definitions {
+  /// <summary>
+  /// Defines the syntax element of the TYPO3 Extension Generator
+  /// </summary>
   public static class Syntax {
     #region Scopes
     public const string ScopeStart = "{";

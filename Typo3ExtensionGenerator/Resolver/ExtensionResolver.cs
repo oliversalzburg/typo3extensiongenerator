@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Configuration;
 using Typo3ExtensionGenerator.Resolver.Extension;
 using Typo3ExtensionGenerator.Resolver.Model;
@@ -9,10 +10,10 @@ using Typo3ExtensionGenerator.Resolver.Plugin;
 
 namespace Typo3ExtensionGenerator.Resolver {
   public static class ExtensionResolver {
-    public static Typo3ExtensionGenerator.Model.Extension Resolve( ExtensionParser.ParsedPartial parsedPartial ) {
+    public static Typo3ExtensionGenerator.Model.Extension Resolve( Fragment parsedFragment ) {
       
-      string extensionKey = parsedPartial.Header.Substring(
-        Keywords.DeclareExtension.Length, parsedPartial.Header.Length - Keywords.DeclareExtension.Length ).Trim();
+      string extensionKey = parsedFragment.Header.Substring(
+        Keywords.DeclareExtension.Length, parsedFragment.Header.Length - Keywords.DeclareExtension.Length ).Trim();
 
       Typo3ExtensionGenerator.Model.Extension extension = new Typo3ExtensionGenerator.Model.Extension {
                                                                                                         Key = extensionKey,
@@ -21,7 +22,7 @@ namespace Typo3ExtensionGenerator.Resolver {
                                                                                                         Version = "0.0.1"
                                                                                                       };
 
-      foreach( ExtensionParser.ParsedPartial subPartial in parsedPartial.Partials ) {
+      foreach( Fragment subPartial in parsedFragment.Fragments ) {
         if( subPartial.Keyword == Keywords.ExtensionDirectives.DefineAuthor ) {
           extension.Author.Name = subPartial.Parameters;
 
@@ -50,12 +51,12 @@ namespace Typo3ExtensionGenerator.Resolver {
           extension.LabelHookImplementation = subPartial.Parameters;
         }
       }
-      extension.Configurations = ConfigurationResolver.Resolve( parsedPartial );
-      extension.Models = ModelResolver.Resolve( parsedPartial );
-      extension.Modules = ModuleResolver.Resolve( parsedPartial );
-      extension.Plugins = PluginResolver.Resolve( parsedPartial );
-      extension.Repositories = RepositoryResolver.Resolve( parsedPartial );
-      extension.Requirements = RequirementResolver.Resolve( parsedPartial );
+      extension.Configurations = ConfigurationResolver.Resolve( parsedFragment );
+      extension.Models = ModelResolver.Resolve( parsedFragment );
+      extension.Modules = ModuleResolver.Resolve( parsedFragment );
+      extension.Plugins = PluginResolver.Resolve( parsedFragment );
+      extension.Repositories = RepositoryResolver.Resolve( parsedFragment );
+      extension.Requirements = RequirementResolver.Resolve( parsedFragment );
 
       return extension;
     }

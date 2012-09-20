@@ -8,6 +8,7 @@ using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resources;
 using log4net;
 

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Typo3ExtensionGenerator.Parser {
+﻿namespace Typo3ExtensionGenerator.Parser.Definitions {
+  /// <summary>
+  /// Defines the keywords that are used in the TYPO3 Extension Generator grammar
+  /// </summary>
   public static class Keywords {
     /// <summary>
     /// interface - Used to define an interface to a data field.
