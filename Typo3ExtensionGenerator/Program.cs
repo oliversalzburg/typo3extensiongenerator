@@ -7,6 +7,7 @@ using NDesk.Options;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.PreProcess;
 using log4net;
 
 namespace Typo3ExtensionGenerator {
@@ -63,21 +64,22 @@ namespace Typo3ExtensionGenerator {
 
       Log.InfoFormat( "Reading '{0}'...", InputFile );
       string markup = File.ReadAllText( InputFile );
-      
+
       try {
         Log.Info( "Parsing..." );
         ExtensionParser parser = new ExtensionParser();
         Extension extension = parser.Parse( markup );
+
+        if( extension.Key.IndexOfAny( new[]{'\r','\n','\t',' '} ) > -1 ) {
+          throw new ParserException( "Illegal extension key. Can't contain whitespace.", extension.SourceLine );
+        }
         
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
 
         string cacheFile = Path.Combine( Environment.CurrentDirectory, extension.Key + ".cache" );
         ExtensionGenerator generator = new ExtensionGenerator( OutputDirectory, extension ) {
                                                                                               TargetDirectory =
-                                                                                                Path.Combine(
-                                                                                                  Environment.
-                                                                                                    CurrentDirectory,
-                                                                                                  OutputDirectory )
+                                                                                                Path.Combine( Environment.CurrentDirectory, OutputDirectory )  
                                                                                             };
         AbstractGenerator.StartCachingSession( cacheFile );
         generator.Generate();
