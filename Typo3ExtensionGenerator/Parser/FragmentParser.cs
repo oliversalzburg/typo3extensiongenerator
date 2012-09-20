@@ -59,22 +59,25 @@ namespace Typo3ExtensionGenerator.Parser {
               // As long as we're on the first scope level, we can collect the body of scopes to parse them later.
               // If we're deeper nested, there's no point, we'll parse those when we recurse.
 
-              // Add the current line as a fragment.
+              // Construct a new document for the currently recorded scope.
               VirtualDocument documentFragment = VirtualDocument.FromDocument( document, scopeStart, walker.CurrentCharacter );
-
+              // ...and store it.
               result.Fragments.Add( new Fragment {Body = body.Trim(), SourceDocument = documentFragment} );
               result.Body += walker.CurrentCharacter;
 
               // Clear buffer
               body = string.Empty;
               
-              // Skip ahead
-              do {
-                walker.Walk();
-              } while( walker.CurrentCharacter == null );
+              // We skip ahead until we see a character again. We need those as markers.
+              try {
+                walker.WalkToNext();
+              } catch( ArgumentOutOfRangeException ) {
+                // Things can always go wrong when running!
+                break;
+              }
+              // Set the current location as the new recording start point
               scopeStart = walker.CurrentCharacter;
 
-              Debug.Assert( null != scopeStart );
               continue;
             }
             if( 0 == scopeLevel ) {
@@ -115,16 +118,14 @@ namespace Typo3ExtensionGenerator.Parser {
               // Clear buffer
               body = string.Empty;
               
-              // Skip ahead
-              // TODO: Explain this!
-              do {
-
-                try {
-                  walker.Walk();
-                } catch( ArgumentOutOfRangeException ) {
-                  break;
-                }
-              } while( walker.CurrentCharacter == null );
+              // We skip ahead until we see a character again. We need those as markers.
+              try {
+                walker.WalkToNext();
+              } catch( ArgumentOutOfRangeException ) {
+                // Things can always go wrong when running!
+                break;
+              }
+              // Set the current location as the new recording start point
               scopeStart = walker.CurrentCharacter;
 
               continue;
@@ -179,7 +180,9 @@ namespace Typo3ExtensionGenerator.Parser {
           }
 
         } else {
+
           // This is when we're parsing within a string.
+
           if( walker.CurrentlyReads( Syntax.StringEscape ) ) {
             // Did we find an escape sequence? Like: \"
             isEscaped = true;

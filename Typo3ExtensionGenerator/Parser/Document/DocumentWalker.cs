@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Typo3ExtensionGenerator.Parser.Document {
   /// <summary>
@@ -85,6 +86,15 @@ namespace Typo3ExtensionGenerator.Parser.Document {
       } else {
         ++CharacterPointer;
       }
+    }
+
+    /// <summary>
+    /// Walks to the next non-whitespace character, but at least once.
+    /// </summary>
+    public void WalkToNext() {
+      do {
+        Walk();
+      } while( null == CurrentCharacter || Regex.IsMatch( CurrentCharacter.ToString(), "\t|\r|\n| " ) );
     }
 
     /// <summary>

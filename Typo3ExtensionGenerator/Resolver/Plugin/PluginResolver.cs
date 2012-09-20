@@ -23,7 +23,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
       foreach( Fragment pluginPartial in pluginPartials ) {
         // Construct the plugin with the given name
         Typo3ExtensionGenerator.Model.Plugin.Plugin plugin = new Typo3ExtensionGenerator.Model.Plugin.Plugin
-                                                             {Name = pluginPartial.Parameters};
+                                                             {Name = pluginPartial.Parameters,SourceFragment = pluginPartial };
 
         // Find the data models that are defined for this plugin
         List<DataModel> dataModels = ModelResolver.Resolve( pluginPartial );

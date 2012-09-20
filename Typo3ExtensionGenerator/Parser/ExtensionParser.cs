@@ -13,11 +13,11 @@ namespace Typo3ExtensionGenerator.Parser {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public Extension Parse( string markup ) {
+    public Extension Parse( string markup, string sourceFileName ) {
       // Remove whitespace
       //markup = markup.Trim();
 
-      VirtualDocument document = VirtualDocument.FromText( markup );
+      VirtualDocument document = VirtualDocument.FromText( markup, sourceFileName );
 
       Log.Info( "Pre-processing..." );
       document = ResolveIncludes.Resolve( document );
