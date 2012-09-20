@@ -106,7 +106,9 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="phpClassSuffix"></param>
     private void WriteLabelHooks( string phpClassSuffix ) {
-      if( !string.IsNullOrEmpty( Subject.LabelHookImplementation ) && !File.Exists( Subject.LabelHookImplementation ) ) {
+      if( string.IsNullOrEmpty( Subject.LabelHookImplementation ) ) return;
+
+      if( !File.Exists( Subject.LabelHookImplementation ) ) {
         throw new GeneratorException(
           string.Format( "Label hook implementation '{0}' does not exist.", Subject.LabelHookImplementation ),
           Subject.SourceLine );
