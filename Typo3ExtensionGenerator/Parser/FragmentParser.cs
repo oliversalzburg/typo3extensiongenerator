@@ -1,37 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Parser.Document;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Parser {
   /// <summary>
   /// The FragmentParser understands the TYPO3 Extension Generator syntax.
   /// It can parse the defined code style into an object tree that can later be translated.
   /// </summary>
-  public class FragmentParser {
+  public static class FragmentParser {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     /// <summary>
-    /// 
+    /// Parses a virtual document into a parsed fragment.
     /// </summary>
-    /// <param name="element">The element that should be parsed.</param>
-    /// <param name="lineNumber">From where to start counting line numbers.</param>
+    /// <param name="document">The virtual document that should be parsed.</param>
     /// <returns></returns>
-    public static Fragment ParseFragment( string element, int lineNumber = 1 ) {
-      // The place where we're currently at in the markup
-      int characterPointer = 0;
+    public static Fragment ParseFragment( VirtualDocument document ) {
+      DocumentWalker walker = new DocumentWalker( document );
 
       // The currently collected scope body
       string body = String.Empty;
 
       // Sub-scopes which we'll find during parsing will be stored in this partial.
-      Fragment result = new Fragment() {
-                                                   Body   = string.Empty,
-                                                   Header = string.Empty,
-                                                   Line   = lineNumber
-                                                 };
+      Fragment result = new Fragment {
+                                       Body   = string.Empty,
+                                       Header = string.Empty
+                                     };
           
       // How deeply nested we are into scopes.
       int scopeLevel  = 0;
+      // Where the scope we're currently recording started.
+      VirtualDocument.Character scopeStart = walker.CurrentCharacter;
       // Are we currently inside a string?
       bool inString = false;
       // Is the current character escaped?
@@ -45,144 +50,161 @@ namespace Typo3ExtensionGenerator.Parser {
       // The whole point of this operation is to collect the full header of the partial,
       // as well as the full body of the partial.
       // If, while parsing the body of the partial, we find nested scopes, we'll store those to parse them later.
-      while( characterPointer < element.Length ) {
-        // Increase line number counter
-        if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
-          ++lineNumber;
-        }
-
-        // We only check for scopes while we're not parsing within a string.
+      while( walker.CanWalk ) {
         if( !inString ) {
           // Check for scope terminator
-          if( Syntax.ScopeTerminate == element.Substring( characterPointer, Syntax.ScopeTerminate.Length ) ) {
+          if( walker.CurrentlyReads( Syntax.ScopeTerminate ) ) {
             // Did we find a scope terminator? Like: ;
             if( 1 == scopeLevel ) {
               // As long as we're on the first scope level, we can collect the body of scopes to parse them later.
               // If we're deeper nested, there's no point, we'll parse those when we recurse.
-              result.Fragments.Add( new Fragment {Body = body.Trim(), Line = lineNumber} );
-              result.Body += element.Substring( characterPointer, 1 );
+
+              // Add the current line as a fragment.
+              VirtualDocument documentFragment = VirtualDocument.FromDocument( document, scopeStart, walker.CurrentCharacter );
+
+              result.Fragments.Add( new Fragment {Body = body.Trim(), SourceDocument = documentFragment} );
+              result.Body += walker.CurrentCharacter;
+
               // Clear buffer
               body = string.Empty;
+              
               // Skip ahead
-              ++characterPointer;
+              do {
+                walker.Walk();
+              } while( walker.CurrentCharacter == null );
+              scopeStart = walker.CurrentCharacter;
+
+              Debug.Assert( null != scopeStart );
               continue;
             }
             if( 0 == scopeLevel ) {
               // If we're on the root level, just increase the scope pointer and skip.
-              ++characterPointer;
+              walker.Walk();
               continue;
             }
           }
 
           // Check for scopes
-          if( Syntax.ScopeStart == element.Substring( characterPointer, Syntax.ScopeStart.Length ) ) {
+          if( walker.CurrentlyReads( Syntax.ScopeStart ) ) {
             // Did we find the start of a new scope?
             ++scopeLevel;
 
             if( 1 == scopeLevel ) {
               // If we're on the root level (we are, because we just increased the scopeLevel), we need to skip ahead.
-              ++characterPointer;
+              walker.Walk();
+              scopeStart = walker.CurrentCharacter;
               continue;
             }
+            if( 2 == scopeLevel ) {
+              //scopeStart = walker.CurrentCharacter;
+            }
 
-          } else if( Syntax.ScopeEnd == element.Substring( characterPointer, Syntax.ScopeEnd.Length ) ) {
+          } else if( walker.CurrentlyReads( Syntax.ScopeEnd ) ) {
             --scopeLevel;
             // Did we find the end of a scope?
             if( 1 == scopeLevel ) {
               // Great! Another temporary scope we can store for later
-              body += element.Substring( characterPointer, 1 );
-              // Calculate the line number by extracting the number of newlines in the body from the line counter.
-              int line = lineNumber - body.Trim().Count( c => c == '\n' );
+              body += walker.CurrentCharacter;
               result.Fragments.Add(
-                new Fragment {Body = body.Trim(), Line = line} );
-              result.Body += element.Substring( characterPointer, 1 );
+                new Fragment {
+                               Body = body.Trim(),
+                               SourceDocument =
+                                 VirtualDocument.FromDocument( document, scopeStart, walker.CurrentCharacter )
+                             } );
+              result.Body += walker.CurrentCharacter;
               // Clear buffer
               body = string.Empty;
+              
               // Skip ahead
-              ++characterPointer;
+              // TODO: Explain this!
+              do {
+
+                try {
+                  walker.Walk();
+                } catch( ArgumentOutOfRangeException ) {
+                  break;
+                }
+              } while( walker.CurrentCharacter == null );
+              scopeStart = walker.CurrentCharacter;
+
               continue;
             }
             if( 0 == scopeLevel ) {
               // If we're on the root level, just increase the scope pointer and skip.
-              ++characterPointer;
+              try {
+                walker.Walk();
+              } catch( ArgumentOutOfRangeException ){}
+
               continue;
             }
           }
 
           // Check for string delimiter
-          if( Syntax.StringDelimiter == element.Substring( characterPointer, Syntax.StringDelimiter.Length ) ) {
+          if( walker.CurrentlyReads( Syntax.StringDelimiter ) ) {
             // Did we hit a string delimiter? Like: "
             inString = true;
           }
 
           // Check for comment
           try {
-            if( characterPointer + Syntax.CommentMultilineStart.Length <= element.Length && 
-              Syntax.CommentMultilineStart == element.Substring( characterPointer, Syntax.CommentMultilineStart.Length ) ) {
+            //if( characterPointer + Syntax.CommentMultilineStart.Length <= element.Length && Syntax.CommentMultilineStart == element.Substring( characterPointer, Syntax.CommentMultilineStart.Length ) ) {
+            if( walker.CurrentlyReads( Syntax.CommentMultilineStart ) ) {
               
               inComment    = true;
-              commentStart = lineNumber;
+              commentStart = walker.CurrentLine.PhysicalLineIndex;
               // Skip ahead until comment is terminated
-              while( characterPointer < element.Length && inComment ) {
-                ++characterPointer;
-                if( Syntax.CommentMultilineEnd
-                    == element.Substring( characterPointer, Syntax.CommentMultilineEnd.Length ) ) {
-                  characterPointer += Syntax.CommentMultilineEnd.Length;
+              while( walker.CanWalk && inComment ) {
+                walker.Walk();
+                if( walker.CurrentlyReads( Syntax.CommentMultilineEnd ) ) {
+                  walker.Walk( Syntax.CommentMultilineEnd.Length );
                   
                   inComment    = false;
                   commentStart = 0;
-                }
-                // We still need to remember to increase line numbers
-                if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
-                  ++lineNumber;
                 }
 
               }
-            } else if( characterPointer + Syntax.CommentSinglelineStart.Length <= element.Length && 
-              Syntax.CommentSinglelineStart == element.Substring( characterPointer, Syntax.CommentSinglelineStart.Length ) ) {
-              inComment = true;
+            } else if( walker.CurrentlyReads( Syntax.CommentSinglelineStart ) ) {
               // Skip ahead until comment is terminated
               // Single line comments are terminated by newline.
-              while( characterPointer < element.Length && inComment ) {
-                ++characterPointer;
-                if( "\n" == element.Substring( characterPointer, "\n".Length ) ) {
-                  
-                  inComment    = false;
-                  commentStart = 0;
-                  ++lineNumber;
-                }
+              while( walker.CanWalkForward ) {
+                walker.Walk();
               }
+              // We walked to the end of the line, no we skip to the next one
+              walker.Walk();
+              commentStart = 0;
+                
             }
-          } catch( ArgumentOutOfRangeException ) {
-            throw new ParserException( string.Format( "Hit end of input while looking for end of comment which started on line {0}.", commentStart ), lineNumber );
+          } catch( ArgumentOutOfRangeException ex ) {
+            throw new ParserException( string.Format( "Hit end of input while looking for end of comment which started on line {0}.", commentStart ), walker.Document );
           }
 
         } else {
           // This is when we're parsing within a string.
-          if( Syntax.StringEscape == element.Substring( characterPointer, Syntax.StringEscape.Length ) ) {
+          if( walker.CurrentlyReads( Syntax.StringEscape ) ) {
             // Did we find an escape sequence? Like: \"
             isEscaped = true;
-            ++characterPointer;
+            walker.Walk();
           }
-          if( !isEscaped && Syntax.StringDelimiter == element.Substring( characterPointer, Syntax.StringDelimiter.Length ) ) {
+          if( !isEscaped && walker.CurrentlyReads( Syntax.StringDelimiter ) ) {
             // Did the string end?
             inString = false;
           }
         }
 
         // Decide if we're currently parsing a header or a body and store accordingly.
-        if( 0 == scopeLevel && characterPointer < element.Length ) {
+        if( 0 == scopeLevel && walker.CanWalk ) {
           // Store in persitent result
-          result.Header += element.Substring( characterPointer, 1 );
+          result.Header += walker.CurrentCharacter;
         } else {
-          // Store in persitent result
-          result.Body += element.Substring( characterPointer, 1 );
+          // Store in persistent result
+          result.Body += walker.CurrentCharacter;
           // Also store in temporary buffer
-          body += element.Substring( characterPointer, 1 );
+          body += walker.CurrentCharacter;
         }
 
         isEscaped = false;
-        ++characterPointer;
+        Debug.Assert( walker.CanWalk, "Tried to walk when it's not possible" );
+        walker.Walk();
       }
 
       result.Header = result.Header.Trim();
@@ -190,7 +212,7 @@ namespace Typo3ExtensionGenerator.Parser {
 
       // Recurse to resolve all previously parsed fragments
       foreach( Fragment childFragment in result.Fragments ) {
-        Fragment fragment = ParseFragment( childFragment.Body, childFragment.Line );
+        Fragment fragment = ParseFragment( childFragment.SourceDocument );
 
         childFragment.Header    = fragment.Header;
         childFragment.Body      = fragment.Body;
@@ -207,7 +229,7 @@ namespace Typo3ExtensionGenerator.Parser {
         // Is the parameter set in ""?
         if( !string.IsNullOrEmpty( childFragment.Parameters ) && "\"" == childFragment.Parameters.Substring( 0, 1 ) ) {
           if( "\"" != childFragment.Parameters.Substring( childFragment.Parameters.Length -1, 1 ) ) {
-            throw new ParserException( string.Format( "Unmatched \" in {0}", childFragment.Header ), lineNumber );
+            throw new ParserException( string.Format( "Unmatched \" in {0}", childFragment.Header ), walker.Document );
           }
           childFragment.Parameters = childFragment.Parameters.Substring( 1, childFragment.Parameters.Length - 2 );
         }

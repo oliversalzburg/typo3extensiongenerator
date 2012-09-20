@@ -1,26 +1,81 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.IO;
+using Typo3ExtensionGenerator.Parser;
+using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Parser.Document;
 using log4net;
 
 namespace Typo3ExtensionGenerator.PreProcess {
   /// <summary>
   /// Resolves #include statements in the given markup.
+  /// #include can only appear at the start of a line. Whitespace in front of it is ignored.
   /// </summary>
   public static class ResolveIncludes {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public static string Resolve( string markup ) {
-      string[] codeLines = Regex.Split( markup, "\r\n|\r|\n" );
-      foreach( string codeLine in codeLines ) {
-        if( codeLine.Trim().StartsWith( "#include" ) ) {
-          Log.Debug( "Found #include statement." );
+    /// <summary>
+    /// Resolves the include statements in the given document.
+    /// </summary>
+    /// <param name="document"></param>
+    /// <returns></returns>
+    public static VirtualDocument Resolve( VirtualDocument document ) {
+      // We'll build a dictionary of replacement actions to perform them after initial enumeration
+      Dictionary<VirtualDocument.Line, VirtualDocument> substitutions = new Dictionary<VirtualDocument.Line, VirtualDocument>();
+
+      // Try to find lines that start with optional whitespace and then an #include statement
+      foreach( VirtualDocument.Line line in document.Lines ) {
+        if( line.VirtualLine.Trim().StartsWith( Keywords.PreProcessInclude ) ) {
+          // Grab the file name from the statement
+          string filename = ExtractFilename( line.VirtualLine, line.PhysicalLineIndex );
+          if( !File.Exists( filename ) ) {
+            throw new ParserException( string.Format( "Given include file '{0}' does not exist.", filename ), document );
+          }
+          Log.InfoFormat( "Including '{0}'.", filename );
+
+          // Remember this substitution
+          substitutions.Add( line, VirtualDocument.FromFile( filename ) );
         }
       }
-      return markup;
+
+      // Perform substitutions
+      foreach( KeyValuePair<VirtualDocument.Line, VirtualDocument> substitution in substitutions ) {
+        document.SubstituteLine( substitution.Key, substitution.Value );
+      }
+      document.UpdateVirtualLineCount();
+
+      return document;
+    }
+
+    /// <summary>
+    /// Grabs the filename from an #include statement.
+    /// </summary>
+    /// <param name="line"></param>
+    /// <param name="lineNumber"></param>
+    /// <returns></returns>
+    /// <example>#include "foo/bar.txt"</example>
+    private static string ExtractFilename( string line, int lineNumber ) {
+      string buffer = line;
+
+      // Remove whitespace
+      buffer = buffer.Trim();
+
+      // Remove #include
+      buffer = buffer.Substring( Keywords.PreProcessInclude.Length );
+
+      // Consume optional whitespace (between #include and "")
+      buffer = buffer.Trim();
+
+      // Remainder is expected to be filename wrapped in ""
+      if( !buffer.StartsWith( Syntax.StringDelimiter ) || !buffer.EndsWith( Syntax.StringDelimiter ) ) {
+        throw new ParserException( string.Format( "Unterminated string in preprocessor directive '{0}'.", line.Trim() ), null );
+      }
+
+      // Now we trim those "" away.
+      buffer = buffer.Trim( new[] {'"'} );
+
+      // Now we should be left with the filename
+      return buffer;
     }
   }
 }

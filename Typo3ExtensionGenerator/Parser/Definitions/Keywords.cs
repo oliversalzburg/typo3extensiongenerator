@@ -4,6 +4,11 @@
   /// </summary>
   public static class Keywords {
     /// <summary>
+    /// Used to pull in another source file at the current location.
+    /// </summary>
+    public const string PreProcessInclude = "#include";
+
+    /// <summary>
     /// interface - Used to define an interface to a data field.
     /// </summary>
     public const string DefineInterface = "interface";

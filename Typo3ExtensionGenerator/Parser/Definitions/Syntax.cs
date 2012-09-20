@@ -12,7 +12,14 @@
 
 
     #region Strings
+    /// <summary>
+    /// " - Marks beginning and end of string
+    /// </summary>
     public const string StringDelimiter = "\"";
+
+    /// <summary>
+    /// \ - Allows for escaping syntax elements within string.
+    /// </summary>
     public const string StringEscape = "\\";
     #endregion
 

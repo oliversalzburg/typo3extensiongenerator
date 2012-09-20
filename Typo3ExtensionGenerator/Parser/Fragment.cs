@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Typo3ExtensionGenerator.Parser.Document;
 
 namespace Typo3ExtensionGenerator.Parser {
   /// <summary>
@@ -44,10 +46,11 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     public List<Fragment> Fragments { get; set; }
 
-    /// <summary>
-    /// The line on which this fragment was defined.
-    /// </summary>
-    public int Line { get; set; }
+    public VirtualDocument SourceDocument { get; set; }
+
+    private int Line {
+      get { return SourceDocument.Lines.First().PhysicalLineIndex; }
+    }
 
     public Fragment() {
       Fragments = new List<Fragment>();

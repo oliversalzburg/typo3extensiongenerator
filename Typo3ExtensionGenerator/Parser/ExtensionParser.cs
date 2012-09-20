@@ -1,18 +1,29 @@
 ﻿using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Parser.Document;
+using Typo3ExtensionGenerator.PreProcess;
 using Typo3ExtensionGenerator.Resolver;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Parser {
   /// <summary>
   /// Entry point for parsing operations
   /// </summary>
   public class ExtensionParser {
+
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     public Extension Parse( string markup ) {
       // Remove whitespace
-      markup = markup.Trim();
+      //markup = markup.Trim();
+
+      VirtualDocument document = VirtualDocument.FromText( markup );
+
+      Log.Info( "Pre-processing..." );
+      document = ResolveIncludes.Resolve( document );
 
       // Translate the markup into an object tree
-      Fragment fragment = FragmentParser.ParseFragment( markup );
+      Fragment fragment = FragmentParser.ParseFragment( document );
       // Parse the object tree
       Extension result = Parse( fragment );
 
@@ -37,7 +48,7 @@ namespace Typo3ExtensionGenerator.Parser {
     private static Extension Parse( Fragment fragment ) {
       // The fragment MUST be an extension definition
       if( Keywords.DeclareExtension != fragment.Header.Substring( 0, Keywords.DeclareExtension.Length ) ) {
-        throw new ParserException( "Missing extension declaration.", 1 );
+        throw new ParserException( "Missing extension declaration.", fragment.SourceDocument );
       }
 
       Extension result = ExtensionResolver.Resolve( fragment );

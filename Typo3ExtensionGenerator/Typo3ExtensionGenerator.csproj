@@ -124,6 +124,8 @@
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Requirement.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
+    <Compile Include="Parser\Document\DocumentWalker.cs" />
+    <Compile Include="Parser\Document\VirtualDocument.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
     <Compile Include="Parser\Fragment.cs" />
     <Compile Include="Parser\FragmentParser.cs" />
