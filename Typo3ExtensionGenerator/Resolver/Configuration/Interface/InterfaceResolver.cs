@@ -13,8 +13,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
     /// <returns>The field interfaces of the data model configuration.</returns>
     public static Typo3ExtensionGenerator.Model.Configuration.Interface.Interface Resolve( Fragment parsedFragment ) {
       Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface =
-        new Typo3ExtensionGenerator.Model.Configuration.Interface.Interface
-        {Target = parsedFragment.Parameters, SourceFragment = parsedFragment};
+        new Typo3ExtensionGenerator.Model.Configuration.Interface.Interface {
+                                                                              Target = parsedFragment.Parameters, SourceFragment = parsedFragment
+                                                                            };
 
       if( parsedFragment.Fragments.Any() ) {
         foreach( Fragment setting in parsedFragment.Fragments ) {

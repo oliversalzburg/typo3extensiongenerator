@@ -17,13 +17,17 @@ namespace Typo3ExtensionGenerator.Parser {
       // Remove whitespace
       //markup = markup.Trim();
 
+      Log.InfoFormat( "Constructing virtual document from markup..." );
       VirtualDocument document = VirtualDocument.FromText( markup, sourceFileName );
 
-      Log.Info( "Pre-processing..." );
+      Log.Info( "Pre-processing virtual document..." );
       document = ResolveIncludes.Resolve( document );
 
+      Log.Info( "Translating document to fragment tree..." );
       // Translate the markup into an object tree
       Fragment fragment = FragmentParser.ParseFragment( document );
+
+      Log.Info( "Translating fragment tree to TYPO3 extension..." );
       // Parse the object tree
       Extension result = Parse( fragment );
 

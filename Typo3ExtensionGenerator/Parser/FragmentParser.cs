@@ -61,10 +61,11 @@ namespace Typo3ExtensionGenerator.Parser {
 
               // Construct a new document for the currently recorded scope.
               VirtualDocument documentFragment = VirtualDocument.FromDocument( document, scopeStart, walker.CurrentCharacter );
+              
               // ...and store it.
               result.Fragments.Add( new Fragment {Body = body.Trim(), SourceDocument = documentFragment} );
               result.Body += walker.CurrentCharacter;
-
+              
               // Clear buffer
               body = string.Empty;
               

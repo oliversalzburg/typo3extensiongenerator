@@ -252,11 +252,11 @@ namespace Typo3ExtensionGenerator.Parser.Document {
       section.UpdateVirtualLineCount();
 
       // Trim start and end sections
-      int startIndex = first.Characters.ToList().IndexOf( begin );
+      int startIndex = first.Characters.ToList().IndexOf( begin ) + first.VirtualWindowBegin;
       section.Lines.First().Trim( startIndex );
 
       int endIndex = last.Characters.ToList().IndexOf( end );
-      section.Lines.Last().Trim( ( first != last ) ? 0 : startIndex, endIndex );
+      section.Lines.Last().Trim( ( first != last ) ? 0 : startIndex, endIndex + first.VirtualWindowBegin + 1 );
 
       return section;
     }
