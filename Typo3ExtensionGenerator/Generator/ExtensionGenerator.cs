@@ -38,8 +38,12 @@ namespace Typo3ExtensionGenerator.Generator {
       }
 
       Log.Info( "Clearing output directory..." );
-      if( Directory.Exists( TargetDirectory ) ) {
-        DirectoryHelper.DeleteDirectory( TargetDirectory, true );
+      try {
+        if( Directory.Exists( TargetDirectory ) ) {
+          DirectoryHelper.DeleteDirectory( TargetDirectory, true );
+        }
+      } catch( IOException ex ) {
+        Log.Error( string.Format( "Unable to clear target directory '{0}'", TargetDirectory ), ex );
       }
       Directory.CreateDirectory( TargetDirectory );
 

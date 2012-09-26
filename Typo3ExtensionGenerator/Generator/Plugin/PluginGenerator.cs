@@ -10,6 +10,7 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Resolver.Model;
+using Typo3ExtensionGenerator.Resources;
 using log4net;
 using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
 
@@ -21,7 +22,6 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     public PluginGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
     public void Generate() {
-
       Log.Info( "Generating plugins..." );
 
       GeneratePlugin();
@@ -66,7 +66,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         WriteVirtual( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">{1}</label>", languageConstant, plugin.Title ) );
 
         // Generate the plugin signature which will be used in the tt_content table and as a flexform ID.
-        string pluginSignature = String.Format( "{0}_{1}", NameHelper.UpperCamelCase( Subject.Key ).ToLower(), plugin.Name.ToLower() );
+        string pluginSignature = NameHelper.GetPluginSignature( Subject, plugin );
 
         // Register FlexForm through ext_tables
         extTables.Append(
@@ -130,6 +130,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         // Generate Fluid templating elements
         GenerateFluidTemplate( plugin );
+
+        // Generate new content element wizard icons
+        GenerateWizard( plugin, languageConstant );
       }
 
       string extTablesPhp = extTables.ToString().Substring( 0, extTables.Length - 1 );
@@ -460,6 +463,70 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       // TODO: Write plugin-specific TS files
       //const string typoScriptRegisterTemplate = "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";
       //WriteFile( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ), true );
+    }
+
+    /// <summary>
+    /// Generates an icon in the "new content element" wizard to quickly select the plugin
+    /// </summary>
+    /// <param name="plugin"></param>
+    /// <param name="titleLanguageConstant">The name of the language constant in locallang_be that contains the title of the plugin.</param>
+    private void GenerateWizard( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin, string titleLanguageConstant ) {
+      string pluginSignature       = NameHelper.GetPluginSignature( Subject, plugin );
+      string wizIconScriptFilename = string.Format( "Resources/Private/Php/class.{0}_wizicon.php", pluginSignature );
+
+      // Class registration
+
+      const string registerWizardIconTemplate = "if( TYPO3_MODE == 'BE' ) {{" +
+                                                "  $TBE_MODULES_EXT['xMOD_db_new_content_el']['addElClasses']['{_pluginSignature}_wizicon'] =" +
+                                                "    t3lib_extMgm::extPath('{_extensionKey}') . '{_wizIconFilename}';" +
+                                                "}}";
+
+      string registerWizardIcon =
+        registerWizardIconTemplate.FormatSmart(
+          new {_pluginSignature = pluginSignature, _extensionKey = Subject.Key, _wizIconFilename = wizIconScriptFilename} );
+
+      WriteVirtual( "ext_tables.php", registerWizardIcon );
+
+      // Class generation
+      string plusWizDescriptionConstant = String.Format( "{0}_plus_wiz_description", plugin.Name.ToLower() );
+      WriteVirtual( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">Description for {1}</label>", plusWizDescriptionConstant, plugin.Title ) );
+
+      // Flush wizard icon
+      string wizIconFilename = string.Format( "ce_wiz_{0}.gif", plugin.Name.ToLower() );
+      string wizIconFullFilename = "Resources/Public/Icons/" + wizIconFilename;
+      ResourceHelper.FlushIcon( "wiz_icon.gif", this, wizIconFullFilename );
+
+      const string wizIconClassTemplate = "class {_pluginSignature}_wizicon {{" +
+                                          "	public function proc($wizardItems) {{" +
+                                          "		$locallang = $this->includeLocalLang();" +
+                                          "" +
+                                          "		$wizardItems['plugins_tx_{_pluginSignature}'] = array(" +
+                                          "			'icon'		  	=> t3lib_extMgm::extRelPath('{_extensionKey}') . '{_wizIconFullFilename}'," +
+                                          "			'title'		  	=> $GLOBALS['LANG']->getLLL('{_languageConstant}', $locallang)," +
+                                          "			'description'	=> $GLOBALS['LANG']->getLLL('{_plusWizDescriptionConstant}', $locallang)," +
+                                          "			'params'	  	=> '&defVals[tt_content][CType]=list&defVals[tt_content][list_type]={_pluginSignature}'" +
+                                          "		);" +
+                                          "" +
+                                          "		return $wizardItems;" +
+                                          "	}}" +
+                                          "	protected function includeLocalLang() {{" +
+                                          "		$file = t3lib_extMgm::extPath('{_extensionKey}') . 'Resources/Private/Language/locallang_be.xml';" +
+                                          "" +
+                                          "		return t3lib_div::readLLXMLfile($file, $GLOBALS['LANG']->lang);" +
+                                          "	}}" +
+                                          "}}";
+
+      string wizIconClass =
+        wizIconClassTemplate.FormatSmart(
+          new {
+                _pluginSignature = pluginSignature,
+                _extensionKey = Subject.Key,
+                _languageConstant = titleLanguageConstant,
+                _plusWizDescriptionConstant = plusWizDescriptionConstant,
+                _wizIconFullFilename = wizIconFullFilename
+              } );
+
+      WritePhpFile( wizIconScriptFilename, wizIconClass, DateTime.UtcNow );
     }
   }
 }

@@ -174,6 +174,16 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Returns a plugin key. Like userdownloads_stats or news_pi1
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="plugin"></param>
+    /// <returns></returns>
+    public static string GetPluginSignature( Extension extension, Plugin plugin ) {
+      return String.Format( "{0}_{1}", extension.Key.Replace( "_", string.Empty ), plugin.Name.ToLower() );
+    }
+
+    /// <summary>
     /// Converts a lowerCamelCase string to UpperCamelCase
     /// </summary>
     /// <param name="input"></param>

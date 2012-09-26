@@ -176,6 +176,9 @@
     <EmbeddedResource Include="Resources\Icons\document.gif" />
     <EmbeddedResource Include="Resources\Icons\document.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\wiz_icon.gif" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(ProjectDir)app.log4net $(TargetPath).log4net
