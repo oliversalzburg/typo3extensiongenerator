@@ -29,8 +29,9 @@ namespace Typo3ExtensionGenerator.Parser {
 
       // Sub-scopes which we'll find during parsing will be stored in this partial.
       Fragment result = new Fragment {
-                                       Body   = string.Empty,
-                                       Header = string.Empty
+                                       Body           = string.Empty,
+                                       Header         = string.Empty,
+                                       SourceDocument = document
                                      };
           
       // How deeply nested we are into scopes.
@@ -213,6 +214,10 @@ namespace Typo3ExtensionGenerator.Parser {
 
       result.Header = result.Header.Trim();
       result.Body   = result.Body.Trim();
+
+      if( inString ) {
+        throw new ParserException( string.Format( "Unmatched \" in {0}", result.Body ), walker.Document );
+      }
 
       // Recurse to resolve all previously parsed fragments
       foreach( Fragment childFragment in result.Fragments ) {

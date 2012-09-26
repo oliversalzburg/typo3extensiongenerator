@@ -27,9 +27,9 @@ namespace Typo3ExtensionGenerator.PreProcess {
       foreach( VirtualDocument.Line line in document.Lines ) {
         if( line.VirtualLine.Trim().StartsWith( Keywords.PreProcessInclude ) ) {
           // Grab the file name from the statement
-          string filename = ExtractFilename( line.VirtualLine, line.PhysicalLineIndex );
+          string filename = ExtractFilename( line );
           if( !File.Exists( filename ) ) {
-            throw new ParserException( string.Format( "Given include file '{0}' does not exist.", filename ), document );
+            throw new ParserException( string.Format( "Given include file '{0}' does not exist.", filename ), line );
           }
           Log.InfoFormat( "Including '{0}'.", filename );
 
@@ -51,11 +51,10 @@ namespace Typo3ExtensionGenerator.PreProcess {
     /// Grabs the filename from an #include statement.
     /// </summary>
     /// <param name="line"></param>
-    /// <param name="lineNumber"></param>
     /// <returns></returns>
     /// <example>#include "foo/bar.txt"</example>
-    private static string ExtractFilename( string line, int lineNumber ) {
-      string buffer = line;
+    private static string ExtractFilename( VirtualDocument.Line line ) {
+      string buffer = line.VirtualLine;
 
       // Remove whitespace
       buffer = buffer.Trim();
@@ -68,7 +67,7 @@ namespace Typo3ExtensionGenerator.PreProcess {
 
       // Remainder is expected to be filename wrapped in ""
       if( !buffer.StartsWith( Syntax.StringDelimiter ) || !buffer.EndsWith( Syntax.StringDelimiter ) ) {
-        throw new ParserException( string.Format( "Unterminated string in preprocessor directive '{0}'.", line.Trim() ), null );
+        throw new ParserException( string.Format( "Unterminated string in preprocessor directive '{0}'.", buffer.Trim() ), line );
       }
 
       // Now we trim those "" away.

@@ -14,9 +14,6 @@ namespace Typo3ExtensionGenerator.Parser {
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     public Extension Parse( string markup, string sourceFileName ) {
-      // Remove whitespace
-      //markup = markup.Trim();
-
       Log.InfoFormat( "Constructing virtual document from markup..." );
       VirtualDocument document = VirtualDocument.FromText( markup, sourceFileName );
 
@@ -51,11 +48,12 @@ namespace Typo3ExtensionGenerator.Parser {
     /// <returns></returns>
     private static Extension Parse( Fragment fragment ) {
       // The fragment MUST be an extension definition
-      if( Keywords.DeclareExtension != fragment.Header.Substring( 0, Keywords.DeclareExtension.Length ) ) {
+      if( fragment.Header.Length < Keywords.DeclareExtension.Length || Keywords.DeclareExtension != fragment.Header.Substring( 0, Keywords.DeclareExtension.Length ) ) {
         throw new ParserException( "Missing extension declaration.", fragment.SourceDocument );
       }
 
       Extension result = ExtensionResolver.Resolve( fragment );
+      result.SourceFragment = fragment;
 
       return result;
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Parser.Document;
@@ -40,12 +41,12 @@ namespace Typo3ExtensionGenerator.Helper {
 
             int memberLength = 0;
             if( !int.TryParse( length, out memberLength ) ) {
-              throw new ParserException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), source );
+              throw new GeneratorException( string.Format( "Unable to translate type character '{0}'.", typeDescription ), source );
             }
             return string.Format( "varchar({0}) default '' NOT NULL", memberLength );
 
           } else {
-            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
+            throw new GeneratorException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
           }
           
       }
@@ -65,7 +66,7 @@ namespace Typo3ExtensionGenerator.Helper {
             return "string";
 
           } else {
-            throw new ParserException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
+            throw new GeneratorException( string.Format( "Unable to translate type '{0}'.", typeDescription ), source );
           }
           
       }

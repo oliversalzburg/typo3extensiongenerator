@@ -6,17 +6,29 @@ using Typo3ExtensionGenerator.Parser.Document;
 
 namespace Typo3ExtensionGenerator.Parser {
   [Serializable]
-  class ParserException : Exception {
+  public class ParserException : Exception {
     public string File { get; private set; }
     public int Line { get; private set; }
 
     public ParserException( string message, VirtualDocument cause ) : base( message ) {
-      if( !cause.Lines.Any() ) {
+      if( null == cause || !cause.Lines.Any() ) {
         Line = -1;
         File = "<unknown file>";
+
       } else {
-        Line = cause.Lines.First().PhysicalLineIndex;
+        Line = cause.Lines.First().PhysicalLineIndex + 1;
         File = cause.Lines.First().SourceFile;
+      }
+    }
+
+    public ParserException( string message, VirtualDocument.Line cause ) : base( message ) {
+      if( null == cause ) {
+        Line = -1;
+        File = "<unknown file>";
+
+      } else {
+        Line = cause.PhysicalLineIndex + 1;
+        File = cause.SourceFile;
       }
     }
 

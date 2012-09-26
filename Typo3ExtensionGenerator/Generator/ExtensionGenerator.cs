@@ -12,6 +12,7 @@ using Typo3ExtensionGenerator.Generator.Module;
 using Typo3ExtensionGenerator.Generator.Plugin;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Resources;
 using log4net;
 
@@ -32,6 +33,10 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     /// <param name="extension">The extension that should be generated.</param>
     public void Generate() {
+      if( Subject.Key.IndexOfAny( new[]{'\r','\n','\t',' '} ) > -1 ) {
+        throw new ParserException( "Illegal extension key. Can't contain whitespace.", Subject.SourceFragment.SourceDocument );
+      }
+
       Log.Info( "Clearing output directory..." );
       if( Directory.Exists( TargetDirectory ) ) {
         DirectoryHelper.DeleteDirectory( TargetDirectory, true );

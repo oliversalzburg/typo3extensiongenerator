@@ -48,10 +48,6 @@ namespace Typo3ExtensionGenerator.Parser {
 
     public VirtualDocument SourceDocument { get; set; }
 
-    private int Line {
-      get { return SourceDocument.Lines.First().PhysicalLineIndex; }
-    }
-
     public Fragment() {
       Fragments = new List<Fragment>();
     }

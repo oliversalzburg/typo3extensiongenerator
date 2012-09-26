@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Typo3ExtensionGenerator.Model.Configuration;
+﻿using System.Linq;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 using log4net;
@@ -22,7 +18,11 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       Fragment interfacePartial =
         parsedFragment.Fragments.SingleOrDefault( p => p.Keyword == Keywords.ConfigurationDirectives.InterfaceType );
       if( null == interfacePartial ) {
-        throw new ParserException( string.Format( "Type '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.SourceDocument );
+        string typeName = parsedFragment.Parameters;
+        if( string.IsNullOrEmpty( typeName ) ) {
+          typeName = "<unnamed>";
+        }
+        throw new ParserException( string.Format( "Type '{0}' does not define an interface.", typeName ), parsedFragment.SourceDocument );
       }
 
       Typo3ExtensionGenerator.Model.Configuration.Type parsedType =

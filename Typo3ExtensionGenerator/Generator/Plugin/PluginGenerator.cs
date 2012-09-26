@@ -5,13 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
-using SmartFormat.Core;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
-using Typo3ExtensionGenerator.Model.Plugin;
-using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Resolver.Model;
 using log4net;
 using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
@@ -160,14 +157,6 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                              "<f:section name=\"main\">" +
                                              "  <f:flashMessages class=\"flashMessages\" />" +
                                              "  <h3>You need to create your own Fluid templates and point TYPO3 to them via TypoScript.</h3>" +
-/*
-"  <f:groupedFor each="{downloads}" as="category" groupBy="downloadCategory" groupKey="downloadCategory">"+
-"  <h2>{downloadCategory.name}</h2>"+
-"  <f:for each="{category}" as="download">"+
-"    <f:render partial="List/Download" arguments="{download: download}"/>"+
-"  </f:for>"+
-"  </f:groupedFor>"+
-*/
                                              "</f:section>";
 
       // Write Fluid templates for each action

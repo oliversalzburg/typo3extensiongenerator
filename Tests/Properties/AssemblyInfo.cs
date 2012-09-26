@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle( "Typo3ExtensionGenerator" )]
+[assembly: AssemblyTitle( "Tests" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "" )]
-[assembly: AssemblyProduct( "Typo3ExtensionGenerator" )]
+[assembly: AssemblyProduct( "Tests" )]
 [assembly: AssemblyCopyright( "Copyright ©  2012" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible( false )]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid( "dd57d12c-ef1a-4602-a4d0-44df33687e32" )]
+[assembly: Guid( "047ffbfe-09af-4156-8176-5508a033759f" )]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -31,8 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "1.0.22.1511" )]
-[assembly: AssemblyFileVersion( "1.0.22.1511" )]
-
-[assembly: log4net.Config.XmlConfigurator( ConfigFileExtension = "log4net", Watch = true )]
+[assembly: AssemblyVersion( "1.0.20.1511" )]
+[assembly: AssemblyFileVersion( "1.0.20.1511" )]

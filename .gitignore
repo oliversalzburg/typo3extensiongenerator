@@ -7,3 +7,5 @@
 /StringLib/bin
 /StringLib/obj
 packages
+/Tests/obj
+/Tests/bin
