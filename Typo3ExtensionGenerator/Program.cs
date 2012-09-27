@@ -40,6 +40,28 @@ namespace Typo3ExtensionGenerator {
 
       if( ParseCommandLine( args ) ) return;
 
+      // Was a directory provided as input?
+      if( !File.Exists( InputFile ) && Directory.Exists( InputFile ) ) {
+        DirectoryInfo inputDirectory = new DirectoryInfo( InputFile );
+        FileInfo[] extensionFiles = inputDirectory.GetFiles( "*.extgen" );
+        
+        if( 0 == extensionFiles.Length ) {
+          Log.Error( "A directory was provided as input, but it contained no .extgen files." );
+          return;
+        }
+
+        if( 1 < extensionFiles.Length ) {
+          Log.Warn( "A directory was provided as input, but it contained more than 1 .extgen file." );
+          return;
+        }
+
+        InputFile = extensionFiles.First().FullName;
+
+      } else if( !File.Exists( InputFile ) ) {
+        Log.ErrorFormat( "The given input file '{0}' does not exist.", InputFile );
+        return;
+      }
+
       if( string.IsNullOrEmpty( OutputDirectory ) ) {
         OutputDirectory = "output";
       }
