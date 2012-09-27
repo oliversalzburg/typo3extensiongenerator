@@ -79,6 +79,15 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         throw new GeneratorException( string.Format( "No display type given in interface for '{0}'!", subject.Target ), subject.SourceFragment.SourceDocument );
       }
 
+      if( null != subject.DefaultValue ) {
+        if( format == SimpleContainer.Format.PhpArray ) {
+          configuration += String.Format( propertyTemplate, "default", "'" + subject.DefaultValue + "'" );
+
+        } else {
+          configuration += String.Format( propertyTemplate, "default", subject.DefaultValue );
+        }
+      }
+
       
       // Trim trailing comma
       configuration = configuration.TrimEnd( new[] {','} );

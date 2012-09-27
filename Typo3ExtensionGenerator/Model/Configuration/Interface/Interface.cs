@@ -42,6 +42,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     public string Title { get; set; }
 
     /// <summary>
+    /// The default value for this interface. The type and value is strongly dependent on the used display type.
+    /// </summary>
+    public string DefaultValue { get; set; }
+
+    /// <summary>
     /// This is the display type that will be used in the interface.
     /// </summary>
     public IDisplayType DisplayType { get; set; }

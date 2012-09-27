@@ -205,6 +205,11 @@
         public const string Representation = "through";
 
         /// <summary>
+        /// default - Used to specify a default value for an interface.
+        /// </summary>
+        public const string DefaultValue = "default";
+
+        /// <summary>
         /// from
         /// </summary>
         //public const string Foreign        = "from";

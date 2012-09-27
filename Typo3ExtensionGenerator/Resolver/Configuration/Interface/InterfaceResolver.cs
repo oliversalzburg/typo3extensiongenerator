@@ -35,6 +35,9 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
         } else if( setting.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.Representation ) {
           @interface.DisplayTypeTarget = setting.Value;
           DisplayTypeResolver.Resolve( parsedFragment, @interface, setting.Value );
+        
+        } else if( setting.Key == Keywords.ConfigurationDirectives.InterfaceDirectives.DefaultValue ) {
+          @interface.DefaultValue = setting.Value;
         }
       }
 
