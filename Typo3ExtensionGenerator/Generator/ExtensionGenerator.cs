@@ -95,19 +95,75 @@ namespace Typo3ExtensionGenerator.Generator {
       // Label hooks
       WriteLabelHooks( phpClassSuffix );
 
-      // Write TypoScript include statements
-      var dataObject =
-        new {extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(), extensionKey = Subject.Key, extensionTitle = Subject.Title};
-      const string typoScriptRegisterTemplate =
-        "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle}');";
-
-      WriteVirtual( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ) );
+      // Write TypoScript
+      GenerateTypoScript();
 
       // Wrap virtual files as needed
       WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
       WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       // Flush virtual file system to disk
       FlushVirtual( TargetDirectory );
+    }
+
+    /// <summary>
+    /// Writes the default TypoScript constants and settings files for the extension.
+    /// </summary>
+    private void GenerateTypoScript() {
+      const string constantsTemplate = "plugin.{extensionName} {{\n" +
+                                       "	view {{\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template root (FE)\n" +
+                                       "		templateRootPath = EXT:{extensionKey}/Resources/Private/Templates/\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template partials (FE)\n" +
+                                       "		partialRootPath = EXT:{extensionKey}/Resources/Private/Partials/\n" +
+                                       "		# cat=plugin.{extensionName}/file; type=string; label=Path to template layouts (FE)\n" +
+                                       "		layoutRootPath = EXT:{extensionKey}/Resources/Private/Layouts/\n" +
+                                       "	}}\n" +
+                                       "	persistence {{\n" +
+                                       "		# cat=plugin.{extensionName}//a; type=int+; label=Default storage PID\n" +
+                                       "		storagePid = \n" +
+                                       "	}}\n" +
+                                       "	settings {{\n" +
+                                       "	 # cat=plugin.{extensionName}/file; type=string; label=Path to file type icons\n" +
+                                       "    iconPath = EXT:{extensionKey}/Resources/Public/Icons/TypeIcons/\n" +
+                                       "  }}\n" +
+                                       "}}";
+
+      const string setupTemplate = "plugin.{extensionName} {{\n" +
+                                   "	view {{\n" +
+                                   "		templateRootPath = {{$plugin.{extensionName}.view.templateRootPath}}\n" +
+                                   "		partialRootPath  = {{$plugin.{extensionName}.view.partialRootPath}}\n" +
+                                   "		layoutRootPath   = {{$plugin.{extensionName}.view.layoutRootPath}}\n" +
+                                   "	}}\n" +
+                                   "	persistence {{\n" +
+                                   "		storagePid = {{$plugin.{extensionName}.persistence.storagePid}}\n" +
+                                   "	}}\n" +
+                                   "	settings {{\n" +
+                                   "	  iconPath = {{$plugin.{extensionName}.settings.iconPath}}\n" +
+                                   "	  example {{\n" +
+                                   "	    // Place your own TS here\n" +
+                                   "	  }}\n" +
+                                   "	}}\n" +
+                                   "}}";
+
+      var dataObject =
+        new {
+              extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(),
+              extensionKey = Subject.Key,
+              extensionTitle = Subject.Title
+            };
+
+      Log.Info( "Generating TypoScript constants..." );
+      string constants = constantsTemplate.FormatSmart( dataObject );
+      WriteFile( "Configuration/TypoScript/constants.txt", constants, DateTime.UtcNow );
+
+      Log.Info( "Generating TypoScript setup..." );
+      string setup = setupTemplate.FormatSmart( dataObject );
+      WriteFile( "Configuration/TypoScript/setup.txt", setup, DateTime.UtcNow );
+
+      const string typoScriptRegisterTemplate =
+        "t3lib_extMgm::addStaticFile('{extensionKey}', 'Configuration/TypoScript', '{extensionTitle} Base');";
+
+      WriteVirtual( "ext_tables.php", typoScriptRegisterTemplate.FormatSmart( dataObject ) );
     }
 
     /// <summary>
