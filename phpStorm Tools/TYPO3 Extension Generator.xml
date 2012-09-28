@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolSet name="TYPO3 Extension Generator">
+  <tool name="Build current extension" description="Build the extension in the current project directory" showInMainMenu="true" showInEditor="true" showInProject="true" showInSearchPopup="true" disabled="false" useConsole="true" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" value="$ProjectFileDir$\build\Typo3ExtensionGenerator.exe " />
+      <option name="PARAMETERS" value="--input=&quot;$ProjectFileDir$&quot;" />
+      <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
+    </exec>
+  </tool>
+</toolSet>
+
