@@ -226,7 +226,6 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// <param name="dataModel"></param>
     /// <returns></returns>
     private string GenerateFluidPartial( DataModel dataModel ) {
-      const string viewHelperNamespaceTemplate = "{namespace downloads=Tx_Downloads_ViewHelpers}\n";
       const string modelTemplate               = "<div class=\"tx-{cssRoot}-item\">\n{fieldsList}</div>\n";
       const string fieldTemplate               = "<div>{{{fieldAccessor}}}</div>\n";
 
@@ -240,7 +239,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         modelTemplate.FormatSmart(
           new {fieldsList = fields, cssRoot = NameHelper.UpperCamelCase( Subject.Key ).ToLower()} );
 
-      return viewHelperNamespaceTemplate + model;
+      return model;
     }
 
     /// <summary>

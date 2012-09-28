@@ -413,15 +413,10 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// <param name="plugin"> </param>
     private void GenerateTypoScript( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
       const string constantsTemplate = "plugin.{pluginName} {{\n" +
-                                       "	settings {{\n" +
-                                       "	 # cat=plugin.{pluginName}/file; type=string; label=Path to file type icons\n" +
-                                       "    iconPath = EXT:{extensionKey}/Resources/Public/Icons/TypeIcons/\n" +
-                                       "  }}\n" +
                                        "}}";
 
       const string setupTemplate = "plugin.{pluginName} {{\n" +
                                    "	settings {{\n" +
-                                   "	  iconPath = {{$plugin.{pluginName}.settings.iconPath}}\n" +
                                    "	  example {{\n" +
                                    "	    // Place your own TS here\n" +
                                    "	  }}\n" +

@@ -61,5 +61,8 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public Fragment SourceFragment { get; set; }
     #endregion
+    public override string ToString() {
+      return string.Format( "Name: {0}, InternalType: {1}", Name, InternalType );
+    }
   }
 }

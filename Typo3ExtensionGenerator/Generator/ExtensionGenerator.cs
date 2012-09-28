@@ -70,7 +70,7 @@ namespace Typo3ExtensionGenerator.Generator {
                                         "<T3locallang>\n" +
                                         "	<meta type=\"array\">\n" +
                                         "		<type>database</type>\n" +
-                                        "		<description>Language labels for database tables/fields belonging to extension 'downloads'</description>\n" +
+                                        "		<description></description>\n" +
                                         "	</meta>\n" +
                                         "	<data type=\"array\">\n" +
                                         "		<languageKey index=\"default\" type=\"array\">";

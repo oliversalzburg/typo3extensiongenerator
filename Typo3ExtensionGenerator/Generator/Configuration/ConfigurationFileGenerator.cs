@@ -267,7 +267,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         finalColumns.Append( T3CommonFields.Interfaces + "," );
       }
       if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3TranslationFields ) ) {
-        finalColumns.Append( T3TranslationFields.Interfaces + "," );
+        finalColumns.Append( T3TranslationFields.GetInterfaces( Subject, Configuration.Model ) + "," );
       }
       if( Configuration.Model.UsesTemplate( Keywords.DataModelTemplates.T3VersioningFields ) ) {
         finalColumns.Append( T3VersioningFields.Interfaces + "," );
