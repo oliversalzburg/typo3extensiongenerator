@@ -143,15 +143,13 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
     private void GenerateFluidTemplate( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
       // The default frontend layout
-      const string defaultLayoutTemplate = "{namespace d=Tx_Downloads_ViewHelpers}" +
-                                           "<d:includeFile path=\"EXT:downloads/Resources/Public/Css/downloads.css\" />" +
-                                           "<div class=\"tx-downloads\">" +
+      const string defaultLayoutTemplate = "<div class=\"tx-{0}\">" +
                                            "	<f:render section=\"main\" />" +
                                            "</div>";
 
       const string layoutFilename = "Resources/Private/Layouts/Default.html";
       Log.InfoFormat( "Generating default Fluid layout '{0}'...", layoutFilename );
-      WriteFile( layoutFilename, defaultLayoutTemplate, DateTime.UtcNow );
+      WriteFile( layoutFilename, String.Format( defaultLayoutTemplate, Subject.Key ), DateTime.UtcNow );
 
       // A generic partial that will render all the fields in a model
       //WriteFile( "Resources/Private/Partials/Models/Download.html", string.Empty );
@@ -332,51 +330,53 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                                       "}}\n";
 
       StringBuilder propertiesList = new StringBuilder();
-      foreach( DataModel dataModel in Subject.Models ) {
-        const string memberTemplate = "/**\n" +
-                                      "* {0}Repository\n" +
-                                      "* @var {1}\n" +
-                                      "*/\n" +
-                                      "protected ${0}Repository;\n";
+      if( Subject.Models != null ) {
+        foreach( DataModel dataModel in Subject.Models ) {
+          const string memberTemplate = "/**\n" +
+                                        "* {0}Repository\n" +
+                                        "* @var {1}\n" +
+                                        "*/\n" +
+                                        "protected ${0}Repository;\n";
 
-        // Check if the repository is internally implemented.
-        // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
-        Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
-        if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
-          propertiesList.Append(
-            String.Format(
-              memberTemplate, dataModel.Name, repository.InternalType ) );
+          // Check if the repository is internally implemented.
+          // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
+          Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
+          if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+            propertiesList.Append(
+              String.Format(
+                memberTemplate, dataModel.Name, repository.InternalType ) );
 
-        } else {
+          } else {
 
-          propertiesList.Append(
-            String.Format(
-              memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+            propertiesList.Append(
+              String.Format(
+                memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+          }
+
+          const string injectorTemplate =
+            "/**\n"+
+            "* inject{0}Repository\n"+
+            "* @param {1} ${2}Repository\n"+
+            "*/\n"+
+            "public function inject{0}Repository({1} ${2}Repository) {{\n" +
+            "  $this->{2}Repository = ${2}Repository;\n" +
+            "}}\n";
+
+          // Check again if the repository is internally implemented.
+          // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
+          string injector = string.Empty;
+          if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+            injector = String.Format(
+              injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ), repository.InternalType, dataModel.Name );
+
+          } else {
+            injector = String.Format(
+              injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
+              NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
+          }
+
+          propertiesList.Append( injector );
         }
-
-      const string injectorTemplate =
-          "/**\n"+
-          "* inject{0}Repository\n"+
-          "* @param {1} ${2}Repository\n"+
-          "*/\n"+
-          "public function inject{0}Repository({1} ${2}Repository) {{\n" +
-          "  $this->{2}Repository = ${2}Repository;\n" +
-          "}}\n";
-
-        // Check again if the repository is internally implemented.
-        // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
-        string injector = string.Empty;
-        if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
-          injector = String.Format(
-            injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ), repository.InternalType, dataModel.Name );
-
-        } else {
-          injector = String.Format(
-            injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
-            NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
-        }
-
-        propertiesList.Append( injector );
       }
 
       string controllerImplementation =
