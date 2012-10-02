@@ -157,6 +157,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       const string defaultTemplateTemplate = "<f:layout name=\"Default\" />" +
                                              "<f:section name=\"main\">" +
                                              "  <f:flashMessages class=\"flashMessages\" />" +
+                                             "  <f:debug>{debug}</f:debug>" +
                                              "  <h3>You need to create your own Fluid templates and point TYPO3 to them via TypoScript.</h3>" +
                                              "</f:section>";
 
@@ -194,10 +195,10 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       }
 
       // Generate actions
-      const string controllerActionTemplate = "{controllerName}->{actionName}";
-      const string actionTemplate = "                  <numIndex index=\"{actIndex}\">" +
-                                    "                    <numIndex index=\"0\">{title}</numIndex>" +
-                                    "                    <numIndex index=\"1\">{controllerName}->{actionName};{nonDefault}</numIndex>" +
+      const string controllerActionTemplate = "{_controllerName}->{_actionName}";
+      const string actionTemplate = "                  <numIndex index=\"{_actIndex}\">" +
+                                    "                    <numIndex index=\"0\">{_title}</numIndex>" +
+                                    "                    <numIndex index=\"1\">{_controllerName}->{_actionName};{_nonDefault}</numIndex>" +
                                     "                  </numIndex>";
 
       // We'll generate an entry for each action in the controller.
@@ -207,8 +208,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         string nonDefault = plugin.Actions.Where( nonDefaultAction => nonDefaultAction != action ).Aggregate(
           string.Empty, ( current, nonDefaultAction ) => current + ( controllerActionTemplate.FormatSmart(
             new {
-                  controllerName = NameHelper.UpperCamelCase( plugin.Name ),
-                  actionName = nonDefaultAction.Name
+                  _controllerName = NameHelper.UpperCamelCase( plugin.Name ),
+                  _actionName = nonDefaultAction.Name
                 } ) + ";" ) );
         if( !string.IsNullOrEmpty( nonDefault ) ) {
           nonDefault = nonDefault.Substring( 0, nonDefault.Length - 1 );
@@ -216,11 +217,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         var dataObject =
           new {
-                title          = action.Title,
-                controllerName = NameHelper.UpperCamelCase( plugin.Name ),
-                actionName     = action.Name,
-                actIndex       = actionIndex,
-                nonDefault     = nonDefault.ToString()
+                _title          = action.Title,
+                _controllerName = NameHelper.UpperCamelCase( plugin.Name ),
+                _actionName     = action.Name,
+                _actIndex       = actionIndex,
+                _nonDefault     = nonDefault.ToString()
               };
         string actionString = actionTemplate.FormatSmart( dataObject );
         actions.Append( actionString );
@@ -341,7 +342,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           // Check if the repository is internally implemented.
           // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
           Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
-          if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+          if( null != repository && PurelyWrapsInternalType( repository ) ) {
             propertiesList.Append(
               String.Format(
                 memberTemplate, dataModel.Name, repository.InternalType ) );
@@ -365,7 +366,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           // Check again if the repository is internally implemented.
           // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
           string injector = string.Empty;
-          if( null != repository && !string.IsNullOrEmpty( repository.InternalType ) ) {
+          if( null != repository && PurelyWrapsInternalType( repository ) ) {
             injector = String.Format(
               injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ), repository.InternalType, dataModel.Name );
 
@@ -404,6 +405,16 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       WritePhpFile(
         string.Format( "Classes/Controller/{0}", NameHelper.GetExtbaseControllerFileName( Subject, plugin ) ),
         controller, DateTime.UtcNow );
+    }
+
+    /// <summary>
+    /// Does this repository wrap an internal type WITHOUT providing an own implementation.
+    /// This is usually the case when referencing repositories that already exist in TYPO3, like Tx_Extbase_Domain_Repository_FrontendUserRepository
+    /// </summary>
+    /// <param name="repository"></param>
+    /// <returns></returns>
+    private static bool PurelyWrapsInternalType( Repository repository ) {
+      return !string.IsNullOrEmpty( repository.InternalType ) && string.IsNullOrEmpty( repository.Implementation );
     }
 
 

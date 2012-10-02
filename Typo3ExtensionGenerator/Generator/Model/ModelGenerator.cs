@@ -150,15 +150,24 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
       
       string implementationClassname = NameHelper.GetExtbaseDomainModelRepositoryImplementationClassName( Subject, model ); 
-      string implementationFilename = NameHelper.GetExtbaseDomainModelRepositoryImplementationFileName( Subject, model );
+      string implementationFilename  = NameHelper.GetExtbaseDomainModelRepositoryImplementationFileName( Subject, model );
+      string baseClassname           = "Tx_Extbase_Persistence_Repository";
 
       // Did the user define additional information for our repository
       bool isExternallyImplemented = false;
       Repository repositoryDefinition = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == model.Name );
 
-      // If the repository type is an internal type, no need to generate anything
+      // If the repository type is an internal type, no need to generate anything...
       if( null != repositoryDefinition && !string.IsNullOrEmpty( repositoryDefinition.InternalType ) ) {
-        return string.Empty;
+        // ...unless BOTH an internal type and an implementation are given
+        if( !string.IsNullOrEmpty( repositoryDefinition.Implementation ) ) {
+          // This would indicate that the internal type is to be extended by the implementation
+          // A common example of this is the extension of the Tx_Extbase_Domain_Repository_FrontendUserRepository
+          baseClassname = repositoryDefinition.InternalType;
+
+        } else {
+          return string.Empty;
+        }
       }
 
       if( null != repositoryDefinition && !string.IsNullOrEmpty( repositoryDefinition.Implementation ) ) {
@@ -198,6 +207,8 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         }
       }
 
+      
+
       string repositoryImplementation =
         repositoryImplementationTemplate.FormatSmart(
           new {
@@ -206,17 +217,18 @@ namespace Typo3ExtensionGenerator.Generator.Model {
               } );
 
       // Generate final class
-      const string template = "class {className} extends Tx_Extbase_Persistence_Repository {{\n" +
-                              "{repositoryMethods}\n" +
+      const string template = "class {_className} extends {_baseClass} {{\n" +
+                              "{_repositoryMethods}\n" +
                               "}}\n" +
-                              "{requireImplementation}";
+                              "{_requireImplementation}";
 
       return
         template.FormatSmart(
           new {
-                className = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model ),
-                repositoryMethods = repositoryImplementation + actions,
-                requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
+                _className             = NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, model ),
+                _baseClass             = baseClassname,
+                _repositoryMethods     = repositoryImplementation + actions,
+                _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
               } );
     }
 

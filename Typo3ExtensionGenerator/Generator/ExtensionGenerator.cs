@@ -70,7 +70,7 @@ namespace Typo3ExtensionGenerator.Generator {
                                         "<T3locallang>\n" +
                                         "	<meta type=\"array\">\n" +
                                         "		<type>database</type>\n" +
-                                        "		<description></description>\n" +
+                                        "		<description>TYPO3 Language file</description>\n" +
                                         "	</meta>\n" +
                                         "	<data type=\"array\">\n" +
                                         "		<languageKey index=\"default\" type=\"array\">";

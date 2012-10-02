@@ -55,12 +55,11 @@ namespace Typo3ExtensionGenerator.Generator.Module {
         result.Append(
           template.FormatSmart(
             new {
-                  extensionName = Subject.Key,
+                  extensionName  = Subject.Key,
                   mainModuleName = module.MainModuleName,
-                  subModuleName = moduleKey,
-                  langFileKey = subKey.ToLower()
+                  subModuleName  = moduleKey,
+                  langFileKey    = subKey.ToLower()
                 } ) + "\n" );
-
 
         // Valid labels that should/could be generated
         // <label index="mlang_tabs_tab">Download Importer</label>
