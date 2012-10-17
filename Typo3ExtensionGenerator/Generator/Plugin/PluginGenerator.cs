@@ -298,6 +298,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           DataModel requiredModel = Subject.Models.SingleOrDefault( m => m.Name.ToLower() == requirement );
           if( requiredModel != null ) {
             typeName = NameHelper.GetExtbaseDomainModelClassName( Subject, requiredModel );
+            Log.InfoFormat(
+              "Assuming requirement '{0}' for action '{1}:{2}' to be of type '{3}'.", requirement, plugin.Name, action.Name, typeName );
           }
           phpDoc = phpDoc + ( "* @param " + typeName + " $" + requirement + "\n" );
         }
