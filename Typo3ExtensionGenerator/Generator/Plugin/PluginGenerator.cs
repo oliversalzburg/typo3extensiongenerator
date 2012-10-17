@@ -289,8 +289,18 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                     "public function {0}Action({1}) {{ return $this->getImplementation()->{0}Action({1}); }}\n";
 
       foreach( Action action in plugin.Actions ) {
-        string phpDoc = action.Requirements.Aggregate(
-          string.Empty, ( current, requirement ) => current + ( "* @param mixed " + requirement + "\n" ) );
+        // Start building up the PHPDoc for this action
+        string phpDoc = string.Empty;
+        foreach( string requirement in action.Requirements ) {
+          string typeName = "mixed";
+          // See if the name of the requirement matches the name of a defined model,
+          // if so, we assume the user wants to reference that model.
+          DataModel requiredModel = Subject.Models.SingleOrDefault( m => m.Name.ToLower() == requirement );
+          if( requiredModel != null ) {
+            typeName = NameHelper.GetExtbaseDomainModelClassName( Subject, requiredModel );
+          }
+          phpDoc = phpDoc + ( "* @param " + typeName + " $" + requirement + "\n" );
+        }
 
         // Prefix each parameter with a $ and join them together with , in between.
         string parameters = action.Requirements.Aggregate(
