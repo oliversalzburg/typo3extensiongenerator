@@ -157,7 +157,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       const string defaultTemplateTemplate = "<f:layout name=\"Default\" />" +
                                              "<f:section name=\"main\">" +
                                              "  <f:flashMessages class=\"flashMessages\" />" +
-                                             "  <f:debug>{debug}</f:debug>" +
+                                             "  <f:if condition=\"{debug}\">" +
+                                             "    <f:debug>{debug}</f:debug>" +
+                                             "  </f:if>" +
                                              "  <h3>You need to create your own Fluid templates and point TYPO3 to them via TypoScript.</h3>" +
                                              "</f:section>";
 
