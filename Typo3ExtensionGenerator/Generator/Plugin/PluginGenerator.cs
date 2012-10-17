@@ -157,10 +157,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       const string defaultTemplateTemplate = "<f:layout name=\"Default\" />" +
                                              "<f:section name=\"main\">" +
                                              "  <f:flashMessages class=\"flashMessages\" />" +
-                                             "  <f:if condition=\"{debug}\">" +
-                                             "    <f:debug>{debug}</f:debug>" +
+                                             "  <f:if condition=\"{{debug}}\">" +
+                                             "    <f:debug>{{debug}}</f:debug>" +
                                              "  </f:if>" +
                                              "  <h3>You need to create your own Fluid templates and point TYPO3 to them via TypoScript.</h3>" +
+                                             "  <p>This is the default template for the action '{_actionTitle}'({_actionName}) of plugin '{_pluginTitle}'({_pluginName}).</p>" +
                                              "</f:section>";
 
       // Write Fluid templates for each action
@@ -171,7 +172,15 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           NameHelper.UpperCamelCase( action.Name ) );
 
         Log.InfoFormat( "Generating Fluid template '{0}'...", templateFilename );
-        WriteFile( templateFilename, defaultTemplateTemplate, DateTime.UtcNow );
+        string template =
+          defaultTemplateTemplate.FormatSmart(
+            new {
+                  _actionName = action.Name,
+                  _actionTitle = action.Title,
+                  _pluginName = plugin.Name,
+                  _pluginTitle = plugin.Title
+                } );
+        WriteFile( templateFilename, template, DateTime.UtcNow );
       }
     }
 
