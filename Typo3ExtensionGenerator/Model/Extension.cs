@@ -76,6 +76,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public List<Requirement> Requirements { get; set; }
 
+    /// <summary>
+    /// The services defined in this extension.
+    /// </summary>
+    public List<Service> Services { get; set; }
+
     #region Implementation of IParserResult
     /// <summary>
     /// The fragment from which this object was generated.

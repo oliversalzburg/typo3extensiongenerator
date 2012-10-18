@@ -8,7 +8,7 @@ using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
   /// <summary>
-  /// Generates the core extension files like ext_emconf and TypoScript.
+  /// Merges user-specified files that were marked as requirements.
   /// </summary>
   public class RequirementGenerator : AbstractGenerator, IGenerator {
 

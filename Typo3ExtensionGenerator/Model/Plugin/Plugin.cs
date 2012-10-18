@@ -8,7 +8,7 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
   /// A plugin for TYPO3.
   /// </summary>
   [Serializable]
-  public class Plugin: IParserResult  {
+  public class Plugin : IParserResult {
     /// <summary>
     /// The name of this plugin.
     /// </summary>

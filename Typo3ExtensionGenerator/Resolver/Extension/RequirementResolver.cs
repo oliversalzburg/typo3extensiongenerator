@@ -16,19 +16,19 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
     /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The models of the extension</returns>
     public static List<Requirement> Resolve( Fragment parsedFragment ) {
-      IEnumerable<Fragment> requirementPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.Requirement );
-      if( !requirementPartials.Any() ) return null;
+      IEnumerable<Fragment> requirementFragments = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.Requirement );
+      if( !requirementFragments.Any() ) return null;
 
       List<Requirement> requirements = new List<Requirement>();
-      foreach( Fragment requirementPartial in requirementPartials ) {
+      foreach( Fragment requirementFragment in requirementFragments ) {
         Requirement requirement = new Requirement {
-                                                    SourceFolder = requirementPartial.Parameters,
-                                                    SourceFragment = requirementPartial
+                                                    SourceFolder = requirementFragment.Parameters,
+                                                    SourceFragment = requirementFragment
                                                   };
         requirements.Add( requirement );
 
-        if( requirementPartial.Fragments.Any() ) {
-          foreach( Fragment fileFilter in requirementPartial.Fragments ) {
+        if( requirementFragment.Fragments.Any() ) {
+          foreach( Fragment fileFilter in requirementFragment.Fragments ) {
             requirement.SourceFilter.Add( ParseHelper.UnwrapString( fileFilter.Keyword ) );
           }
         }

@@ -93,6 +93,11 @@
       /// repository - Used to define the implementation details of an ExtBase repository.
       /// </summary>
       public const string DeclareRepository = "repository";
+
+      /// <summary>
+      /// service - Used to define a service class.
+      /// </summary>
+      public const string DeclareService = "service";
     }
 
     /// <summary>

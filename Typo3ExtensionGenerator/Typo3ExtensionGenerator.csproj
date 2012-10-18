@@ -98,6 +98,7 @@
     <Compile Include="Generator\Plugin\PluginGenerator.cs" />
     <Compile Include="Generator\PrettyPrint\LudicrousPrettyPrinter.cs" />
     <Compile Include="Generator\RequirementGenerator.cs" />
+    <Compile Include="Generator\ServiceGenerator.cs" />
     <Compile Include="Helper\DirectoryHelper.cs" />
     <Compile Include="Helper\NameHelper.cs" />
     <Compile Include="Helper\ParseHelper.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Generator\Model\Templates\T3VersioningFields.cs" />
     <Compile Include="Model\Repository.cs" />
     <Compile Include="Model\Requirement.cs" />
+    <Compile Include="Model\Service.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
     <Compile Include="Parser\Document\DocumentWalker.cs" />
     <Compile Include="Parser\Document\VirtualDocument.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Resolver\ExtensionResolver.cs" />
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
     <Compile Include="Resolver\Extension\RequirementResolver.cs" />
+    <Compile Include="Resolver\Extension\ServiceResolver.cs" />
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />

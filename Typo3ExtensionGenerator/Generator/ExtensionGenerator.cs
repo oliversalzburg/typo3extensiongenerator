@@ -59,8 +59,13 @@ namespace Typo3ExtensionGenerator.Generator {
       modelGenerator.Generate();
       ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, Subject );
       configurationGenerator.Generate();
+      ServiceGenerator serviceGenerator = new ServiceGenerator( TargetDirectory, Subject );
+      serviceGenerator.Generate();
+      
+      // We generate the requirements last so that they can overwrite previous work
       RequirementGenerator requirementGenerator = new RequirementGenerator( TargetDirectory, Subject );
       requirementGenerator.Generate();
+      
 
       // Create extension icon
       ResourceHelper.FlushIcon( "box.gif", this, "ext_icon.gif" );
@@ -201,7 +206,7 @@ namespace Typo3ExtensionGenerator.Generator {
               externalImplementation =
           ( !string.IsNullOrEmpty( Subject.LabelHookImplementation ) )
             ? externalImplementationTemplate.FormatSmart(
-              new {implClassname = implementationClassname,} )
+              new {implClassname = implementationClassname} )
             : string.Empty
             } );
       WrapVirtual( "Classes/Hooks/Labels.php", labelHooks, phpClassSuffix );

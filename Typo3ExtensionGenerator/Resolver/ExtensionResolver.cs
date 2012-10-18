@@ -57,6 +57,7 @@ namespace Typo3ExtensionGenerator.Resolver {
       extension.Plugins = PluginResolver.Resolve( parsedFragment );
       extension.Repositories = RepositoryResolver.Resolve( parsedFragment );
       extension.Requirements = RequirementResolver.Resolve( parsedFragment );
+      extension.Services = ServiceResolver.Resolve( parsedFragment );
 
       return extension;
     }

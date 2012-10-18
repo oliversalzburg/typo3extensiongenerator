@@ -141,6 +141,46 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Generates the ExtBase service class name for a given service.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static string GetExtbaseServiceClassName( Extension extension, Service service ) {
+      return String.Format( "Tx_{0}_Service_{1}Service", UpperCamelCase( extension.Key ), UpperCamelCase( service.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase service class name that must be used to implement a service.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static string GetExtbaseServiceImplementationClassName( Extension extension, Service service ) {
+      return String.Format( "{0}{1}ServiceImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( service.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the Extbase service class name for a given service.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static string GetExtbaseServiceFileName( Extension extension, Service service ) {
+      return String.Format( "{0}Service.php", UpperCamelCase( service.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the ExtBase service file name that must be used for the implementation of a service.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public static string GetExtbaseServiceImplementationFileName( Extension extension, Service service ) {
+      return String.Format( "{0}{1}ServiceImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( service.Name ) );
+    }
+
+    /// <summary>
     /// Generates the file name for a Fluid partial.
     /// </summary>
     /// <param name="subject"></param>

@@ -22,18 +22,14 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
     public PluginGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
-    public void Generate() {
-      Log.Info( "Generating plugins..." );
-
-      GeneratePlugin();
-    }
-
     /// <summary>
     /// Generates the plugins.
     /// </summary>
     /// <returns></returns>
-    private void GeneratePlugin() {
+    public void Generate() {
       if( null == Subject.Plugins || !Subject.Plugins.Any() ) return;
+
+      Log.Info( "Generating plugins..." );
 
       StringBuilder extTables = new StringBuilder();
       StringBuilder extLocalconf = new StringBuilder();
