@@ -129,9 +129,12 @@ namespace Tests {
     [TestMethod]
     [ExpectedException(typeof(ParserException), "Listener without signal host was allowed.")]
     public void TestListenerWithoutHost() {
-      const string markup = "model a {\n" +
-                            "  listener onUpdate {\n" +
-                            "    slot foo;\n" +
+      const string markup = "extension test {\n" +
+                            "  plugin a {\n" +
+                            "    model;" +
+                            "    listener onUpdate {\n" +
+                            "      slot foo;\n" +
+                            "    }\n" +
                             "  }\n" +
                             "}\n";
       ParseMarkup( markup );
@@ -143,10 +146,25 @@ namespace Tests {
     [TestMethod]
     [ExpectedException(typeof(ParserException), "Listener without signal slot was allowed.")]
     public void TestListenerWithoutSignal() {
-      const string markup = "model a {\n" +
-                            "  listener onUpdate {\n" +
-                            "    host foo;\n" +
+      const string markup = "extension test {\n" +
+                            "  plugin a {\n" +
+                            "    model;" +
+                            "    listener onUpdate {\n" +
+                            "      host foo;\n" +
+                            "    }\n" +
                             "  }\n" +
+                            "}\n";
+      ParseMarkup( markup );
+    }
+
+    /// <summary>
+    /// Services must provide a name.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ParserException), "Service without name was allowed.")]
+    public void TestServiceWithoutName() {
+      const string markup = "extension test {\n" +
+                            "  service;\n" +
                             "}\n";
       ParseMarkup( markup );
     }
