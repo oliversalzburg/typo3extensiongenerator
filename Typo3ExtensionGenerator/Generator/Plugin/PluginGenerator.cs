@@ -119,11 +119,11 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         // Register our SignalSlot listeners
         if( plugin.Listeners.Count > 0 ) {
-          extLocalconf.Append( "$signalSlotDispatcher = t3lib_div::makeInstance('Tx_Extbase_SignalSlot_Dispatcher');" );
+          extLocalconf.Append( "$signalSlotDispatcher = t3lib_div::makeInstance('Tx_Extbase_SignalSlot_Dispatcher');\n" );
 
           foreach( Listener listener in plugin.Listeners ) {
             const string connectTemplate =
-              "$signalSlotDispatcher->connect( '{_host}', '{_signal}', '{_controller}', '{_action}', FALSE );";
+              "$signalSlotDispatcher->connect( '{_host}', '{_signal}', '{_controller}', '{_action}', FALSE );\n";
 
             string connetor = connectTemplate.FormatSmart(
               new {
