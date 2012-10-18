@@ -185,7 +185,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
         string repositoryImplementationContent = File.ReadAllText( repositoryDefinition.Implementation );
         DateTime lastWriteTimeUtc = new FileInfo( repositoryDefinition.Implementation ).LastWriteTimeUtc;
         if( !Regex.IsMatch( repositoryImplementationContent, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
-          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
+          Log.WarnFormat( "The class name of your implementation for repository for model '{1}' MUST be '{0}'!", implementationClassname, repositoryDefinition.TargetModelName );
         }
 
         WriteFile( "Classes/Domain/Repository/" + implementationFilename, repositoryImplementationContent, lastWriteTimeUtc );

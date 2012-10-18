@@ -355,7 +355,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         if(
           !Regex.IsMatch(
             pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
-          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
+          Log.WarnFormat( "The class name of your implementation for plugin '{1}' MUST be '{0}'!", implementationClassname, plugin.Name );
         }
         WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation, DateTime.UtcNow );
 
@@ -368,6 +368,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       }
       #endregion
 
+      #region Generate Properties
       StringBuilder propertiesList = new StringBuilder();
       if( Subject.Models != null ) {
         foreach( DataModel dataModel in Subject.Models ) {
@@ -386,17 +387,17 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                 memberTemplate, dataModel.Name, repository.InternalType ) );
 
           } else {
-
             propertiesList.Append(
               String.Format(
-                memberTemplate, dataModel.Name, NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
+                memberTemplate, dataModel.Name,
+                NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
           }
 
           const string injectorTemplate =
-            "/**\n"+
-            "* inject{0}Repository\n"+
-            "* @param {1} ${2}Repository\n"+
-            "*/\n"+
+            "/**\n" +
+            "* inject{0}Repository\n" +
+            "* @param {1} ${2}Repository\n" +
+            "*/\n" +
             "public function inject{0}Repository({1} ${2}Repository) {{\n" +
             "  $this->{2}Repository = ${2}Repository;\n" +
             "}}\n";
@@ -417,8 +418,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           propertiesList.Append( injector );
         }
       }
+      #endregion
 
-      
+
       const string controllerImplementationTemplate = "private $implementation;\n" +
                                                       "private function getImplementation() {{\n" +
                                                       "  if( null == $this->implementation ) {{\n" +

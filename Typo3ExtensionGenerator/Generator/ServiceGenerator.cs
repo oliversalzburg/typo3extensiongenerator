@@ -87,7 +87,7 @@ namespace Typo3ExtensionGenerator.Generator {
         Log.InfoFormat( "Merging implementation '{0}'...", service.Implementation );
         string serviceImplementationContent = File.ReadAllText( service.Implementation );
         if( !Regex.IsMatch( serviceImplementationContent, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
-          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );  
+          Log.WarnFormat( "The class name of your implementation for service '{1}' MUST be '{0}'!", implementationClassname, service.Name );  
         }
         WriteFile( "Classes/Service/" + implementationFilename, serviceImplementationContent, DateTime.UtcNow );
 
