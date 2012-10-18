@@ -51,6 +51,7 @@
       <keyword name="action" />
       <keyword name="as" />
       <keyword name="interface" />
+      <keyword name="listener" />
       <keyword name="through" />
     </keywords2>
     <keywords3>
@@ -60,6 +61,7 @@
       <keyword name="plugin" />
       <keyword name="repository" />
       <keyword name="require" />
+      <keyword name="service" />
     </keywords3>
     <keywords4>
       <keyword name="char" />

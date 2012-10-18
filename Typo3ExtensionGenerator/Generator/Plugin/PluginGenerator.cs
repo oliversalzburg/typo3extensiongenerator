@@ -127,10 +127,10 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
             string connetor = connectTemplate.FormatSmart(
               new {
-                    _host = listener.Host,
-                    _signal = listener.Signal,
+                    _host       = listener.Host,
+                    _signal     = listener.Signal,
                     _controller = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
-                    _action = listener.TargetAction.Name + "Action"
+                    _action     = listener.TargetAction.Name + "Action"
                   } );
 
             extLocalconf.Append( connetor );
