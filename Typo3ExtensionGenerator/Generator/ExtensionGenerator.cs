@@ -31,7 +31,6 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <summary>
     /// Generates the described extension.
     /// </summary>
-    /// <param name="extension">The extension that should be generated.</param>
     public void Generate() {
       if( Subject.Key.IndexOfAny( new[]{'\r','\n','\t',' '} ) > -1 ) {
         throw new ParserException( "Illegal extension key. Can't contain whitespace.", Subject.SourceFragment.SourceDocument );

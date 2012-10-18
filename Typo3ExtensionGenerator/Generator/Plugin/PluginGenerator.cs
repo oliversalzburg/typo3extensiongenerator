@@ -299,6 +299,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       string className = NameHelper.GetExtbaseControllerClassName( Subject, plugin );
       Log.InfoFormat( "Generating controller '{0}'...", className );
 
+      #region Generate Actions
       StringBuilder actions = new StringBuilder();
       const string actionTemplate = "/**\n" +
                                     "{2}" +
@@ -316,7 +317,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           if( requiredModel != null ) {
             typeName = NameHelper.GetExtbaseDomainModelClassName( Subject, requiredModel );
             Log.InfoFormat(
-              "Assuming requirement '{0}' for action '{1}:{2}' to be of type '{3}'.", requirement, plugin.Name, action.Name, typeName );
+              "Assuming requirement '{0}' for action '{1}:{2}' to be of type '{3}'.", requirement, plugin.Name,
+              action.Name, typeName );
           }
           phpDoc = phpDoc + ( "* @param " + typeName + " $" + requirement + "\n" );
         }
@@ -329,14 +331,17 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
         actions.Append( String.Format( actionTemplate, action.Name, parameters, phpDoc ) );
       }
+      #endregion
 
+
+      #region Handle External Implementations
       bool isExternallyImplemented = false;
       string implementationClassname = string.Empty;
       string implementationFilename = string.Empty;
       if( !string.IsNullOrEmpty( plugin.Implementation ) ) {
         isExternallyImplemented = true;
         implementationClassname = NameHelper.GetExtbaseControllerImplementationClassName( Subject, plugin );
-        implementationFilename  = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
+        implementationFilename = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
       }
 
       if( isExternallyImplemented ) {
@@ -347,8 +352,10 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
         }
         Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
         string pluginImplementation = File.ReadAllText( plugin.Implementation );
-        if( !Regex.IsMatch( pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
-          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );  
+        if(
+          !Regex.IsMatch(
+            pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
+          Log.WarnFormat( "The class name of your implementation MUST be '{0}'!", implementationClassname );
         }
         WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation, DateTime.UtcNow );
 
@@ -359,16 +366,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
             plugin.Name );
         }
       }
-
-      const string controllerImplementationTemplate = "private $implementation;\n" +
-                                                      "private function getImplementation() {{\n" +
-                                                      "  if( null == $this->implementation ) {{\n" +
-                                                      "    $this->implementation = new {implClassname}($this);\n" +
-                                                      "  }}\n" +
-                                                      "  return $this->implementation;\n" +
-                                                      "}}\n"+
-                                                      "function __construct() {{\n"+
-                                                      "}}\n";
+      #endregion
 
       StringBuilder propertiesList = new StringBuilder();
       if( Subject.Models != null ) {
@@ -419,6 +417,17 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
           propertiesList.Append( injector );
         }
       }
+
+      
+      const string controllerImplementationTemplate = "private $implementation;\n" +
+                                                      "private function getImplementation() {{\n" +
+                                                      "  if( null == $this->implementation ) {{\n" +
+                                                      "    $this->implementation = new {implClassname}($this);\n" +
+                                                      "  }}\n" +
+                                                      "  return $this->implementation;\n" +
+                                                      "}}\n"+
+                                                      "function __construct() {{\n"+
+                                                      "}}\n";
 
       string controllerImplementation =
         controllerImplementationTemplate.FormatSmart(
