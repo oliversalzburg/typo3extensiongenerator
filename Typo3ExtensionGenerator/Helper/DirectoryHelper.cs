@@ -14,6 +14,8 @@ namespace Typo3ExtensionGenerator.Helper {
       }
 
       foreach( string dir in dirs ) {
+        DirectoryInfo info = new DirectoryInfo( dir );
+        if( ".git" == info.Name || ".svn" == info.Name ) continue;
         DeleteDirectory( dir );
       }
 
