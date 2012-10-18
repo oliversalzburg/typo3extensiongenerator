@@ -122,5 +122,33 @@ namespace Tests {
                             "}\n";
       ParseMarkup( markup );
     }
+
+    /// <summary>
+    /// Listeners must refer to a signal host.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ParserException), "Listener without signal host was allowed.")]
+    public void TestListenerWithoutHost() {
+      const string markup = "model a {\n" +
+                            "  listener onUpdate {\n" +
+                            "    slot foo;\n" +
+                            "  }\n" +
+                            "}\n";
+      ParseMarkup( markup );
+    }
+
+    /// <summary>
+    /// Listeners must refer to a signal slot.
+    /// </summary>
+    [TestMethod]
+    [ExpectedException(typeof(ParserException), "Listener without signal slot was allowed.")]
+    public void TestListenerWithoutSignal() {
+      const string markup = "model a {\n" +
+                            "  listener onUpdate {\n" +
+                            "    host foo;\n" +
+                            "  }\n" +
+                            "}\n";
+      ParseMarkup( markup );
+    }
   }
 }

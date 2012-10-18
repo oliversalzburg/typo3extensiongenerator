@@ -15,8 +15,9 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
         } else if( actionDirective.Keyword == Keywords.Requirement ) {
           resultingAction.Requirements.AddRange( actionDirective.Parameters.Split( new[] {','} ) );
         
-        } else if( actionDirective.Keyword == Keywords.PluginDirectives.Uncachable ) {
+        } else if( actionDirective.Keyword == Keywords.PluginDirectives.ActionDirectives.Uncachable ) {
           resultingAction.Uncachable = true;
+
         }
       }
       

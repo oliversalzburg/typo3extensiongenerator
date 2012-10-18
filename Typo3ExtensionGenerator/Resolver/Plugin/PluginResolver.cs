@@ -50,6 +50,11 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
             Action action = ActionResolver.ResolveAction( pluginParameter );
             plugin.Actions.Add( action );
 
+          } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Listener ) {
+            Listener listener = ListenerResolver.ResolveListener( pluginParameter );
+            plugin.Actions.Add( listener.TargetAction );
+            plugin.Listeners.Add( listener );
+            
           } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Implementation ) {
             plugin.Implementation = pluginParameter.Parameters;
           }

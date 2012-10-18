@@ -114,14 +114,24 @@
       public const string Action = "action";
 
       /// <summary>
-      /// uncachable - Marks a controller action as uncachable.
+      /// listener - A listener is an action that connects to an ExtBase SignalSlot
       /// </summary>
-      public const string Uncachable = "uncachable";
+      public const string Listener = "listener";
 
       /// <summary>
       /// represents - Used to point to a file that implements the interface of a controller.
       /// </summary>
       public const string Implementation = "represents";
+
+      public static class ActionDirectives {
+        /// <summary>
+        /// uncachable - Marks a controller action as uncachable.
+        /// </summary>
+        public const string Uncachable = "uncachable";
+
+        public const string Host = "host";
+        public const string Slot = "slot";
+      }
     }
 
     /// <summary>

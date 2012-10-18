@@ -9,6 +9,7 @@ using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
+using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Resolver.Model;
 using Typo3ExtensionGenerator.Resources;
 using log4net;
@@ -115,6 +116,26 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
               };
         
         extLocalconf.Append( configurePlugin.FormatSmart( configurePluginData ) + "\n" );
+
+        // Register our SignalSlot listeners
+        if( plugin.Listeners.Count > 0 ) {
+          extLocalconf.Append( "$signalSlotDispatcher = t3lib_div::makeInstance('Tx_Extbase_SignalSlot_Dispatcher');" );
+
+          foreach( Listener listener in plugin.Listeners ) {
+            const string connectTemplate =
+              "$signalSlotDispatcher->connect( '{_host}', '{_signal}', '{_controller}', '{_action}', FALSE );";
+
+            string connetor = connectTemplate.FormatSmart(
+              new {
+                    _host = listener.Host,
+                    _signal = listener.Signal,
+                    _controller = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
+                    _action = listener.TargetAction.Name + "Action"
+                  } );
+
+            extLocalconf.Append( connetor );
+          }
+        }
 
         // Resolve the foreign key references in the flexform model
         ForeignKeyResolver.Resolve( new List<DataModel> {plugin.Model}, Subject.Models );

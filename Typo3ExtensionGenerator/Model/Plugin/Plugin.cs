@@ -36,9 +36,15 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
 
     public List<Action> Actions { get; set; }
 
+    /// <summary>
+    /// ExtBase SignalSlot listeners that should be connected.
+    /// </summary>
+    public List<Listener> Listeners { get; set; }
+
     public Plugin() {
       Interfaces = new List<Interface>();
-      Actions = new List<Action>();
+      Actions    = new List<Action>();
+      Listeners  = new List<Listener>();
     }
 
     #region Implementation of IParserResult
