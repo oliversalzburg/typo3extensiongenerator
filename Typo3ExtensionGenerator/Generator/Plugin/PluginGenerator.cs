@@ -160,9 +160,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
 
     private void GenerateFluidTemplate( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
       // The default frontend layout
-      const string defaultLayoutTemplate = "<div class=\"tx-{0}\">" +
-                                           "	<f:render section=\"main\" />" +
-                                           "</div>";
+      const string defaultLayoutTemplate = "<f:render section=\"main\" />";
 
       const string layoutFilename = "Resources/Private/Layouts/Default.html";
       Log.InfoFormat( "Generating default Fluid layout '{0}'...", layoutFilename );
