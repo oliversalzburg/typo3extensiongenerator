@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Typo3ExtensionGenerator.Generator;
@@ -7,9 +8,13 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Model;
+using log4net;
 
 namespace Typo3ExtensionGenerator.Resolver.Extension {
   public static class RequirementResolver {
+    
+    private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
+
     /// <summary>
     /// Resolves the models of an extension from a ParsedPartial.
     /// </summary>
@@ -60,12 +65,18 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
             searchRoot = new DirectoryInfo( activePath );
             filter = sourceFilter.Substring( sourceFilter.LastIndexOf( '/' ) + 1 );
           }
+
           // Add all matched
-          FileInfo[] files = searchRoot.GetFiles( filter );
-          // Convert filenames to RequiredFile instances
-          requirement.Files.AddRange(
-            files.Select(
-              s => new Requirement.RequiredFile {FullSourceName = s.FullName, RelativeTargetName = currentPath + s.Name} ) );
+          try {
+            FileInfo[] files = searchRoot.GetFiles( filter );
+            // Convert filenames to RequiredFile instances
+            requirement.Files.AddRange(
+              files.Select(
+                s => new Requirement.RequiredFile {FullSourceName = s.FullName, RelativeTargetName = currentPath + s.Name} ) );
+
+          } catch( DirectoryNotFoundException e ) {
+            throw new ParserException( e.Message, parsedFragment.SourceDocument );
+          }
         }
         
       }
