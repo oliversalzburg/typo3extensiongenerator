@@ -8,7 +8,7 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
   /// A plugin for TYPO3.
   /// </summary>
   [Serializable]
-  public class Plugin : IParserResult {
+  public class Plugin : IParserResult, IControllerTemplate {
     /// <summary>
     /// The name of this plugin.
     /// </summary>
@@ -34,6 +34,10 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
     /// </summary>
     public List<Interface> Interfaces { get; set; }
 
+    /// <summary>
+    /// The actions that are defined in this plugin.
+    /// These will later be available through an ExtBase controller
+    /// </summary>
     public List<Action> Actions { get; set; }
 
     /// <summary>

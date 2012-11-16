@@ -8,7 +8,7 @@ using SmartFormat;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
-using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
+using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator {
   /// <summary>

@@ -24,10 +24,10 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Implementation { get; set; }
 
-    public List<Plugin.Action> Methods { get; set; }
+    public List<Action> Methods { get; set; }
 
     public Repository() {
-      Methods = new List<Plugin.Action>();
+      Methods = new List<Action>();
     }
 
     #region Implementation of IParserResult

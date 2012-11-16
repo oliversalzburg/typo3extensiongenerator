@@ -9,7 +9,7 @@ namespace Typo3ExtensionGenerator.Model {
   /// A module for TYPO3.
   /// </summary>
   [Serializable]
-  public class Module : IParserResult {
+  public class Module : IParserResult, IControllerTemplate {
     /// <summary>
     /// What main module is this module a child of?
     /// </summary>
@@ -25,7 +25,17 @@ namespace Typo3ExtensionGenerator.Model {
     /// The human-readable title for the module
     /// </summary>
     public string Title { get; set; }
-    
+
+    /// <summary>
+    /// The actions that are defined in this object.
+    /// These will later be available through an ExtBase controller
+    /// </summary>
+    public List<Action> Actions { get; set; }
+
+    public Module() {
+      Actions = new List<Action>();
+    }
+
     #region Implementation of IParserResult
     /// <summary>
     /// The fragment from which this object was generated.

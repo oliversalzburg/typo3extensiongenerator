@@ -26,7 +26,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
         // Resolve service
         foreach( Fragment serviceParameter in serviceFragment.Fragments ) {
           if( serviceParameter.Keyword == Keywords.PluginDirectives.Action ) {
-            Typo3ExtensionGenerator.Model.Plugin.Action action = ActionResolver.ResolveAction( serviceParameter );
+            Typo3ExtensionGenerator.Model.Action action = ActionResolver.ResolveAction( serviceParameter );
             service.Actions.Add( action );
 
           } else if( serviceParameter.Keyword == Keywords.PluginDirectives.Listener ) {

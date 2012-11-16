@@ -19,7 +19,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Implementation { get; set; }
 
-    public List<Plugin.Action> Actions { get; set; }
+    public List<Action> Actions { get; set; }
 
     /// <summary>
     /// ExtBase SignalSlot listeners that should be connected.
@@ -28,7 +28,7 @@ namespace Typo3ExtensionGenerator.Model {
     //public List<Listener> Listeners { get; set; }
 
     public Service() {
-      Actions    = new List<Plugin.Action>();
+      Actions    = new List<Action>();
       //Listeners  = new List<Listener>();
     }
 

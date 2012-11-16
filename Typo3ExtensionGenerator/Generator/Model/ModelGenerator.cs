@@ -11,7 +11,7 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 using log4net;
-using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
+using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Model {
   /// <summary>

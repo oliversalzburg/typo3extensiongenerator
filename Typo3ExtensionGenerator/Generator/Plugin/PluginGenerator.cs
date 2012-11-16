@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Configuration;
+using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
@@ -13,7 +14,7 @@ using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Resolver.Model;
 using Typo3ExtensionGenerator.Resources;
 using log4net;
-using Action = Typo3ExtensionGenerator.Model.Plugin.Action;
+using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Plugin {
   public class PluginGenerator : AbstractGenerator, IGenerator {
@@ -40,16 +41,14 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                     "  'LLL:EXT:{0}/Resources/Private/Language/locallang_be.xml:{2}'\n" +
                                     ");";
 
-      const string controllerAction = "    '{controllerName}' => '{actionList}'";
-
       const string configurePlugin = "Tx_Extbase_Utility_Extension::configurePlugin(" +
-                                     "  '{extensionKey}'," +
-                                     "  '{pluginName}'," +
+                                     "  '{_extensionKey}'," +
+                                     "  '{_pluginName}'," +
                                      "  array(" +
-                                     "{cachableActions}" +
+                                     "{_cachableActions}" +
                                      "  )," +
                                      "  array(" +
-                                     "{unCachableActions}" +
+                                     "{_unCachableActions}" +
                                      "  )" +
                                      ");";
 
@@ -74,41 +73,17 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
             "t3lib_extMgm::addPiFlexFormValue('{0}', 'FILE:EXT:{1}/Configuration/FlexForms/flexform_{2}.xml');\n",
             pluginSignature, Subject.Key, plugin.Name.ToLower() ) );
 
-        // Generate allowed action combination that should be configured
-        StringBuilder actions = new StringBuilder();
-        StringBuilder uncachableActions = new StringBuilder();
-        foreach( Action action in plugin.Actions ) {
-          if( action.Uncachable ) {
-            uncachableActions.Append(  action.Name + "," );
-          } else {
-            actions.Append( action.Name + "," );
-          }
-        }
-        
-        string actionsCachable = actions.ToString();
-        actionsCachable = ( actionsCachable.Length > 0 )
-                            ? actionsCachable.Substring( 0, actionsCachable.Length - 1 )
-                            : actionsCachable;
-        string actionsUncachable = uncachableActions.ToString();
-        actionsUncachable = ( actionsUncachable.Length > 0 )
-                            ? actionsUncachable.Substring( 0, actionsUncachable.Length - 1 )
-                            : actionsUncachable;
-        var controllerData =
-            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsCachable };
-        var uncachableControllerData =
-            new {controllerName = NameHelper.UpperCamelCase( plugin.Name ), actionList = actionsUncachable };
 
-        string allControllerActions = controllerAction.FormatSmart( controllerData );
-        string allUncachableControllerActions = controllerAction.FormatSmart( uncachableControllerData );
+        ActionAggregator.AggregationResult aggregationResult = ActionAggregator.Aggregate( plugin );
 
 
         // Add configurePlugin line to ext_localconf
         var configurePluginData =
           new {
-                extensionKey = Subject.Key,
-                pluginName = NameHelper.UpperCamelCase( plugin.Name ),
-                cachableActions = allControllerActions,
-                unCachableActions = allUncachableControllerActions,
+                _extensionKey      = Subject.Key,
+                _pluginName        = NameHelper.UpperCamelCase( plugin.Name ),
+                _cachableActions   = aggregationResult.Cachable,
+                _unCachableActions = aggregationResult.Uncachable,
               };
         
         extLocalconf.Append( configurePlugin.FormatSmart( configurePluginData ) + "\n" );

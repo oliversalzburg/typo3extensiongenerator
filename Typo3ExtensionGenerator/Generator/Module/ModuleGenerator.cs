@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using SmartFormat;
+using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
@@ -30,17 +31,17 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
       const string template = "if( TYPO3_MODE === 'BE' ) {{\n" +
                               "  Tx_Extbase_Utility_Extension::registerModule(\n" +
-                              "    '{extensionName}',\n" +
-                              "    '{mainModuleName}',\n" +
-                              "    '{subModuleName}',\n" +
+                              "    '{_extensionName}',\n" +
+                              "    '{_mainModuleName}',\n" +
+                              "    '{_subModuleName}',\n" +
                               "    '',\n" +
                               "    array(\n" +
-                              "      'TODO Import' => 'index, listCategories, listInstallNotes, enumDirectory, importEntityAsDownload',\n" +
+                              "      {_actions}\n" +
                               "    ),\n" +
                               "    array(\n" +
-                              "      'TODO access' => 'user,group',\n" +
-                              "      'icon'   => 'EXT:{extensionName}/ext_icon.gif',\n" +
-                              "      'labels' => 'LLL:EXT:{extensionName}/Resources/Private/Language/locallang_{langFileKey}.xml',\n" +
+                              "      'access' => 'user,group',\n" +
+                              "      'icon'   => 'EXT:{_extensionName}/ext_icon.gif',\n" +
+                              "      'labels' => 'LLL:EXT:{_extensionName}/Resources/Private/Language/locallang_{_langFileKey}.xml',\n" +
                               "    )\n" +
                               "  );\n" +
                               "}}";
@@ -50,15 +51,19 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
         Log.InfoFormat( "Registering module '{0}'...", module.Name );
 
+        ActionAggregator.AggregationResult aggregationResult = ActionAggregator.Aggregate( module, true );
+        
+
         string subKey = string.Format( "m{0}", moduleIndex + 1 );
         string moduleKey = string.Format( "tx_{0}_{1}", Subject.Key, subKey );
         result.Append(
           template.FormatSmart(
             new {
-                  extensionName  = Subject.Key,
-                  mainModuleName = module.MainModuleName,
-                  subModuleName  = moduleKey,
-                  langFileKey    = subKey.ToLower()
+                  _extensionName  = Subject.Key,
+                  _mainModuleName = module.MainModuleName,
+                  _subModuleName  = moduleKey,
+                  _langFileKey    = subKey.ToLower(),
+                  _actions        = aggregationResult.Uncachable
                 } ) + "\n" );
 
         // Valid labels that should/could be generated
