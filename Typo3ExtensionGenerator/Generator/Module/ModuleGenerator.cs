@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using SmartFormat;
+using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -74,6 +75,9 @@ namespace Typo3ExtensionGenerator.Generator.Module {
         // <label index="mlang_labels_tablabel">Create download records from files on the file system.</label>
 
         WriteVirtual( string.Format( "Resources/Private/Language/locallang_{0}.xml", module.Name.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ) );
+
+        ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+        classGenerator.GenerateClassProxy( module, new ControllerNamingStrategy(), "Classes/Controller/", true );
       }
 
       string modules = result.ToString().Substring( 0, result.Length - 1 );

@@ -30,5 +30,7 @@ namespace Typo3ExtensionGenerator.Generator.Class.Naming {
       Debug.Assert( classTemplate is Service );
       return NameHelper.GetExtbaseServiceImplementationFileName( extension, classTemplate as Service );
     }
+
+    public string MethodSuffix { get { return string.Empty; } }
   }
 }

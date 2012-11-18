@@ -275,17 +275,6 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     }
 
     /// <summary>
-    /// Does this repository wrap an internal type WITHOUT providing an own implementation.
-    /// This is usually the case when referencing repositories that already exist in TYPO3, like Tx_Extbase_Domain_Repository_FrontendUserRepository
-    /// </summary>
-    /// <param name="repository"></param>
-    /// <returns></returns>
-    private static bool PurelyWrapsInternalType( Repository repository ) {
-      return !string.IsNullOrEmpty( repository.InternalType ) && string.IsNullOrEmpty( repository.Implementation );
-    }
-
-
-    /// <summary>
     /// Writes the default TypoScript constants and settings files for the extension.
     /// </summary>
     /// <param name="plugin"> </param>

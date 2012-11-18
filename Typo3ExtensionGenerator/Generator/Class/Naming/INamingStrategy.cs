@@ -40,5 +40,10 @@ namespace Typo3ExtensionGenerator.Generator.Class.Naming {
     /// <param name="classTemplate">The class template itself.</param>
     /// <returns>The file name to be used for the implementation of given class template.</returns>
     string GetExtbaseImplementationFileName( Extension extension, IClassTemplate classTemplate );
+
+    /// <summary>
+    /// A string that should be appended to all method names (like "Action")
+    /// </summary>
+    string MethodSuffix { get; }
   }
 }

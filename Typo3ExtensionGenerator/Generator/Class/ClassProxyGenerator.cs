@@ -42,9 +42,9 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
       #region Generate Methods
       StringBuilder methods = new StringBuilder();
       const string methodTemplate = "/**\n" +
-                                    "{2}" +
+                                    "{_phpDoc}" +
                                     "*/\n" +
-                                    "public function {0}({1}) {{ return $this->getImplementation()->{0}({1}); }}\n";
+                                    "public function {_methodName}{_methodSuffix}({_parameters}) {{ return $this->getImplementation()->{_methodName}{_methodSuffix}({_parameters}); }}\n";
 
       foreach( Action method in classTemplate.Actions ) {
         // Start building up the PHPDoc for this action
@@ -69,7 +69,9 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
           ( current, requirement ) =>
           current + ( "$" + requirement + ( ( requirement != method.Requirements.Last() ) ? "," : string.Empty ) ) );
 
-        methods.Append( String.Format( methodTemplate, method.Name, parameters, phpDoc ) );
+        var methodData = new { _phpDoc = phpDoc, _methodSuffix = namingStrategy.MethodSuffix, _methodName = method.Name, _parameters = parameters };
+
+        methods.Append( methodTemplate.FormatSmart( methodData ) );
       }
       #endregion
 
@@ -172,7 +174,7 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
                 _implClassname = implementationClassname
               } );
 
-      const string template = "class {_className} {{\n" +
+      const string template = "class {_className} extends Tx_Extbase_MVC_Controller_ActionController {{\n" +
                               "{_properties}\n" +
                               "{_actions}\n" +
                               "}}\n" +
@@ -181,14 +183,12 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
       string serviceResult = template.FormatSmart(
           new {
                 _className             = namingStrategy.GetExtbaseClassName( Subject, classTemplate ),
-                _properties            = (( isExternallyImplemented ) ? serviceImplementation : string.Empty),
+                _properties            = (( isExternallyImplemented ) ? serviceImplementation : string.Empty) + propertiesList,
                 _actions               = methods.ToString(),
                 _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
               } );
 
-      WritePhpFile(
-        string.Format( "Classes/Service/{0}", namingStrategy.GetExtbaseFileName( Subject, classTemplate ) ),
-        serviceResult, DateTime.UtcNow );
+      WritePhpFile( Path.Combine( classDirectory, namingStrategy.GetExtbaseFileName( Subject, classTemplate ) ), serviceResult, DateTime.UtcNow );
     }
 
     /// <summary>

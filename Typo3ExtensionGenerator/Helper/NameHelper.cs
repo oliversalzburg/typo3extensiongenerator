@@ -96,7 +96,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="extension"></param>
     /// <param name="plugin"></param>
     /// <returns></returns>
-    public static string GetExtbaseControllerClassName( Extension extension, Plugin plugin ) {
+    public static string GetExtbaseControllerClassName( Extension extension, IControllerTemplate plugin ) {
       return String.Format( "Tx_{0}_Controller_{1}Controller", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
     }
 
@@ -106,7 +106,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="extension"></param>
     /// <param name="plugin"></param>
     /// <returns></returns>
-    public static string GetExtbaseControllerImplementationClassName( Extension extension, Plugin plugin ) {
+    public static string GetExtbaseControllerImplementationClassName( Extension extension, IControllerTemplate plugin ) {
       return String.Format( "{0}{1}ControllerImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
     }
 
@@ -114,9 +114,9 @@ namespace Typo3ExtensionGenerator.Helper {
     /// Generates the Extbase controller class name for a given plugin.
     /// </summary>
     /// <param name="extension"></param>
-    /// <param name="dataModel"></param>
+    /// <param name="plugin"></param>
     /// <returns></returns>
-    public static string GetExtbaseControllerFileName( Extension extension, Plugin plugin ) {
+    public static string GetExtbaseControllerFileName( Extension extension, IControllerTemplate plugin ) {
       return String.Format( "{0}Controller.php", UpperCamelCase( plugin.Name ) );
     }
 
@@ -126,7 +126,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="extension"></param>
     /// <param name="plugin"></param>
     /// <returns></returns>
-    public static string GetExtbaseControllerImplementationFileName( Extension extension, Plugin plugin ) {
+    public static string GetExtbaseControllerImplementationFileName( Extension extension, IControllerTemplate plugin ) {
       return String.Format( "{0}{1}ControllerImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( plugin.Name ) );
     }
 
