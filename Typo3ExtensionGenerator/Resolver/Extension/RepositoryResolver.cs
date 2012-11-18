@@ -31,7 +31,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
               Action action = ActionResolver.ResolveAction( dataMember );
               repository.Methods.Add( action );
 
-            } else if( dataMember.Keyword == Keywords.PluginDirectives.Implementation) {
+            } else if( dataMember.Keyword == Keywords.Implementation) {
               repository.Implementation = dataMember.Parameters;
             
             } else if( dataMember.Keyword == Keywords.InternalType ) {

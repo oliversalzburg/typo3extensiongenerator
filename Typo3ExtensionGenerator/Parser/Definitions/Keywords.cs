@@ -38,6 +38,11 @@
     /// </summary>
     public const string InternalType = "is";
 
+    /// <summary>
+    /// represents - Used to point to a file that implements the interface of a controller.
+    /// </summary>
+    public const string Implementation = "represents";
+
     public static class ExtensionDirectives {
       /// <summary>
       /// author - Used to define the name of the author of the extension.
@@ -122,11 +127,6 @@
       /// listener - A listener is an action that connects to an ExtBase SignalSlot
       /// </summary>
       public const string Listener = "listener";
-
-      /// <summary>
-      /// represents - Used to point to a file that implements the interface of a controller.
-      /// </summary>
-      public const string Implementation = "represents";
 
       public static class ActionDirectives {
         /// <summary>

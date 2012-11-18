@@ -35,7 +35,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
             throw new NotImplementedException();
             //service.Listeners.Add( listener );
             
-          } else if( serviceParameter.Keyword == Keywords.PluginDirectives.Implementation ) {
+          } else if( serviceParameter.Keyword == Keywords.Implementation ) {
             service.Implementation = serviceParameter.Parameters;
           }
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Resolver.Plugin;
 
 namespace Typo3ExtensionGenerator.Resolver.Module {
   public static class ModuleResolver {
@@ -17,7 +18,7 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
 
       List<Typo3ExtensionGenerator.Model.Module> modules = new List<Typo3ExtensionGenerator.Model.Module>();
       foreach( Fragment modulePartial in modulePartials ) {
-        Typo3ExtensionGenerator.Model.Module module = new Typo3ExtensionGenerator.Model.Module {Name = modulePartial.Parameters};
+        Typo3ExtensionGenerator.Model.Module module = new Typo3ExtensionGenerator.Model.Module {Name = modulePartial.Parameters, SourceFragment = parsedFragment};
 
         foreach( Fragment subPartial in modulePartial.Fragments ) {
           if( subPartial.Keyword == Keywords.Category ) {
@@ -25,7 +26,15 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
 
           } else if( subPartial.Keyword == Keywords.Title ) {
             module.Title = subPartial.Parameters;
-          }
+
+          } else if( subPartial.Keyword == Keywords.Implementation ) {
+            module.Implementation = subPartial.Parameters;
+          
+          } else if( subPartial.Keyword == Keywords.PluginDirectives.Action ) {
+            Action action = ActionResolver.ResolveAction( subPartial );
+            module.Actions.Add( action );
+
+          } 
         }
 
         // If no name was defined, use the common placeholder names

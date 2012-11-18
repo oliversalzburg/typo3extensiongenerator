@@ -55,7 +55,7 @@ namespace Typo3ExtensionGenerator.Resolver.Plugin {
             plugin.Actions.Add( listener.TargetAction );
             plugin.Listeners.Add( listener );
             
-          } else if( pluginParameter.Keyword == Keywords.PluginDirectives.Implementation ) {
+          } else if( pluginParameter.Keyword == Keywords.Implementation ) {
             plugin.Implementation = pluginParameter.Parameters;
           }
         }

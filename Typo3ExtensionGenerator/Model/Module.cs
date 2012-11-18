@@ -29,7 +29,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The name of a PHP class that implements the proxies defined in the generated class.
     /// </summary>
-    public string Implementation { get; private set; }
+    public string Implementation { get; set; }
 
     /// <summary>
     /// The actions that are defined in this object.
