@@ -84,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Generator\AbstractGenerator.cs" />
+    <Compile Include="Generator\Class\Naming\INamingStrategy.cs" />
+    <Compile Include="Generator\Class\Naming\ControllerNamingStrategy.cs" />
+    <Compile Include="Generator\Class\Naming\ServiceNamingStrategy.cs" />
     <Compile Include="Generator\Configuration\ConfigurationFileGenerator.cs" />
     <Compile Include="Generator\Configuration\ConfigurationGenerator.cs" />
     <Compile Include="Generator\Configuration\InterfaceGenerator.cs" />
@@ -91,6 +94,7 @@
     <Compile Include="Generator\ExtensionCoreGenerator.cs" />
     <Compile Include="Generator\ExtensionGenerator.cs" />
     <Compile Include="Generator\GeneratorException.cs" />
+    <Compile Include="Generator\Class\ClassProxyGenerator.cs" />
     <Compile Include="Generator\IGenerator.cs" />
     <Compile Include="Generator\Model\ModelGenerator.cs" />
     <Compile Include="Generator\Model\Templates\T3Sortable.cs" />
@@ -114,6 +118,7 @@
     <Compile Include="Model\Configuration\Palette.cs" />
     <Compile Include="Model\Configuration\Type.cs" />
     <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Model\IClassTemplate.cs" />
     <Compile Include="Model\IControllerTemplate.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\Person.cs" />

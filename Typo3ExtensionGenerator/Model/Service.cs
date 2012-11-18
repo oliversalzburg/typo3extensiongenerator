@@ -8,7 +8,7 @@ namespace Typo3ExtensionGenerator.Model {
   /// A service class for TYPO3.
   /// </summary>
   [Serializable]
-  public class Service : IParserResult  {
+  public class Service : IParserResult, IClassTemplate  {
     /// <summary>
     /// The name of this plugin.
     /// </summary>

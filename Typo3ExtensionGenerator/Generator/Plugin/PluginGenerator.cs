@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
+using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
@@ -269,166 +270,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// </summary>
     /// <param name="plugin"></param>
     private void GenerateController( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
-      string className = NameHelper.GetExtbaseControllerClassName( Subject, plugin );
-      Log.InfoFormat( "Generating controller '{0}'...", className );
-
-      #region Generate Actions
-      StringBuilder actions = new StringBuilder();
-      const string actionTemplate = "/**\n" +
-                                    "{2}" +
-                                    "*/\n" +
-                                    "public function {0}Action({1}) {{ return $this->getImplementation()->{0}Action({1}); }}\n";
-
-      foreach( Action action in plugin.Actions ) {
-        // Start building up the PHPDoc for this action
-        string phpDoc = string.Empty;
-        foreach( string requirement in action.Requirements ) {
-          string typeName = "mixed";
-          // See if the name of the requirement matches the name of a defined model,
-          // if so, we assume the user wants to reference that model.
-          DataModel requiredModel = Subject.Models.SingleOrDefault( m => m.Name.ToLower() == requirement );
-          if( requiredModel != null ) {
-            typeName = NameHelper.GetExtbaseDomainModelClassName( Subject, requiredModel );
-            Log.InfoFormat(
-              "Assuming requirement '{0}' for action '{1}:{2}' to be of type '{3}'.", requirement, plugin.Name,
-              action.Name, typeName );
-          }
-          phpDoc = phpDoc + ( "* @param " + typeName + " $" + requirement + "\n" );
-        }
-
-        // Prefix each parameter with a $ and join them together with , in between.
-        string parameters = action.Requirements.Aggregate(
-          string.Empty,
-          ( current, requirement ) =>
-          current + ( "$" + requirement + ( ( requirement != action.Requirements.Last() ) ? "," : string.Empty ) ) );
-
-        actions.Append( String.Format( actionTemplate, action.Name, parameters, phpDoc ) );
-      }
-      #endregion
-
-
-      #region Handle External Implementations
-      bool isExternallyImplemented = false;
-      string implementationClassname = string.Empty;
-      string implementationFilename = string.Empty;
-      if( !string.IsNullOrEmpty( plugin.Implementation ) ) {
-        isExternallyImplemented = true;
-        implementationClassname = NameHelper.GetExtbaseControllerImplementationClassName( Subject, plugin );
-        implementationFilename = NameHelper.GetExtbaseControllerImplementationFileName( Subject, plugin );
-      }
-
-      if( isExternallyImplemented ) {
-        if( !File.Exists( plugin.Implementation ) ) {
-          throw new GeneratorException(
-            string.Format( "Implementation '{0}' for plugin '{1}' does not exist.", plugin.Implementation, plugin.Name ),
-            plugin.SourceFragment.SourceDocument );
-        }
-        Log.InfoFormat( "Merging implementation '{0}'...", plugin.Implementation );
-        string pluginImplementation = File.ReadAllText( plugin.Implementation );
-        if(
-          !Regex.IsMatch(
-            pluginImplementation, String.Format( "class {0} ?({{|extends|implements)", implementationClassname ) ) ) {
-          Log.WarnFormat( "The class name of your implementation for plugin '{1}' MUST be '{0}'!", implementationClassname, plugin.Name );
-        }
-        WriteFile( "Classes/Controller/" + implementationFilename, pluginImplementation, DateTime.UtcNow );
-
-      } else {
-        if( plugin.Actions.Count > 0 ) {
-          Log.WarnFormat(
-            "Plugin '{0}' defines actions, but has no implementation provided. If any of these actions is invoked by TYPO3, a PHP error will be generated!",
-            plugin.Name );
-        }
-      }
-      #endregion
-
-      #region Generate Properties
-      StringBuilder propertiesList = new StringBuilder();
-      if( Subject.Models != null ) {
-        foreach( DataModel dataModel in Subject.Models ) {
-          const string memberTemplate = "/**\n" +
-                                        "* {0}Repository\n" +
-                                        "* @var {1}\n" +
-                                        "*/\n" +
-                                        "protected ${0}Repository;\n";
-
-          // Check if the repository is internally implemented.
-          // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
-          Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
-          if( null != repository && PurelyWrapsInternalType( repository ) ) {
-            propertiesList.Append(
-              String.Format(
-                memberTemplate, dataModel.Name, repository.InternalType ) );
-
-          } else {
-            propertiesList.Append(
-              String.Format(
-                memberTemplate, dataModel.Name,
-                NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ) ) );
-          }
-
-          const string injectorTemplate =
-            "/**\n" +
-            "* inject{0}Repository\n" +
-            "* @param {1} ${2}Repository\n" +
-            "*/\n" +
-            "public function inject{0}Repository({1} ${2}Repository) {{\n" +
-            "  $this->{2}Repository = ${2}Repository;\n" +
-            "}}\n";
-
-          // Check again if the repository is internally implemented.
-          // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
-          string injector = string.Empty;
-          if( null != repository && PurelyWrapsInternalType( repository ) ) {
-            injector = String.Format(
-              injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ), repository.InternalType, dataModel.Name );
-
-          } else {
-            injector = String.Format(
-              injectorTemplate, NameHelper.UpperCamelCase( dataModel.Name ),
-              NameHelper.GetExtbaseDomainModelRepositoryClassName( Subject, dataModel ), dataModel.Name );
-          }
-
-          propertiesList.Append( injector );
-        }
-      }
-      #endregion
-
-
-      const string controllerImplementationTemplate = "private $implementation;\n" +
-                                                      "private function getImplementation() {{\n" +
-                                                      "  if( null == $this->implementation ) {{\n" +
-                                                      "    $this->implementation = new {implClassname}($this);\n" +
-                                                      "  }}\n" +
-                                                      "  return $this->implementation;\n" +
-                                                      "}}\n"+
-                                                      "function __construct() {{\n"+
-                                                      "}}\n";
-
-      string controllerImplementation =
-        controllerImplementationTemplate.FormatSmart(
-          new {
-                implClassname = implementationClassname,
-                className     = NameHelper.GetExtbaseControllerClassName( Subject, plugin )
-              } );
-
-      const string controllerTemplate = "class {className} extends Tx_Extbase_MVC_Controller_ActionController {{\n" +
-                                        "{controllerProperties}\n" +
-                                        "{controllerActions}\n" +
-                                        "}}\n" +
-                                        "{requireImplementation}";
-
-      string controller =
-        controllerTemplate.FormatSmart(
-          new {
-                className             = NameHelper.GetExtbaseControllerClassName( Subject, plugin ),
-                controllerProperties  = (( isExternallyImplemented ) ? controllerImplementation : string.Empty) + propertiesList,
-                controllerActions     = actions.ToString(),
-                requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
-              } );
-
-      WritePhpFile(
-        string.Format( "Classes/Controller/{0}", NameHelper.GetExtbaseControllerFileName( Subject, plugin ) ),
-        controller, DateTime.UtcNow );
+      ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+      classGenerator.GenerateClassProxy( plugin, new ControllerNamingStrategy(), "Classes/Controller/", true );
     }
 
     /// <summary>
@@ -461,10 +304,10 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       // Just to be safe, we also go all lower-case here.
       var dataObject =
         new {
-              pluginName = "tx_" + NameHelper.GetPluginSignature( Subject, plugin ),
+              pluginName   = "tx_" + NameHelper.GetPluginSignature( Subject, plugin ),
               extensionKey = Subject.Key,
               pluginFolder = plugin.Name,
-              pluginTitle = plugin.Title
+              pluginTitle  = plugin.Title
             };
 
       Log.Info( "Generating TypoScript constants..." );

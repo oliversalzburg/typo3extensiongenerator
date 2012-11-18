@@ -4,18 +4,9 @@ using System.Linq;
 using System.Text;
 
 namespace Typo3ExtensionGenerator.Model {
-  public interface IControllerTemplate {
-
-    /// <summary>
-    /// The name of this object.
-    /// </summary>
-    string Name { get; }
-
-    /// <summary>
-    /// The actions that are defined in this object.
-    /// These will later be available through an ExtBase controller
-    /// </summary>
-    List<Action> Actions { get; }
-
+  /// <summary>
+  /// The IControllerTemplate is an interface that describes a class that contains properties to generate an ExtBase controller.
+  /// </summary>
+  public interface IControllerTemplate : IClassTemplate {
   }
 }

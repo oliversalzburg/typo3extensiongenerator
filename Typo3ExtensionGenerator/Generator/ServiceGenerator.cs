@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
+using Typo3ExtensionGenerator.Generator.Class.Naming;
+using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
@@ -18,8 +20,16 @@ namespace Typo3ExtensionGenerator.Generator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+    /// <summary>
+    /// Constructs a ServiceGenerator
+    /// </summary>
+    /// <param name="outputDirectory"></param>
+    /// <param name="extension"></param>
     public ServiceGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
+    /// <summary>
+    /// Generates the services defined in the extension
+    /// </summary>
     public void Generate() {
       if( null == Subject.Services || !Subject.Services.Any() ) return;
 
@@ -30,7 +40,15 @@ namespace Typo3ExtensionGenerator.Generator {
       }
     }
 
+    /// <summary>
+    /// Generates a single service
+    /// </summary>
+    /// <param name="service"></param>
     private void GenerateService( Service service ) {
+
+      ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+      classGenerator.GenerateClassProxy( service, new ServiceNamingStrategy(), "Classes/Service/", false );
+      return;
       string className = NameHelper.GetExtbaseServiceClassName( Subject, service );
       Log.InfoFormat( "Generating service '{0}'...", className );
 
