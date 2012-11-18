@@ -104,6 +104,7 @@
     <Compile Include="Helper\ParseHelper.cs" />
     <Compile Include="Helper\TypeTranslator.cs" />
     <Compile Include="Model\AbstractContainer.cs" />
+    <Compile Include="Model\Action.cs" />
     <Compile Include="Model\Configuration\Configuration.cs" />
     <Compile Include="Model\Configuration\Interface\IDisplayType.cs" />
     <Compile Include="Model\Configuration\Interface\Interface.cs" />
@@ -113,12 +114,13 @@
     <Compile Include="Model\Configuration\Palette.cs" />
     <Compile Include="Model\Configuration\Type.cs" />
     <Compile Include="Model\DataModel.cs" />
+    <Compile Include="Model\IControllerTemplate.cs" />
     <Compile Include="Model\Module.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\Extension.cs" />
-    <Compile Include="Model\Plugin\Action.cs" />
     <Compile Include="Model\Plugin\Listener.cs" />
     <Compile Include="Model\Plugin\Plugin.cs" />
+    <Compile Include="Generator\Helper\ActionAggregator.cs" />
     <Compile Include="Generator\Model\Templates\T3CommonFields.cs" />
     <Compile Include="Generator\Model\Templates\T3ManagedFields.cs" />
     <Compile Include="Generator\Model\Templates\T3TranslationFields.cs" />
@@ -184,6 +186,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Icons\wiz_icon.gif" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(ProjectDir)app.log4net $(TargetPath).log4net
