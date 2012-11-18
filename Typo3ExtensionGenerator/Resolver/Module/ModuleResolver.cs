@@ -18,6 +18,7 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
       List<Typo3ExtensionGenerator.Model.Module> modules = new List<Typo3ExtensionGenerator.Model.Module>();
       foreach( Fragment modulePartial in modulePartials ) {
         Typo3ExtensionGenerator.Model.Module module = new Typo3ExtensionGenerator.Model.Module {Name = modulePartial.Parameters};
+
         foreach( Fragment subPartial in modulePartial.Fragments ) {
           if( subPartial.Keyword == Keywords.Category ) {
             module.MainModuleName = subPartial.Parameters;
@@ -26,6 +27,12 @@ namespace Typo3ExtensionGenerator.Resolver.Module {
             module.Title = subPartial.Parameters;
           }
         }
+
+        // If no name was defined, use the common placeholder names
+        if( string.IsNullOrEmpty( module.Name ) ) {
+          module.Name = string.Format( "M{0}", ( modules.Count + 1 ) );
+        }
+
         modules.Add( module );
       }
 

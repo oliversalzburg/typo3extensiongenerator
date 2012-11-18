@@ -224,6 +224,16 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Returns a module key. Like userdownloads_import or news_m1
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="module"></param>
+    /// <returns></returns>
+    public static string GetModuleSignature( Extension extension, Module module ) {
+      return String.Format( "{0}_{1}", extension.Key.Replace( "_", string.Empty ), module.Name.ToLower() );
+    }
+
+    /// <summary>
     /// Converts a lowerCamelCase string to UpperCamelCase
     /// </summary>
     /// <param name="input"></param>
