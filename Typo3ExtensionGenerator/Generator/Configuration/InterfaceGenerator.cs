@@ -55,11 +55,15 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
           configuration += String.Format(
             propertyTemplate, "foreign_table", "'" + typename + "'" );
           configuration += String.Format(
-            propertyTemplate, "allowed", "'" + typename+ "'" );
+            propertyTemplate, "foreign_table_where", "'AND " + typename + ".sys_language_uid=0'" );
+          configuration += String.Format(
+            propertyTemplate, "allowed", "'" + typename + "'" );
 
         } else {
           configuration += String.Format(
             propertyTemplate, "foreign_table", typename );
+          configuration += String.Format(
+            propertyTemplate, "foreign_table_where", "AND " + typename + ".sys_language_uid=0" );
           configuration += String.Format(
             propertyTemplate, "allowed", typename );
         }

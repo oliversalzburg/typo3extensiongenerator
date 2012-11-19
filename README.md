@@ -12,6 +12,7 @@ The **TYPO3 Extension Generator** is a tool to generate a TYPO3 extension from a
 - ExtBase Controllers
 - ExtBase SignalSlot Connections
 - Frontend Plugins + FlexForm
+- Backend Modules
 - Services
 - Language Resources
 - TypoScript Resources
