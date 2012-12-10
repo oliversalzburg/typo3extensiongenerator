@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Typo3ExtensionGenerator.Compatibility {
@@ -28,7 +29,7 @@ namespace Typo3ExtensionGenerator.Compatibility {
     /// <param name="targetVersion">The version since this method is deprecated. For example: <see cref="Typo3Version.TYPO3_4_6_0"/></param>
     /// <param name="replacement">The method that should be used instead. For example: t3lib_l10n_parser_Llxml::getParsedData</param>
     /// <returns>Always returns <see langword="null"/></returns>
-    public static Deprecated Register( string signature, Typo3Version targetVersion, string replacement ) {
+    public static Object Register( string signature, Typo3Version targetVersion, string replacement ) {
       if( null == Replacements ) {
         Replacements = new Dictionary<string, List<KeyValuePair<Typo3Version, string>>>();
       }
