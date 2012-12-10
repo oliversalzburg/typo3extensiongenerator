@@ -9,12 +9,16 @@ using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 using Typo3ExtensionGenerator.Resolver.Model;
 
 namespace Typo3ExtensionGenerator.Resolver.Plugin {
+  /// <summary>
+  /// Resolves all plugins that are defined in an extension markup.
+  /// </summary>
   public static class PluginResolver {
     /// <summary>
-    /// Resolves the plugins of an extension from a ParsedPartial.
+    /// Resolves the plugins of an extension from a fragment.
     /// </summary>
     /// <param name="parsedFragment">The partially parsed extension.</param>
-    /// <returns>The plauings of the extension</returns>
+    /// <returns>The plugins of the extension</returns>
+    /// <exception cref="GeneratorException">A plugin must contain exactly one model.</exception>
     public static List<Typo3ExtensionGenerator.Model.Plugin.Plugin> Resolve( Fragment parsedFragment ) {
       IEnumerable<Fragment> pluginPartials = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.ExtensionDirectives.DeclarePlugin );
       if( !pluginPartials.Any() ) return null;

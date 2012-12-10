@@ -9,6 +9,9 @@ using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Tests {
+  /// <summary>
+  /// Contains the unit tests that should throw a <see cref="ParserException"/>.
+  /// </summary>
   [TestClass]
   public class ParserExceptionsTest {
     /// <summary>

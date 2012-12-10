@@ -22,12 +22,24 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+    /// <summary>
+    /// Constructs a ConfigurationFileGenerator. 
+    /// </summary>
+    /// <param name="outputDirectory">The directory where generated files should be placed.</param>
+    /// <param name="extension">The extension that should be generated.</param>
+    /// <param name="configuration">The model for the configuration that should be generated.</param>
     public ConfigurationFileGenerator( string outputDirectory, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) : base( outputDirectory, extension ) {
       Configuration = configuration;
     }
 
-    public Typo3ExtensionGenerator.Model.Configuration.Configuration Configuration { get; private set; }
+    /// <summary>
+    /// The model for the configuration that is being generated.
+    /// </summary>
+    private Typo3ExtensionGenerator.Model.Configuration.Configuration Configuration { get; set; }
 
+    /// <summary>
+    /// Generates the configuration
+    /// </summary>
     public void Generate() {
       string targetFile = "Configuration/TCA/" + NameHelper.GetExtbaseDomainModelFileName( Subject, Configuration.Model );
       

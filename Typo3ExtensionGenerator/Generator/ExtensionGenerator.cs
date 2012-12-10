@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
+using Typo3ExtensionGenerator.Compatibility;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Model;
 using Typo3ExtensionGenerator.Generator.Module;
@@ -17,6 +18,9 @@ using Typo3ExtensionGenerator.Resources;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
+  /// <summary>
+  /// Generates a TYPO3 extension.
+  /// </summary>
   public class ExtensionGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -26,6 +30,16 @@ namespace Typo3ExtensionGenerator.Generator {
     /// </summary>
     public string TargetDirectory { get; set; }
 
+    /// <summary>
+    /// The TYPO3 version under which our exported extension should run.
+    /// </summary>
+    public Typo3Version TargetVersion { get; set; }
+
+    /// <summary>
+    /// Default Constructor
+    /// </summary>
+    /// <param name="outputDirectory">The directory in which the generated content should be placed.</param>
+    /// <param name="subject">The extension object that should be generated.</param>
     public ExtensionGenerator( string outputDirectory, Extension subject ) : base( outputDirectory, subject ) {}
 
     /// <summary>
@@ -51,6 +65,7 @@ namespace Typo3ExtensionGenerator.Generator {
       ExtensionCoreGenerator extensionCoreGenerator = new ExtensionCoreGenerator( TargetDirectory, Subject );
       extensionCoreGenerator.Generate();
       PluginGenerator pluginGenerator = new PluginGenerator( TargetDirectory, Subject );
+      pluginGenerator.TargetVersion = TargetVersion;
       pluginGenerator.Generate();
       ModuleGenerator moduleGenerator = new ModuleGenerator( TargetDirectory, Subject );
       moduleGenerator.Generate();

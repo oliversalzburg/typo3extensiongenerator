@@ -37,6 +37,9 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public List<Action> Actions { get; set; }
 
+    /// <summary>
+    /// Constructs a Module
+    /// </summary>
     public Module() {
       Actions = new List<Action>();
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;
+using Typo3ExtensionGenerator.Helper.Compatibility;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Model.Plugin;
@@ -18,11 +20,29 @@ using log4net;
 using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator.Plugin {
+  /// <summary>
+  /// Generator for FrontEnd plugins
+  /// </summary>
   public class PluginGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+    private static readonly ArrayList _void = new ArrayList {
+      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1})", Typo3Version.TYPO3_4_6_0, "t3lib_l10n_parser_Llxml::getParsedData({0},{1})" ),
+      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1},{2})", Typo3Version.TYPO3_4_6_0, "t3lib_l10n_parser_Llxml::getParsedData({0},{1},{2})" ) 
+    };
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <param name="outputDirectory"></param>
+    /// <param name="extension"></param>
     public PluginGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+
+    /// <summary>
+    /// The TYPO3 version under which our generated extension should run.
+    /// </summary>
+    public Typo3Version TargetVersion { get; set; }
 
     /// <summary>
     /// Generates the plugins.
@@ -358,18 +378,19 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                                           "	protected function includeLocalLang() {{" +
                                           "		$file = t3lib_extMgm::extPath('{_extensionKey}') . 'Resources/Private/Language/locallang_be.xml';" +
                                           "" +
-                                          "		return t3lib_div::readLLXMLfile($file, $GLOBALS['LANG']->lang);" +
+                                          "		return {_readLLXMLfile};" +
                                           "	}}" +
                                           "}}";
 
       string wizIconClass =
         wizIconClassTemplate.FormatSmart(
           new {
-                _pluginSignature = pluginSignature,
-                _extensionKey = Subject.Key,
-                _languageConstant = titleLanguageConstant,
+                _pluginSignature            = pluginSignature,
+                _extensionKey               = Subject.Key,
+                _languageConstant           = titleLanguageConstant,
                 _plusWizDescriptionConstant = plusWizDescriptionConstant,
-                _wizIconFullFilename = wizIconFullFilename
+                _wizIconFullFilename        = wizIconFullFilename,
+                _readLLXMLfile              = String.Format( Deprecated.Get( "t3lib_div::readLLXMLfile({0},{1})", TargetVersion ), "$file", "$GLOBALS['LANG']->lang" )
               } );
 
       WritePhpFile( wizIconScriptFilename, wizIconClass, DateTime.UtcNow );

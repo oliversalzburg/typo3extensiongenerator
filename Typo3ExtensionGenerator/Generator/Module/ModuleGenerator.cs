@@ -9,12 +9,23 @@ using Typo3ExtensionGenerator.Model;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator.Module {
+  /// <summary>
+  /// Generates backend modules for TYPO3
+  /// </summary>
   public class ModuleGenerator : AbstractGenerator, IGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    /// <param name="outputDirectory">The directory in which the output should be placed.</param>
+    /// <param name="extension">The extension that is being worked on.</param>
     public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
 
+    /// <summary>
+    /// Generate all backend modules
+    /// </summary>
     public void Generate() {
       GenerateModules();
     }

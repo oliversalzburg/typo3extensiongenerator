@@ -5,8 +5,19 @@ using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 
 namespace Typo3ExtensionGenerator.Generator.Configuration {
+  /// <summary>
+  /// Generates an interface.
+  /// An interface is a translation of model data to a user interface.
+  /// </summary>
   public static class InterfaceGenerator {
-
+    /// <summary>
+    /// Generates the interface.
+    /// </summary>
+    /// <param name="parent">The generator that uses this <see cref="InterfaceGenerator"/>.</param>
+    /// <param name="extension">The extension that is being worked on.</param>
+    /// <param name="subject">The model for the interface defintion.</param>
+    /// <param name="format">The format of the interface.</param>
+    /// <returns></returns>
     public static string Generate( AbstractGenerator parent, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface subject, SimpleContainer.Format format ) {
       string propertyTemplate = ( format == SimpleContainer.Format.PhpArray )
                                   ? SimpleContainer.PropertyTemplatePhp
@@ -52,20 +63,14 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         subject.DisplayType.ParentModel = foreignModel;
 
         if( format == SimpleContainer.Format.PhpArray ) {
-          configuration += String.Format(
-            propertyTemplate, "foreign_table", "'" + typename + "'" );
-          configuration += String.Format(
-            propertyTemplate, "foreign_table_where", "'AND " + typename + ".sys_language_uid=0'" );
-          configuration += String.Format(
-            propertyTemplate, "allowed", "'" + typename + "'" );
+          configuration += String.Format( propertyTemplate, "foreign_table", "'" + typename + "'" );
+          configuration += String.Format( propertyTemplate, "foreign_table_where", "'AND " + typename + ".sys_language_uid=0'" );
+          configuration += String.Format( propertyTemplate, "allowed", "'" + typename + "'" );
 
         } else {
-          configuration += String.Format(
-            propertyTemplate, "foreign_table", typename );
-          configuration += String.Format(
-            propertyTemplate, "foreign_table_where", "AND " + typename + ".sys_language_uid=0" );
-          configuration += String.Format(
-            propertyTemplate, "allowed", typename );
+          configuration += String.Format( propertyTemplate, "foreign_table", typename );
+          configuration += String.Format( propertyTemplate, "foreign_table_where", "AND " + typename + ".sys_language_uid=0" );
+          configuration += String.Format( propertyTemplate, "allowed", typename );
         }
       }
 

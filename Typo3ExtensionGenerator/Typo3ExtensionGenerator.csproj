@@ -103,6 +103,8 @@
     <Compile Include="Generator\PrettyPrint\LudicrousPrettyPrinter.cs" />
     <Compile Include="Generator\RequirementGenerator.cs" />
     <Compile Include="Generator\ServiceGenerator.cs" />
+    <Compile Include="Helper\Compatibility\Deprecated.cs" />
+    <Compile Include="Helper\Compatibility\Typo3Version.cs" />
     <Compile Include="Helper\DirectoryHelper.cs" />
     <Compile Include="Helper\NameHelper.cs" />
     <Compile Include="Helper\ParseHelper.cs" />

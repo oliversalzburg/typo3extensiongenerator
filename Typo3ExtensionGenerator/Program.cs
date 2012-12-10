@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using NDesk.Options;
 using Typo3ExtensionGenerator.Generator;
+using Typo3ExtensionGenerator.Helper.Compatibility;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.PreProcess;
@@ -34,6 +35,11 @@ namespace Typo3ExtensionGenerator {
     /// The file that contains the extension description.
     /// </summary>
     private static string InputFile { get; set; }
+
+    /// <summary>
+    /// The target TYPO3 version on which our extension should run.
+    /// </summary>
+    private static Typo3Version TargetVersion = Typo3Version.TYPO3_4_7_0;
 
     private static void Main( string[] args ) {
       DateTime start = DateTime.Now;
@@ -93,11 +99,12 @@ namespace Typo3ExtensionGenerator {
         Extension extension = parser.Parse( markup, InputFile );
 
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
+        Log.InfoFormat( "Compatibility level '{0}'", TargetVersion.Version );
 
         string cacheFile = Path.Combine( Environment.CurrentDirectory, extension.Key + ".cache" );
         ExtensionGenerator generator = new ExtensionGenerator( OutputDirectory, extension ) {
-                                                                                              TargetDirectory =
-                                                                                                Path.Combine( Environment.CurrentDirectory, OutputDirectory )  
+                                                                                              TargetDirectory = Path.Combine( Environment.CurrentDirectory, OutputDirectory ),
+                                                                                              TargetVersion = Program.TargetVersion
                                                                                             };
         AbstractGenerator.StartCachingSession( cacheFile );
         generator.Generate();

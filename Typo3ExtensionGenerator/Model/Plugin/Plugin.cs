@@ -45,6 +45,9 @@ namespace Typo3ExtensionGenerator.Model.Plugin {
     /// </summary>
     public List<Listener> Listeners { get; set; }
 
+    /// <summary>
+    /// Default constructor
+    /// </summary>
     public Plugin() {
       Interfaces = new List<Interface>();
       Actions    = new List<Action>();
