@@ -4,6 +4,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Typo3ExtensionGenerator;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
@@ -19,10 +20,9 @@ namespace Tests {
     /// </summary>
     /// <param name="markup"></param>
     private void ParseMarkup( string markup ) {
-      ExtensionParser parser = new ExtensionParser();
-      Extension extension = parser.Parse( markup, "<unit test>" );
+      Extension extension = ExtensionParser.Parse( markup, "<unit test>" );
 
-      ExtensionGenerator generator = new ExtensionGenerator( Path.GetTempPath(), extension );
+      ExtensionGenerator generator = new ExtensionGenerator( Context.GetTemporaryContext(), extension );
       generator.Generate();
     }
 

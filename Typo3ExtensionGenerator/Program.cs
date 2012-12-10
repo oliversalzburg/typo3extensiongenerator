@@ -21,25 +21,7 @@ namespace Typo3ExtensionGenerator {
     /// </summary>
     private static bool ShowHelp { get; set; }
 
-    /// <summary>
-    /// The directory from where to take input files that should be merged with the extension.
-    /// </summary>
-    private static string RequireRoot { get; set; }
-
-    /// <summary>
-    /// Where should the resulting extension be placed.
-    /// </summary>
-    private static string OutputDirectory { get; set; }
-
-    /// <summary>
-    /// The file that contains the extension description.
-    /// </summary>
-    private static string InputFile { get; set; }
-
-    /// <summary>
-    /// The target TYPO3 version on which our extension should run.
-    /// </summary>
-    private static Typo3Version TargetVersion = Typo3Version.TYPO3_4_7_0;
+    private static Context GeneratorContext = new Context();
 
     private static void Main( string[] args ) {
       DateTime start = DateTime.Now;
@@ -47,8 +29,8 @@ namespace Typo3ExtensionGenerator {
       if( ParseCommandLine( args ) ) return;
 
       // Was a directory provided as input?
-      if( !File.Exists( InputFile ) && Directory.Exists( InputFile ) ) {
-        DirectoryInfo inputDirectory = new DirectoryInfo( InputFile );
+      if( !File.Exists( GeneratorContext.InputFile ) && Directory.Exists( GeneratorContext.InputFile ) ) {
+        DirectoryInfo inputDirectory = new DirectoryInfo( GeneratorContext.InputFile );
         FileInfo[] extensionFiles = inputDirectory.GetFiles( "*.extgen" );
         
         if( 0 == extensionFiles.Length ) {
@@ -61,51 +43,46 @@ namespace Typo3ExtensionGenerator {
           return;
         }
 
-        InputFile = extensionFiles.First().FullName;
+        GeneratorContext.InputFile = extensionFiles.First().FullName;
 
-      } else if( !File.Exists( InputFile ) ) {
-        Log.ErrorFormat( "The given input file '{0}' does not exist.", InputFile );
+      } else if( !File.Exists( GeneratorContext.InputFile ) ) {
+        Log.ErrorFormat( "The given input file '{0}' does not exist.", GeneratorContext.InputFile );
         return;
       }
 
-      if( string.IsNullOrEmpty( OutputDirectory ) ) {
-        OutputDirectory = "output";
+      if( string.IsNullOrEmpty( GeneratorContext.OutputDirectory ) ) {
+        GeneratorContext.OutputDirectory = "output";
       }
-      if( string.IsNullOrEmpty( InputFile ) ) {
+      if( string.IsNullOrEmpty( GeneratorContext.InputFile ) ) {
         Log.Fatal( "No input file given." );
         return;
       }
-      if( string.IsNullOrEmpty( RequireRoot ) ) {
-        RequireRoot = Path.Combine( new FileInfo( InputFile ).DirectoryName, "input" );
-      }
-
+      
       // Set the working directory to the directory name of the extension description
-      Directory.SetCurrentDirectory( new FileInfo( InputFile ).DirectoryName );
+      Directory.SetCurrentDirectory( new FileInfo( GeneratorContext.InputFile ).DirectoryName );
       
       // I hate small console windows!
       try {
-        Console.WindowWidth = 160;
+        Console.WindowWidth  = 160;
         Console.WindowHeight = 50;
       } catch( IOException ) {
         // Maybe there is no console window (stream redirection)
       }
 
-      Log.InfoFormat( "Reading '{0}'...", InputFile );
-      string markup = File.ReadAllText( InputFile );
+      Log.InfoFormat( "Reading '{0}'...", GeneratorContext.InputFile );
+      string markup = File.ReadAllText( GeneratorContext.InputFile );
 
       try {
         Log.Info( "Parsing..." );
-        ExtensionParser parser = new ExtensionParser();
-        Extension extension = parser.Parse( markup, InputFile );
+        Extension extension = ExtensionParser.Parse( markup, GeneratorContext.InputFile );
 
         Log.InfoFormat( "Found extension definition for '{0}'", extension.Key );
-        Log.InfoFormat( "Compatibility level '{0}'", TargetVersion.Version );
+        Log.InfoFormat( "Compatibility level '{0}'", GeneratorContext.TargetVersion.Version );
 
         string cacheFile = Path.Combine( Environment.CurrentDirectory, extension.Key + ".cache" );
-        ExtensionGenerator generator = new ExtensionGenerator( OutputDirectory, extension ) {
-                                                                                              TargetDirectory = Path.Combine( Environment.CurrentDirectory, OutputDirectory ),
-                                                                                              TargetVersion = Program.TargetVersion
-                                                                                            };
+        GeneratorContext.OutputDirectory = Path.Combine( Environment.CurrentDirectory, GeneratorContext.OutputDirectory );
+        ExtensionGenerator generator = new ExtensionGenerator( GeneratorContext, extension );
+
         AbstractGenerator.StartCachingSession( cacheFile );
         generator.Generate();
         AbstractGenerator.EndCachingSession( cacheFile );
@@ -127,10 +104,9 @@ namespace Typo3ExtensionGenerator {
     /// <returns><see langword="true"/> if the application should exit; <see langword="false"/> otherwise.</returns>
     private static bool ParseCommandLine( IEnumerable<string> args ) {
       OptionSet options = new OptionSet {
-                                          {"require=", "The 'require' root directory.",                   v => RequireRoot = v},
-                                          {"output=",  "Where the extension directory should be placed.", v => OutputDirectory = v },
-                                          {"input=",   "The file we should parse.",                       v => InputFile = v},
-                                          {"h|?|help", "Shows this help message",                         v => ShowHelp = v != null}
+                                          { "output=",  "Where the extension directory should be placed.", v => GeneratorContext.OutputDirectory = v },
+                                          { "input=",   "The file we should parse.",                       v => GeneratorContext.InputFile = v },
+                                          { "h|?|help", "Shows this help message",                         v => ShowHelp = v != null }
                                         };
 
       try {

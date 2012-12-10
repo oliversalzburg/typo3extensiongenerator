@@ -35,14 +35,9 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// <summary>
     /// Default constructor
     /// </summary>
-    /// <param name="outputDirectory"></param>
-    /// <param name="extension"></param>
-    public PluginGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
-
-    /// <summary>
-    /// The TYPO3 version under which our generated extension should run.
-    /// </summary>
-    public Typo3Version TargetVersion { get; set; }
+    /// <param name="context">The generator context.</param>
+    /// <param name="extension">The extension.</param>
+    public PluginGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
     /// <summary>
     /// Generates the plugins.
@@ -290,7 +285,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     /// </summary>
     /// <param name="plugin"></param>
     private void GenerateController( Typo3ExtensionGenerator.Model.Plugin.Plugin plugin ) {
-      ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+      ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
       classGenerator.GenerateClassProxy( plugin, new ControllerNamingStrategy(), "Classes/Controller/", true );
     }
 
@@ -390,7 +385,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
                 _languageConstant           = titleLanguageConstant,
                 _plusWizDescriptionConstant = plusWizDescriptionConstant,
                 _wizIconFullFilename        = wizIconFullFilename,
-                _readLLXMLfile              = String.Format( Deprecated.Get( "t3lib_div::readLLXMLfile({0},{1})", TargetVersion ), "$file", "$GLOBALS['LANG']->lang" )
+                _readLLXMLfile              = String.Format( Deprecated.Get( "t3lib_div::readLLXMLfile({0},{1})", GeneratorContext.TargetVersion ), "$file", "$GLOBALS['LANG']->lang" )
               } );
 
       WritePhpFile( wizIconScriptFilename, wizIconClass, DateTime.UtcNow );

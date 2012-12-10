@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context.cs" />
     <Compile Include="Generator\AbstractGenerator.cs" />
     <Compile Include="Generator\Class\Naming\INamingStrategy.cs" />
     <Compile Include="Generator\Class\Naming\ControllerNamingStrategy.cs" />

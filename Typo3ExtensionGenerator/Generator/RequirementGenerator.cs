@@ -14,8 +14,16 @@ namespace Typo3ExtensionGenerator.Generator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public RequirementGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    /// <summary>
+    /// Constructs a new RequirementGenerator.
+    /// </summary>
+    /// <param name="context">The generator context.</param>
+    /// <param name="extension">The extension.</param>
+    public RequirementGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
+    /// <summary>
+    /// Pulls in all requirements defined in the extension.
+    /// </summary>
     public void Generate() {
       if( null == Subject.Requirements || !Subject.Requirements.Any() ) return;
 

@@ -19,6 +19,9 @@ namespace Typo3ExtensionGenerator.Model {
     /// </summary>
     public string Implementation { get; set; }
 
+    /// <summary>
+    /// The actions that are defined in this service.
+    /// </summary>
     public List<Action> Actions { get; set; }
 
     /// <summary>

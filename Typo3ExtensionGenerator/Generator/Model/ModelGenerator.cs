@@ -22,8 +22,17 @@ namespace Typo3ExtensionGenerator.Generator.Model {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public ModelGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    /// <summary>
+    /// Constructs a ModelGenerator.
+    /// </summary>
+    /// <param name="context">The generator context.</param>
+    /// <param name="extension">The extension.</param>
+    public ModelGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
+    /// <summary>
+    /// Generates the models for the extension.
+    /// </summary>
+    /// <exception cref="GeneratorException">The target type for the repository is not defined.</exception>
     public void Generate() {
       GenerateSql();
 
@@ -138,6 +147,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
     /// </summary>
     /// <param name="model"></param>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">Implementation for repository does not exist.</exception>
     private string GenerateRepositoryFile( DataModel model ) {
       
       const string repositoryImplementationTemplate = "private $implementation;\n" +

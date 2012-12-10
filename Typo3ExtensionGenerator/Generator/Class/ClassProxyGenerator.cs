@@ -23,9 +23,9 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
     /// <summary>
     /// Constructs a ClassProxyGenerator
     /// </summary>
-    /// <param name="outputDirectory"></param>
-    /// <param name="subject"></param>
-    public ClassProxyGenerator( string outputDirectory, Extension subject ) : base( outputDirectory, subject ) {}
+    /// <param name="context">The generator context.</param>
+    /// <param name="subject">The extension.</param>
+    public ClassProxyGenerator( Context context, Extension subject ) : base( context, subject ) {}
 
     /// <summary>
     /// Generates a class proxy.

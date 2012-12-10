@@ -13,14 +13,17 @@ using Typo3ExtensionGenerator.Model;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
+  /// <summary>
+  /// Abstract base class for generators.
+  /// </summary>
   public abstract class AbstractGenerator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     /// <summary>
-    /// The directory where our generated extension should be placed.
+    /// The TYPO3 version under which our exported extension should run.
     /// </summary>
-    protected string OutputDirectory { get; set; }
+    public Context GeneratorContext { get; private set; }
 
     /// <summary>
     /// The extension definition we're working on.
@@ -42,9 +45,14 @@ namespace Typo3ExtensionGenerator.Generator {
     private static bool UsedCachedStorage { get; set; }
     private static Dictionary<string, CacheEntry> Cache { get; set; }
 
-    protected AbstractGenerator( string outputDirectory, Extension subject ) {
-      OutputDirectory = outputDirectory;
-      Subject         = subject;
+    /// <summary>
+    /// Constructs an abstract generator
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="subject"></param>
+    protected AbstractGenerator( Context context, Extension subject ) {
+      GeneratorContext = context;
+      Subject          = subject;
     }
 
     /// <summary>
@@ -61,7 +69,7 @@ namespace Typo3ExtensionGenerator.Generator {
         WriteVirtual( filename, content );
 
       } else {
-        InternalWrite( OutputDirectory, filename, content, lastWriteTimeUtc );
+        InternalWrite( GeneratorContext.OutputDirectory, filename, content, lastWriteTimeUtc );
       }
     }
 
@@ -72,9 +80,15 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <param name="content">The content that should be written to the file.</param>
     /// <param name="lastWriteTimeUtc">The last modified timestamp that should be used for the file.</param>
     public void WriteFile( string filename, byte[] content, DateTime lastWriteTimeUtc ) {
-      InternalWrite( OutputDirectory, filename, content, lastWriteTimeUtc );
+      InternalWrite( GeneratorContext.OutputDirectory, filename, content, lastWriteTimeUtc );
     }
 
+    /// <summary>
+    /// Write text to a PHP file.
+    /// </summary>
+    /// <param name="filename"></param>
+    /// <param name="content"></param>
+    /// <param name="lastWriteTimeUtc"></param>
     public void WritePhpFile( string filename, string content, DateTime lastWriteTimeUtc ) {
       string fileContent = string.Format( "<?php\n{0}\n?>", content );
       WriteFile( filename, fileContent, lastWriteTimeUtc );
@@ -89,6 +103,12 @@ namespace Typo3ExtensionGenerator.Generator {
       return VirtualFileSystem.ContainsKey( filename );
     }
 
+    /// <summary>
+    /// Write text to a virtual file.
+    /// Virtual files don't exist on disk until they are flushed.
+    /// </summary>
+    /// <param name="filename">The name of the virtual file.</param>
+    /// <param name="content">The text that should be written to the file.</param>
     public void WriteVirtual( string filename, string content ) {
       if( !VirtualFileSystem.ContainsKey( filename ) ) {
         VirtualFileSystem[ filename ] = new StringBuilder();
@@ -153,8 +173,6 @@ namespace Typo3ExtensionGenerator.Generator {
     }
 
     private static DateTime UpdateCacheEntry<T>( string filename, Func<T,string> hashCalculator, T content, DateTime lastWriteTimeUtc ) {
-      
-
       // Do we have a cache yet?
       if( null == Cache ) {
         // Create it.
@@ -206,6 +224,13 @@ namespace Typo3ExtensionGenerator.Generator {
     }
     #endregion
 
+    #region Caching
+    /// <summary>
+    /// Begins a new sessions in the cached storage mechanism.
+    /// The cache stores MD5 and "last changed" times for all generated files.
+    /// This allows us to determine if any files actuallly changed between two runs of the extension generator.
+    /// </summary>
+    /// <param name="cacheFile">The file that contains the cache</param>
     protected internal static void StartCachingSession( string cacheFile ) {
       UsedCachedStorage = true;
 
@@ -223,11 +248,16 @@ namespace Typo3ExtensionGenerator.Generator {
       }
     }
 
+    /// <summary>
+    /// Ends a previously started caching session.
+    /// This will write the cached information to the cache file for the extension.
+    /// </summary>
+    /// <param name="cacheFile">The name of the cache file.</param>
     protected internal static void EndCachingSession( string cacheFile ) {
       if( UsedCachedStorage ) {
         Log.InfoFormat( "Writing cache file '{0}'...", cacheFile );
-      
-        using( FileStream filestream = new FileStream( cacheFile, FileMode.Create,FileAccess.Write,FileShare.Read )) {
+
+        using( FileStream filestream = new FileStream( cacheFile, FileMode.Create, FileAccess.Write, FileShare.Read ) ) {
           BinaryFormatter binaryFormatter = new BinaryFormatter();
           binaryFormatter.Serialize( filestream, Cache );
         }
@@ -248,6 +278,8 @@ namespace Typo3ExtensionGenerator.Generator {
       VirtualFileSystem[ filename ].Insert( 0, front );
       VirtualFileSystem[ filename ].Append( back );
     }
+    #endregion
+
 
     /// <summary>
     /// Wraps all matching files in given strings.

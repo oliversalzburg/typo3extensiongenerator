@@ -21,20 +21,30 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public ConfigurationGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    /// <summary>
+    /// Constructs a ConfigurationGenerator.
+    /// </summary>
+    /// <param name="context">The generator context.</param>
+    /// <param name="extension">The extension.</param>
+    public ConfigurationGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
+    /// <summary>
+    /// Generates the configuration files for the extension.
+    /// </summary>
     public void Generate() {
       WriteVirtual( "ext_tables.php", GeneratePhp() );
       WriteConfigurationFiles();
     }
 
+    /// <summary>
+    /// Writes the configurations files for the extension.
+    /// </summary>
     private void WriteConfigurationFiles() {
       if( null == Subject.Configurations ) return;
 
       foreach( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration in Subject.Configurations ) {
         // Export dynamic config file
-        ConfigurationFileGenerator configurationFileGenerator = new ConfigurationFileGenerator(
-          OutputDirectory, Subject, configuration );
+        ConfigurationFileGenerator configurationFileGenerator = new ConfigurationFileGenerator( GeneratorContext, Subject, configuration );
         configurationFileGenerator.Generate();
       }
     }
@@ -43,6 +53,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// Generates the PHP statements to create required instructions in the TCA.
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">Unable to find target data model</exception>
     private string GeneratePhp( ) {
       if( null == Subject.Configurations ) return string.Empty;
 
@@ -190,6 +201,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       return result.ToString().Substring( 0, result.Length - 1 );
     }
 
+    /// <summary>
+    /// Write all defined language fields to the locallang_db.xml
+    /// </summary>
+    /// <param name="configuration"></param>
     private void FlushLanguageFields( Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) {
       string languageConstant = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
 

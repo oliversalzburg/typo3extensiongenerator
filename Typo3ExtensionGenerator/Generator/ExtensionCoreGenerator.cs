@@ -14,8 +14,16 @@ namespace Typo3ExtensionGenerator.Generator {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public ExtensionCoreGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    /// <summary>
+    /// Constructs an ExtensionCoreGenerator.
+    /// </summary>
+    /// <param name="context">The generator context.</param>
+    /// <param name="extension">The extension.</param>
+    public ExtensionCoreGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
+    /// <summary>
+    /// Generates the extension core.
+    /// </summary>
     public void Generate() {
 
       Log.Info( "Generating ext_emconf.php..." );

@@ -26,25 +26,16 @@ namespace Typo3ExtensionGenerator.Generator {
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     /// <summary>
-    /// The directory where the generated extension should be placed.
-    /// </summary>
-    public string TargetDirectory { get; set; }
-
-    /// <summary>
-    /// The TYPO3 version under which our exported extension should run.
-    /// </summary>
-    public Typo3Version TargetVersion { get; set; }
-
-    /// <summary>
     /// Default Constructor
     /// </summary>
-    /// <param name="outputDirectory">The directory in which the generated content should be placed.</param>
+    /// <param name="context">The generator context.</param>
     /// <param name="subject">The extension object that should be generated.</param>
-    public ExtensionGenerator( string outputDirectory, Extension subject ) : base( outputDirectory, subject ) {}
+    public ExtensionGenerator( Context context, Extension subject ) : base( context, subject ) {}
 
     /// <summary>
     /// Generates the described extension.
     /// </summary>
+    /// <exception cref="ParserException">Illegal extension key. Can't contain whitespace.</exception>
     public void Generate() {
       if( Subject.Key.IndexOfAny( new[]{'\r','\n','\t',' '} ) > -1 ) {
         throw new ParserException( "Illegal extension key. Can't contain whitespace.", Subject.SourceFragment.SourceDocument );
@@ -52,32 +43,31 @@ namespace Typo3ExtensionGenerator.Generator {
 
       Log.Info( "Clearing output directory..." );
       try {
-        if( Directory.Exists( TargetDirectory ) ) {
-          DirectoryHelper.DeleteDirectory( TargetDirectory, true );
+        if( Directory.Exists( GeneratorContext.OutputDirectory ) ) {
+          DirectoryHelper.DeleteDirectory( GeneratorContext.OutputDirectory, true );
         }
       } catch( IOException ex ) {
-        Log.Error( string.Format( "Unable to clear target directory '{0}'", TargetDirectory ), ex );
+        Log.Error( string.Format( "Unable to clear target directory '{0}'", GeneratorContext.OutputDirectory ), ex );
       }
-      Directory.CreateDirectory( TargetDirectory );
+      Directory.CreateDirectory( GeneratorContext.OutputDirectory );
 
       Log.Info( "Generating extension..." );
 
-      ExtensionCoreGenerator extensionCoreGenerator = new ExtensionCoreGenerator( TargetDirectory, Subject );
+      ExtensionCoreGenerator extensionCoreGenerator = new ExtensionCoreGenerator( GeneratorContext, Subject );
       extensionCoreGenerator.Generate();
-      PluginGenerator pluginGenerator = new PluginGenerator( TargetDirectory, Subject );
-      pluginGenerator.TargetVersion = TargetVersion;
+      PluginGenerator pluginGenerator = new PluginGenerator( GeneratorContext, Subject );
       pluginGenerator.Generate();
-      ModuleGenerator moduleGenerator = new ModuleGenerator( TargetDirectory, Subject );
+      ModuleGenerator moduleGenerator = new ModuleGenerator( GeneratorContext, Subject );
       moduleGenerator.Generate();
-      ModelGenerator modelGenerator = new ModelGenerator( TargetDirectory, Subject );
+      ModelGenerator modelGenerator = new ModelGenerator( GeneratorContext, Subject );
       modelGenerator.Generate();
-      ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( TargetDirectory, Subject );
+      ConfigurationGenerator configurationGenerator = new ConfigurationGenerator( GeneratorContext, Subject );
       configurationGenerator.Generate();
-      ServiceGenerator serviceGenerator = new ServiceGenerator( TargetDirectory, Subject );
+      ServiceGenerator serviceGenerator = new ServiceGenerator( GeneratorContext, Subject );
       serviceGenerator.Generate();
       
       // We generate the requirements last so that they can overwrite previous work
-      RequirementGenerator requirementGenerator = new RequirementGenerator( TargetDirectory, Subject );
+      RequirementGenerator requirementGenerator = new RequirementGenerator( GeneratorContext, Subject );
       requirementGenerator.Generate();
       
 
@@ -121,7 +111,7 @@ namespace Typo3ExtensionGenerator.Generator {
       WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
       WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
       // Flush virtual file system to disk
-      FlushVirtual( TargetDirectory );
+      FlushVirtual( GeneratorContext.OutputDirectory );
     }
 
     /// <summary>
@@ -189,6 +179,7 @@ namespace Typo3ExtensionGenerator.Generator {
     /// Generates the class that will provide the label hooks for the extension
     /// </summary>
     /// <param name="phpClassSuffix"></param>
+    /// <exception cref="GeneratorException">Label hook implementation does not exist.</exception>
     private void WriteLabelHooks( string phpClassSuffix ) {
       if( string.IsNullOrEmpty( Subject.LabelHookImplementation ) ) return;
 

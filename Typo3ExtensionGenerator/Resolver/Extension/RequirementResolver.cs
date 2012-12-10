@@ -11,6 +11,10 @@ using Typo3ExtensionGenerator.Resolver.Model;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Resolver.Extension {
+  /// <summary>
+  /// Resolves all requirements defined in an extension.
+  /// A requirement is an external file that the extension depends upon.
+  /// </summary>
   public static class RequirementResolver {
     
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
@@ -20,6 +24,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
     /// </summary>
     /// <param name="parsedFragment">The partially parsed extension.</param>
     /// <returns>The models of the extension</returns>
+    /// <exception cref="GeneratorException">The given requirement root does not exist.</exception>
     public static List<Requirement> Resolve( Fragment parsedFragment ) {
       IEnumerable<Fragment> requirementFragments = parsedFragment.Fragments.Where( p => p.Keyword == Keywords.Requirement );
       if( !requirementFragments.Any() ) return null;
@@ -27,7 +32,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
       List<Requirement> requirements = new List<Requirement>();
       foreach( Fragment requirementFragment in requirementFragments ) {
         Requirement requirement = new Requirement {
-                                                    SourceFolder = requirementFragment.Parameters,
+                                                    SourceFolder   = requirementFragment.Parameters,
                                                     SourceFragment = requirementFragment
                                                   };
         requirements.Add( requirement );
@@ -42,9 +47,7 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
       foreach( Requirement requirement in requirements ) {
         // If the requirement root does not exist, throw
         if( !Directory.Exists( requirement.SourceFolder ) ) {
-          throw new GeneratorException(
-            string.Format( "The given requirement root '{0}' does not exist.", requirement.SourceFolder ),
-            requirement.SourceFragment.SourceDocument );
+          throw new GeneratorException( string.Format( "The given requirement root '{0}' does not exist.", requirement.SourceFolder ), requirement.SourceFragment.SourceDocument );
         }
 
         // Find files in the requirement root

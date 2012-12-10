@@ -9,11 +9,17 @@ namespace Typo3ExtensionGenerator.Parser {
   /// <summary>
   /// Entry point for parsing operations
   /// </summary>
-  public class ExtensionParser {
+  public static class ExtensionParser {
 
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
-    public Extension Parse( string markup, string sourceFileName ) {
+    /// <summary>
+    /// Parse extension markup into an extension model.
+    /// </summary>
+    /// <param name="markup">The markup that describes the extension.</param>
+    /// <param name="sourceFileName">The filename in which the markup was/is contained</param>
+    /// <returns></returns>
+    public static Extension Parse( string markup, string sourceFileName ) {
       Log.InfoFormat( "Constructing virtual document from markup..." );
       VirtualDocument document = VirtualDocument.FromText( markup, sourceFileName );
 
@@ -46,6 +52,7 @@ namespace Typo3ExtensionGenerator.Parser {
     /// </summary>
     /// <param name="fragment"></param>
     /// <returns></returns>
+    /// <exception cref="ParserException">Missing extension declaration.</exception>
     private static Extension Parse( Fragment fragment ) {
       // The fragment MUST be an extension definition
       if( fragment.Header.Length < Keywords.DeclareExtension.Length || Keywords.DeclareExtension != fragment.Header.Substring( 0, Keywords.DeclareExtension.Length ) ) {

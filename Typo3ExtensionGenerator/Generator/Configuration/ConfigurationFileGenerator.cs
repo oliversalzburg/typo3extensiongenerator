@@ -25,10 +25,10 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// <summary>
     /// Constructs a ConfigurationFileGenerator. 
     /// </summary>
-    /// <param name="outputDirectory">The directory where generated files should be placed.</param>
+    /// <param name="context">The generator context.</param>
     /// <param name="extension">The extension that should be generated.</param>
     /// <param name="configuration">The model for the configuration that should be generated.</param>
-    public ConfigurationFileGenerator( string outputDirectory, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) : base( outputDirectory, extension ) {
+    public ConfigurationFileGenerator( Context context, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Configuration configuration ) : base( context, extension ) {
       Configuration = configuration;
     }
 

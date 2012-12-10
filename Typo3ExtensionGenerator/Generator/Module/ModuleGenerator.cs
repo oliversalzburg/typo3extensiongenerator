@@ -19,9 +19,9 @@ namespace Typo3ExtensionGenerator.Generator.Module {
     /// <summary>
     /// Default constructor
     /// </summary>
-    /// <param name="outputDirectory">The directory in which the output should be placed.</param>
+    /// <param name="context">The generator context.</param>
     /// <param name="extension">The extension that is being worked on.</param>
-    public ModuleGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    public ModuleGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
     /// <summary>
     /// Generate all backend modules
@@ -87,7 +87,7 @@ namespace Typo3ExtensionGenerator.Generator.Module {
 
         WriteVirtual( string.Format( "Resources/Private/Language/locallang_{0}.xml", module.Name.ToLower() ), string.Format( "<label index=\"{0}\">{1}</label>", "mlang_tabs_tab", module.Title ) );
 
-        ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+        ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
         classGenerator.GenerateClassProxy( module, new ControllerNamingStrategy(), "Classes/Controller/", true );
       }
 

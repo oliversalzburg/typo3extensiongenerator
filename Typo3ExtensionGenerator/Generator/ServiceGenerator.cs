@@ -23,9 +23,9 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <summary>
     /// Constructs a ServiceGenerator
     /// </summary>
-    /// <param name="outputDirectory"></param>
-    /// <param name="extension"></param>
-    public ServiceGenerator( string outputDirectory, Extension extension ) : base( outputDirectory, extension ) {}
+    /// <param name="context">The generator context</param>
+    /// <param name="extension">The extension.</param>
+    public ServiceGenerator( Context context, Extension extension ) : base( context, extension ) {}
 
     /// <summary>
     /// Generates the services defined in the extension
@@ -43,9 +43,9 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <summary>
     /// Generates a single service
     /// </summary>
-    /// <param name="service"></param>
+    /// <param name="service">The service that should be generated.</param>
     private void GenerateService( Service service ) {
-      ClassProxyGenerator classGenerator = new ClassProxyGenerator( OutputDirectory, Subject );
+      ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
       classGenerator.GenerateClassProxy( service, new ServiceNamingStrategy(), "Classes/Service/", false );
     }
   }
