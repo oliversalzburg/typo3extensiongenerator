@@ -187,7 +187,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="task"></param>
     /// <returns></returns>
     public static string GetTaskClassName( Extension extension, Task task ) {
-      return String.Format( "Tx_{0}_Task_{1}Task", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
+      return String.Format( "Tx_{0}_Tasks_{1}Task", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
     }
 
     /// <summary>

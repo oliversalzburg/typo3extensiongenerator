@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Model;
@@ -38,7 +40,37 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <param name="task">The task that should be generated.</param>
     private void GenerateTask( Task task ) {
       ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
-      classGenerator.GenerateClassProxy( task, new TaskNamingStrategy(), "Classes/Tasks/", false );
+      TaskNamingStrategy taskNamingStrategy = new TaskNamingStrategy();
+      
+      // Generate the task class itself
+      classGenerator.GenerateClassProxy( task, taskNamingStrategy, "Classes/Tasks/", false );
+
+      // Add the autoloader for our class
+      WriteVirtual(
+        "ext_autoload.php", 
+        String.Format( "'{0}' => $extensionPath . 'Classes/Tasks/{1}',", taskNamingStrategy.GetExtbaseClassName( Subject, task ).ToLower(), taskNamingStrategy.GetExtbaseFileName( Subject, task ) ) );
+
+      // Register the scheduler task itself
+      const string registerTaskTemplate = "$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['{_taskClassName}'] = array(" +
+                                          "	'extension'        => $_EXTKEY," +
+                                          "	'title'            => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xml:{_taskName}'," +
+                                          "	'description'      => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xml:{_taskDescription}'" +
+                                          ");";
+
+      string taskName        = String.Format( "{0}.name",        task.Name.ToLower() );
+      string taskDescription = String.Format( "{0}.description", task.Name.ToLower() );
+
+      WriteVirtual( "ext_localconf.php", registerTaskTemplate.FormatSmart( 
+        new {
+          _taskClassName    = taskNamingStrategy.GetExtbaseClassName( Subject, task ), 
+          _taskName         = taskName, 
+          _taskDescription  = taskDescription
+        } 
+      ) );
+
+      // Write language constants
+      WriteVirtual( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">{1}</label>", taskName, task.Title ) );
+      WriteVirtual( "Resources/Private/Language/locallang_be.xml", string.Format( "<label index=\"{0}\">{1}</label>", taskDescription, task.Description ) );
     }
   }
 }

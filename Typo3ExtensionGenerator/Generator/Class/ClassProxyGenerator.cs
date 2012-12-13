@@ -159,14 +159,15 @@ namespace Typo3ExtensionGenerator.Generator.Class {
       }
       #endregion
 
-      const string implementationTemplate = "private $implementation;\n" +
-                                            "private function getImplementation() {{\n" +
-                                            "  if( null == $this->implementation ) {{\n" +
-                                            "    $this->implementation = new {_implClassname}($this);\n" +
-                                            "  }}\n" +
-                                            "  return $this->implementation;\n" +
-                                            "}}\n" +
-                                            "function __construct() {{\n" +
+      const string implementationTemplate = "private $implementation;" +
+                                            "private function getImplementation() {{" +
+                                            "  if( null == $this->implementation ) {{" +
+                                            "    $this->implementation = new {_implClassname}($this);" +
+                                            "  }}" +
+                                            "  return $this->implementation;" +
+                                            "}}" +
+                                            "function __construct() {{" +
+                                            "  parent::__construct();" +
                                             "}}\n";
 
       string serviceImplementation = implementationTemplate.FormatSmart(
@@ -174,10 +175,10 @@ namespace Typo3ExtensionGenerator.Generator.Class {
                 _implClassname = implementationClassname
               } );
 
-      const string template = "class {_className} {_extends} {{\n" +
-                              "{_properties}\n" +
-                              "{_actions}\n" +
-                              "}}\n" +
+      const string template = "class {_className} {_extends} {{" +
+                              "{_properties}" +
+                              "{_actions}" +
+                              "}}" +
                               "{_requireImplementation}";
 
       string serviceResult = template.FormatSmart(
@@ -186,7 +187,7 @@ namespace Typo3ExtensionGenerator.Generator.Class {
                 _extends               = namingStrategy.BaseClassExtension,
                 _properties            = (( isExternallyImplemented ) ? serviceImplementation : string.Empty) + propertiesList,
                 _actions               = methods.ToString(),
-                _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty
+                _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');", implementationFilename ) : string.Empty
               } );
 
       WritePhpFile( Path.Combine( classDirectory, namingStrategy.GetExtbaseFileName( Subject, classTemplate ) ), serviceResult, DateTime.UtcNow );

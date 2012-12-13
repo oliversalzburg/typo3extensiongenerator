@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Typo3ExtensionGenerator.Model;
-using Typo3ExtensionGenerator.Model.Plugin;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
-using Typo3ExtensionGenerator.Resolver.Plugin;
 
 namespace Typo3ExtensionGenerator.Resolver.Extension {
   /// <summary>
