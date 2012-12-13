@@ -4,8 +4,7 @@ using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
   /// <summary>
-  /// DataModel describes a generic data container inside the extension.
-  /// From these models, we'll generate the SQL description, the ExtBase model, ...
+  /// An interface describes a visualization of some data and/or means to manipulate it.
   /// </summary>
   [Serializable]
   public class Interface : SimpleContainer, IParserResult {
@@ -56,6 +55,9 @@ namespace Typo3ExtensionGenerator.Model.Configuration.Interface {
     /// </summary>
     public string DisplayTypeTarget { get; set; }
 
+    /// <summary>
+    /// Construct an interface
+    /// </summary>
     public Interface() {
       Settings   = new List<KeyValuePair<string, string>>();
     }

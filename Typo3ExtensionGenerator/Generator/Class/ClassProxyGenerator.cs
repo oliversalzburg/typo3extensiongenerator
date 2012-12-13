@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +10,7 @@ using Typo3ExtensionGenerator.Model;
 using log4net;
 using Action = Typo3ExtensionGenerator.Model.Action;
 
-namespace Typo3ExtensionGenerator.Generator.Helper {
+namespace Typo3ExtensionGenerator.Generator.Class {
   /// <summary>
   /// Helps to generate the proxy classes that TYPO3 Extension Generator uses to
   /// connect generated extension code to real code.
@@ -35,6 +34,7 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
     /// <param name="namingStrategy">The naming strategy that should be used to generate names for all the entities the class uses.</param>
     /// <param name="classDirectory">Into which subdirectory the files should be placed.</param>
     /// <param name="addDependencies">Should dependencies be placed in the class proxy? If true, the class will contain references and injectors to all repositories in the extension.</param>
+    /// <exception cref="GeneratorException">Implementation does not exist.</exception>
     public void GenerateClassProxy( IClassTemplate classTemplate, INamingStrategy namingStrategy, string classDirectory, bool addDependencies ) {
       string className = namingStrategy.GetExtbaseClassName( Subject, classTemplate );
       Log.InfoFormat( "Generating class '{0}'...", className );
@@ -118,7 +118,7 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
                                         "protected ${0}Repository;\n";
 
           // Check if the repository is internally implemented.
-          // An example for an inernally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
+          // An example for an internally implemented repository would be Tx_Extbase_Domain_Repository_FrontendUserRepository
           Repository repository = Subject.Repositories.SingleOrDefault( r => r.TargetModelName == dataModel.Name );
           if( null != repository && PurelyWrapsInternalType( repository ) ) {
             propertiesList.Append(

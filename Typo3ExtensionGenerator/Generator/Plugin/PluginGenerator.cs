@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
 using Typo3ExtensionGenerator.Compatibility;
+using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Generator.Configuration;
 using Typo3ExtensionGenerator.Generator.Helper;

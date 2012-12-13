@@ -9,6 +9,11 @@ namespace Typo3ExtensionGenerator.Generator.PrettyPrint {
   /// It is intended for debugging purposes to make the output more readable.
   /// </summary>
   public static class LudicrousPrettyPrinter {
+    /// <summary>
+    /// Returns a crudely pretty-printed version of the input string.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <returns></returns>
     [Obsolete( "Use at your own risk!" )]
     public static string PrettyPrint( string code ) {
       

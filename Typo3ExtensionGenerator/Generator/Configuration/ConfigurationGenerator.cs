@@ -171,19 +171,19 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
         string absoluteModelName = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
         var dataObject = new {
-                               _extensionKey = Subject.Key,
-                               _model = absoluteModelName,
-                               _label = configuration.Label,
-                               _labelAlt = labelAlternative,
-                               _labelFunc = labelFunction,
-                               _commonFields = finalCommonFields,
+                               _extensionKey      = Subject.Key,
+                               _model             = absoluteModelName,
+                               _label             = configuration.Label,
+                               _labelAlt          = labelAlternative,
+                               _labelFunc         = labelFunction,
+                               _commonFields      = finalCommonFields,
                                _translationFields = finalTranslationFields,
-                               _versioningFields = finalVersioningFields,
-                               _sortableFields = finalSortableFields,
-                               _configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
-                               _thumbnail = thumbnailField,
-                               _searchFields = finalSearchFields,
-                               _tableHidden = hideTable
+                               _versioningFields  = finalVersioningFields,
+                               _sortableFields    = finalSortableFields,
+                               _configFilename    = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
+                               _thumbnail         = thumbnailField,
+                               _searchFields      = finalSearchFields,
+                               _tableHidden       = hideTable
                              };
         string generatedConfiguration = template.FormatSmart( dataObject );
 

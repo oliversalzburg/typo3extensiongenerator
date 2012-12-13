@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
+using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Generator.Helper;
 using Typo3ExtensionGenerator.Helper;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Typo3ExtensionGenerator.Model.Configuration.Interface;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model {
