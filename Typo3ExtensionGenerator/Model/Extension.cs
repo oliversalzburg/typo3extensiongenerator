@@ -17,7 +17,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The display name of the extension.
     /// </summary>
-    public string Name { get; set; }
+    public string Title { get; set; }
 
     /// <summary>
     /// A short description of the extension.

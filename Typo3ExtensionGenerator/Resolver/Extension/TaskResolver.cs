@@ -28,18 +28,18 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
         Task task = new Task {Name = taskFragment.Parameters, SourceFragment = taskFragment};
         
         // Resolve task
-        foreach( Fragment serviceParameter in taskFragment.Fragments ) {
-          if( serviceParameter.Keyword == Keywords.Description ) {
-            task.Description = serviceParameter.Parameters;
+        foreach( Fragment taskParameter in taskFragment.Fragments ) {
+          if( taskParameter.Keyword == Keywords.Description ) {
+            task.Description = taskParameter.Parameters;
 
-          } else if( serviceParameter.Keyword == Keywords.Title ) {
-            task.Name = serviceParameter.Parameters;
+          } else if( taskParameter.Keyword == Keywords.Title ) {
+            task.Title = taskParameter.Parameters;
         
-          } else if( serviceParameter.Keyword == Keywords.Implementation ) {
-            task.Implementation = serviceParameter.Parameters;
+          } else if( taskParameter.Keyword == Keywords.Implementation ) {
+            task.Implementation = taskParameter.Parameters;
 
-          } else if( serviceParameter.Keyword == Keywords.ServiceDirectives.AdditionalFields ) {
-            task.AdditionalFieldsClass = serviceParameter.Parameters;
+          } else if( taskParameter.Keyword == Keywords.ServiceDirectives.AdditionalFields ) {
+            task.AdditionalFieldsClass = taskParameter.Parameters;
           }
         }
 

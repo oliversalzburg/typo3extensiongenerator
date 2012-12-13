@@ -45,5 +45,11 @@ namespace Typo3ExtensionGenerator.Generator.Class.Naming {
     /// A string that should be appended to all method names (like "Action")
     /// </summary>
     string MethodSuffix { get; }
+
+    /// <summary>
+    /// If the class should extend a given base class, this should be the string describing the extension.
+    /// </summary>
+    /// <example>extends Tx_Extbase_MVC_Controller_ActionController</example>
+    string BaseClassExtension { get; }
   }
 }

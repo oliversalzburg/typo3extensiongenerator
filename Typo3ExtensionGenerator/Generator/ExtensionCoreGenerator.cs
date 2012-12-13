@@ -60,7 +60,7 @@ namespace Typo3ExtensionGenerator.Generator {
 
       string result = template.FormatSmart(
         new {
-              title = Subject.Name,
+              title = Subject.Title,
               description = Subject.Description,
               authorName = Subject.Author.Name,
               authorEmail = Subject.Author.Email,

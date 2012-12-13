@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using SmartFormat;
+﻿using System.Linq;
 using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
-using Typo3ExtensionGenerator.Generator.Helper;
-using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
-using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator {
   /// <summary>

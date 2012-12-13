@@ -181,6 +181,46 @@ namespace Typo3ExtensionGenerator.Helper {
     }
 
     /// <summary>
+    /// Generates the task class name for a given task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskClassName( Extension extension, Task task ) {
+      return String.Format( "Tx_{0}_Task_{1}Task", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task class name that must be used to implement a task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskImplementationClassName( Extension extension, Task task ) {
+      return String.Format( "{0}{1}TaskImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task class name for a given task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskFileName( Extension extension, Task task ) {
+      return String.Format( "{0}Task.php", UpperCamelCase( task.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task file name that must be used for the implementation of a task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskImplementationFileName( Extension extension, Task task ) {
+      return String.Format( "{0}{1}TaskImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
+    }
+
+    /// <summary>
     /// Generates the file name for a Fluid partial.
     /// </summary>
     /// <param name="subject"></param>

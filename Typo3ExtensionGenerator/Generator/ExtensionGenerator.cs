@@ -65,6 +65,8 @@ namespace Typo3ExtensionGenerator.Generator {
       configurationGenerator.Generate();
       ServiceGenerator serviceGenerator = new ServiceGenerator( GeneratorContext, Subject );
       serviceGenerator.Generate();
+      TaskGenerator taskGenerator = new TaskGenerator( GeneratorContext, Subject );
+      taskGenerator.Generate();
       
       // We generate the requirements last so that they can overwrite previous work
       RequirementGenerator requirementGenerator = new RequirementGenerator( GeneratorContext, Subject );
@@ -158,7 +160,7 @@ namespace Typo3ExtensionGenerator.Generator {
         new {
               extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(),
               extensionKey = Subject.Key,
-              extensionTitle = Subject.Name
+              extensionTitle = Subject.Title
             };
 
       Log.Info( "Generating TypoScript constants..." );

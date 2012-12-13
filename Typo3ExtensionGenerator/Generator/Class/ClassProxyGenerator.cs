@@ -174,7 +174,7 @@ namespace Typo3ExtensionGenerator.Generator.Class {
                 _implClassname = implementationClassname
               } );
 
-      const string template = "class {_className} extends Tx_Extbase_MVC_Controller_ActionController {{\n" +
+      const string template = "class {_className} {_extends} {{\n" +
                               "{_properties}\n" +
                               "{_actions}\n" +
                               "}}\n" +
@@ -183,6 +183,7 @@ namespace Typo3ExtensionGenerator.Generator.Class {
       string serviceResult = template.FormatSmart(
           new {
                 _className             = namingStrategy.GetExtbaseClassName( Subject, classTemplate ),
+                _extends               = namingStrategy.BaseClassExtension,
                 _properties            = (( isExternallyImplemented ) ? serviceImplementation : string.Empty) + propertiesList,
                 _actions               = methods.ToString(),
                 _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');\n", implementationFilename ) : string.Empty

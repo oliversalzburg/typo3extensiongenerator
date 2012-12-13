@@ -47,7 +47,7 @@ namespace Typo3ExtensionGenerator.Resolver {
           extension.Description = extensionFragment.Parameters;
 
         } else if( extensionFragment.Keyword == Keywords.Title ) {
-          extension.Name = extensionFragment.Parameters;
+          extension.Title = extensionFragment.Parameters;
 
         } else if( extensionFragment.Keyword == Keywords.ExtensionDirectives.State ) {
           extension.State = extensionFragment.Parameters;

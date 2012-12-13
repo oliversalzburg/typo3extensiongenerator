@@ -14,6 +14,11 @@ namespace Typo3ExtensionGenerator.Model {
     public string Name { get; set; }
 
     /// <summary>
+    /// The readable title of this task.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
     /// A longer description for this task.
     /// </summary>
     public string Description { get; set; }
