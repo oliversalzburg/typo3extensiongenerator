@@ -42,13 +42,18 @@ namespace Typo3ExtensionGenerator.Generator {
     private void GenerateTask( Task task ) {
       ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
       TaskNamingStrategy taskNamingStrategy = new TaskNamingStrategy();
+      TaskFieldsNamingStrategy taskFieldsNamingStrategy = new TaskFieldsNamingStrategy();
       
       // Generate the task class itself
       classGenerator.GenerateClassProxy( task, taskNamingStrategy, "Classes/Tasks/", false );
 
       if( null != task.TaskFields ) {
-        TaskFieldsNamingStrategy taskFieldsNamingStrategy = new TaskFieldsNamingStrategy();
         classGenerator.GenerateClassProxy( task.TaskFields, taskFieldsNamingStrategy, "Classes/Tasks/", false );
+
+        // Add the autoloader for our fields class
+        WriteVirtual(
+          "ext_autoload.php",
+          String.Format( "'{0}' => $extensionPath . 'Classes/Tasks/{1}',", taskFieldsNamingStrategy.GetExtbaseClassName( Subject, task.TaskFields ).ToLower(), taskFieldsNamingStrategy.GetExtbaseFileName( Subject, task.TaskFields ) ) );
       }
 
       // Add the autoloader for our class
@@ -57,17 +62,19 @@ namespace Typo3ExtensionGenerator.Generator {
         String.Format( "'{0}' => $extensionPath . 'Classes/Tasks/{1}',", taskNamingStrategy.GetExtbaseClassName( Subject, task ).ToLower(), taskNamingStrategy.GetExtbaseFileName( Subject, task ) ) );
 
       // Register the scheduler task itself
-      const string registerTaskTemplate = "$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['{_taskClassName}'] = array(" +
-                                          "	'extension'        => $_EXTKEY," +
-                                          "	'title'            => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xml:{_taskName}'," +
-                                          "	'description'      => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xml:{_taskDescription}'" +
-                                          ");";
+      string registerTaskTemplate = "$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['{_taskClassName}'] = array(" +
+                                    "	'extension'        => '{_extensionKey}'," +
+                                    "	'title'            => 'LLL:EXT:{_extensionKey}/Resources/Private/Language/locallang_be.xml:{_taskName}'," +
+                                    "	'description'      => 'LLL:EXT:{_extensionKey}/Resources/Private/Language/locallang_be.xml:{_taskDescription}'" +
+                                    ( ( null != task.TaskFields ) ? ",'additionalFields' => '" + taskFieldsNamingStrategy.GetExtbaseClassName( Subject, task.TaskFields ).ToLower() + "'" : string.Empty ) +
+                                    ");";
 
       string taskName        = String.Format( "{0}.name",        task.Name.ToLower() );
       string taskDescription = String.Format( "{0}.description", task.Name.ToLower() );
 
       WriteVirtual( "ext_localconf.php", registerTaskTemplate.FormatSmart( 
         new {
+          _extensionKey     = Subject.Key,
           _taskClassName    = taskNamingStrategy.GetExtbaseClassName( Subject, task ), 
           _taskName         = taskName, 
           _taskDescription  = taskDescription
