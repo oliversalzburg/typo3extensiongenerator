@@ -4,6 +4,7 @@ using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Model.Task;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Generator {
@@ -44,6 +45,11 @@ namespace Typo3ExtensionGenerator.Generator {
       
       // Generate the task class itself
       classGenerator.GenerateClassProxy( task, taskNamingStrategy, "Classes/Tasks/", false );
+
+      if( null != task.TaskFields ) {
+        TaskFieldsNamingStrategy taskFieldsNamingStrategy = new TaskFieldsNamingStrategy();
+        classGenerator.GenerateClassProxy( task.TaskFields, taskFieldsNamingStrategy, "Classes/Tasks/", false );
+      }
 
       // Add the autoloader for our class
       WriteVirtual(

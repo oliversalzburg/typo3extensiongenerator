@@ -87,7 +87,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The scheduler tasks defined in this extension.
     /// </summary>
-    public List<Task> Tasks { get; set; }
+    public List<Task.Task> Tasks { get; set; }
 
     #region Implementation of IParserResult
     /// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Typo3ExtensionGenerator.Parser;
 
-namespace Typo3ExtensionGenerator.Model {
+namespace Typo3ExtensionGenerator.Model.Task {
   /// <summary>
   /// A scheduler task for TYPO3.
   /// </summary>
@@ -32,6 +32,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// The PHP class that describes the additional fields for the task.
     /// </summary>
     public string AdditionalFieldsClass { get; set; }
+
+    /// <summary>
+    /// The data model used to generate the class for the additional task fields.
+    /// </summary>
+    public TaskFields TaskFields { get; set; }
 
     /// <summary>
     /// The actions that are defined in this object.

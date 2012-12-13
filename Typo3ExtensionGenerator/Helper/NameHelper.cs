@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Model.Plugin;
+using Typo3ExtensionGenerator.Model.Task;
 
 namespace Typo3ExtensionGenerator.Helper {
   /// <summary>
@@ -218,6 +219,46 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <returns></returns>
     public static string GetTaskImplementationFileName( Extension extension, Task task ) {
       return String.Format( "{0}{1}TaskImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( task.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task fields class name for a given task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskFieldsClassName( Extension extension, TaskFields taskFields ) {
+      return String.Format( "Tx_{0}_Tasks_{1}TaskFields", UpperCamelCase( extension.Key ), UpperCamelCase( taskFields.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task fields class name that must be used to implement a task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskFieldsImplementationClassName( Extension extension, TaskFields taskFields ) {
+      return String.Format( "{0}{1}TaskFieldsImplementation", UpperCamelCase( extension.Key ), UpperCamelCase( taskFields.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task fields class name for a given task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskFieldsFileName( Extension extension, TaskFields taskFields ) {
+      return String.Format( "{0}TaskFields.php", UpperCamelCase( taskFields.Name ) );
+    }
+
+    /// <summary>
+    /// Generates the task fields file name that must be used for the implementation of a task.
+    /// </summary>
+    /// <param name="extension"></param>
+    /// <param name="task"></param>
+    /// <returns></returns>
+    public static string GetTaskFieldsImplementationFileName( Extension extension, TaskFields taskFields ) {
+      return String.Format( "{0}{1}TaskFieldsImplementation.php", UpperCamelCase( extension.Key ), UpperCamelCase( taskFields.Name ) );
     }
 
     /// <summary>

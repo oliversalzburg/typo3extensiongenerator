@@ -20,6 +20,7 @@
       <keyword name="description" />
       <keyword name="exclude" />
       <keyword name="extension" />
+      <keyword name="fields" />
       <keyword name="fileReference" />
       <keyword name="group" />
       <keyword name="hide" />
@@ -62,6 +63,7 @@
       <keyword name="repository" />
       <keyword name="require" />
       <keyword name="service" />
+      <keyword name="task" />
     </keywords3>
     <keywords4>
       <keyword name="char" />

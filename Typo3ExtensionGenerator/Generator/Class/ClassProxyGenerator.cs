@@ -44,7 +44,7 @@ namespace Typo3ExtensionGenerator.Generator.Class {
       const string methodTemplate = "/**\n" +
                                     "{_phpDoc}" +
                                     "*/\n" +
-                                    "public function {_methodName}{_methodSuffix}({_parameters}) {{ return $this->getImplementation()->{_methodName}{_methodSuffix}({_parameters}); }}\n";
+                                    "public function {_methodName}{_methodSuffix}({_parameters}) {{ return $this->getImplementation()->{_methodName}{_methodSuffix}({_callParameters}); }}\n";
 
       foreach( Action method in classTemplate.Actions ) {
         // Start building up the PHPDoc for this action
@@ -64,12 +64,14 @@ namespace Typo3ExtensionGenerator.Generator.Class {
         }
 
         // Prefix each parameter with a $ and join them together with , in between.
-        string parameters = method.Requirements.Aggregate(
-          string.Empty,
-          ( current, requirement ) =>
-          current + ( "$" + requirement + ( ( requirement != method.Requirements.Last() ) ? "," : string.Empty ) ) );
+        StringBuilder parameters = new StringBuilder();
+        StringBuilder callParameters = new StringBuilder();
+        foreach( string requirement in method.Requirements ) {
+          parameters.Append( ( Regex.Replace( requirement, @"(?<name>[\w][^ ]+)$", @"$$${name}" ) + ( ( requirement != method.Requirements.Last() ) ? "," : string.Empty ) ) );
+          callParameters.Append( "$" + ( Regex.Match( requirement, @"(?<name>[\w][^ ]+)$" ).Groups[ "name" ].ToString() + ( ( requirement != method.Requirements.Last() ) ? "," : string.Empty ) ) );
+        }
 
-        var methodData = new { _phpDoc = phpDoc, _methodSuffix = namingStrategy.MethodSuffix, _methodName = method.Name, _parameters = parameters };
+        var methodData = new { _phpDoc = phpDoc, _methodSuffix = namingStrategy.MethodSuffix, _methodName = method.Name, _parameters = parameters, _callParameters = callParameters };
 
         methods.Append( methodTemplate.FormatSmart( methodData ) );
       }
@@ -159,23 +161,23 @@ namespace Typo3ExtensionGenerator.Generator.Class {
       }
       #endregion
 
-      const string implementationTemplate = "private $implementation;" +
-                                            "private function getImplementation() {{" +
-                                            "  if( null == $this->implementation ) {{" +
-                                            "    $this->implementation = new {_implClassname}($this);" +
-                                            "  }}" +
-                                            "  return $this->implementation;" +
-                                            "}}" +
-                                            "function __construct() {{" +
-                                            "  parent::__construct();" +
-                                            "}}\n";
+      string implementationTemplate = "private $implementation;" +
+                                      "private function getImplementation() {{" +
+                                      "  if( null == $this->implementation ) {{" +
+                                      "    $this->implementation = new {_implClassname}($this);" +
+                                      "  }}" +
+                                      "  return $this->implementation;" +
+                                      "}}" +
+                                      "function __construct() {{" +
+                                      ( ( !String.IsNullOrEmpty( namingStrategy.Extends ) ) ? "parent::__construct();" : string.Empty ) +
+                                      "}}\n";
 
       string serviceImplementation = implementationTemplate.FormatSmart(
           new {
                 _implClassname = implementationClassname
               } );
 
-      const string template = "class {_className} {_extends} {{" +
+      const string template = "class {_className} {_extends} {_implements} {{" +
                               "{_properties}" +
                               "{_actions}" +
                               "}}" +
@@ -184,7 +186,8 @@ namespace Typo3ExtensionGenerator.Generator.Class {
       string serviceResult = template.FormatSmart(
           new {
                 _className             = namingStrategy.GetExtbaseClassName( Subject, classTemplate ),
-                _extends               = namingStrategy.BaseClassExtension,
+                _extends               = namingStrategy.Extends,
+                _implements            = namingStrategy.Implements,
                 _properties            = (( isExternallyImplemented ) ? serviceImplementation : string.Empty) + propertiesList,
                 _actions               = methods.ToString(),
                 _requireImplementation = ( isExternallyImplemented ) ? string.Format( "require_once('{0}');", implementationFilename ) : string.Empty

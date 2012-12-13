@@ -50,6 +50,12 @@ namespace Typo3ExtensionGenerator.Generator.Class.Naming {
     /// If the class should extend a given base class, this should be the string describing the extension.
     /// </summary>
     /// <example>extends Tx_Extbase_MVC_Controller_ActionController</example>
-    string BaseClassExtension { get; }
+    string Extends { get; }
+
+    /// <summary>
+    /// If the class should implement a given interface, this should be the string describing the extension.
+    /// </summary>
+    /// <example>extends tx_scheduler_AdditionalFieldProvider</example>
+    string Implements { get; }
   }
 }

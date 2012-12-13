@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Typo3ExtensionGenerator.Model;
+using Typo3ExtensionGenerator.Model.Task;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 
@@ -37,12 +38,17 @@ namespace Typo3ExtensionGenerator.Resolver.Extension {
 
           } else if( taskParameter.Keyword == Keywords.ServiceDirectives.AdditionalFields ) {
             task.AdditionalFieldsClass = taskParameter.Parameters;
+            task.TaskFields = new TaskFields { Implementation = taskParameter.Parameters };
           }
         }
 
         // If no name was defined, throw
         if( string.IsNullOrEmpty( task.Name ) ) {
           throw new ParserException( "Service has no name!", parsedFragment.SourceDocument );
+        }
+
+        if( null != task.TaskFields ) {
+          task.TaskFields.Name = task.Name;
         }
 
         tasks.Add( task );
