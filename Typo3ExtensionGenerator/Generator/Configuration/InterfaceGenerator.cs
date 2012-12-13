@@ -21,8 +21,8 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// <exception cref="GeneratorException">No display type given in interface.</exception>
     public static string Generate( AbstractGenerator parent, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface subject, SimpleContainer.Format format ) {
       string propertyTemplate = ( format == SimpleContainer.Format.PhpArray )
-                                  ? SimpleContainer.PropertyTemplatePhp
-                                  : SimpleContainer.PropertyTemplateXml;
+                                  ? SimpleContainer.PropertyTemplatePHP
+                                  : SimpleContainer.PropertyTemplateXML;
       
       StringBuilder interfaceDefinition = new StringBuilder();
 

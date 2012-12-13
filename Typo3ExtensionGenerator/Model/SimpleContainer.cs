@@ -11,13 +11,30 @@ namespace Typo3ExtensionGenerator.Model {
   /// An AbstractContainer implementation that uses only strings for storage
   /// </summary>
   public class SimpleContainer : AbstractContainer<Dictionary<string, SimpleContainer>, string> {
+    /// <summary>
+    /// The format of exported data
+    /// </summary>
     public enum Format {
+      /// <summary>
+      /// Format as a PHP array
+      /// </summary>
       PhpArray,
-      Xml
+
+      /// <summary>
+      /// Format as XML
+      /// </summary>
+      XML
     }
 
-    public const string PropertyTemplatePhp = "'{0}' => {1},";
-    public const string PropertyTemplateXml = "\n<{0}>{1}</{0}>";
+    /// <summary>
+    /// How properties should be formatted in PHP.
+    /// </summary>
+    public const string PropertyTemplatePHP = "'{0}' => {1},";
+    
+    /// <summary>
+    /// How properties should be formatted in XML.
+    /// </summary>
+    public const string PropertyTemplateXML = "\n<{0}>{1}</{0}>";
 
     /// <summary>
     /// Set a given key/value in the tree hierarchy.
@@ -38,14 +55,29 @@ namespace Typo3ExtensionGenerator.Model {
       InternalSet( path, value );
     }
 
+    /// <summary>
+    /// Set a value in the simple container.
+    /// </summary>
+    /// <param name="path">The variable to set.</param>
+    /// <param name="value">The value of the variable</param>
     public void Set( string path, int value ) {
       InternalSet( path, value.ToString( CultureInfo.InvariantCulture ) );
     }
 
+    /// <summary>
+    /// Set a value in the simple container.
+    /// </summary>
+    /// <param name="path">The variable to set.</param>
+    /// <param name="value">The value of the variable</param>
     public void Set( string path, bool value ) {
       InternalSet( path, ( ( value ) ? "1" : "0" ).ToString( CultureInfo.InvariantCulture ) );
     }
 
+    /// <summary>
+    /// Set a value in the simple container.
+    /// </summary>
+    /// <param name="path">The variable to set.</param>
+    /// <param name="value">The value of the variable</param>
     private void InternalSet( string path, string value ) {
       string[] pathParts = path.Split( new[] {'.'} );
       SimpleContainer currentContainer = this;
@@ -59,8 +91,14 @@ namespace Typo3ExtensionGenerator.Model {
       currentContainer.Value = value;
     }
 
-    private string GeneratePropertyArray( SimpleContainer forType, Format format ) {
-      string propertyTemplate = ( format == Format.PhpArray ) ? PropertyTemplatePhp : PropertyTemplateXml;
+    /// <summary>
+    /// Generate the formatted array of for all contained values.
+    /// </summary>
+    /// <param name="forType">The container that should be exported.</param>
+    /// <param name="format">The format that should be exported.</param>
+    /// <returns></returns>
+    private static string GeneratePropertyArray( SimpleContainer forType, Format format ) {
+      string propertyTemplate = ( format == Format.PhpArray ) ? PropertyTemplatePHP : PropertyTemplateXML;
 
       StringBuilder configuration = new StringBuilder();
       foreach( KeyValuePair<string, SimpleContainer> child in forType.Children ) {
@@ -79,7 +117,7 @@ namespace Typo3ExtensionGenerator.Model {
         } else {
           string propertyValue = child.Value.Value;
           // For XML format, we ignore quotes
-          if( format == Format.Xml ) {
+          if( format == Format.XML ) {
             Regex quoteEnclosed = new Regex( "^'.*?'$" );
             if( quoteEnclosed.IsMatch( propertyValue ) ) {
               propertyValue = propertyValue.Substring( 1, propertyValue.Length - 2 );
@@ -91,6 +129,10 @@ namespace Typo3ExtensionGenerator.Model {
       return configuration.ToString();
     }
 
+    /// <summary>
+    /// Generate the formatted array of for all contained values.
+    /// </summary>
+    /// <param name="format">The format that should be exported.</param>
     public string GeneratePropertyArray( Format format ) {
       return GeneratePropertyArray( this, format );
     }
