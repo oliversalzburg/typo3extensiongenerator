@@ -206,7 +206,7 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
       // TODO: Should possibly render ALL fields in the model
       const string membersTemplate = "\n<settings.{0}><TCEforms>{1}</TCEforms></settings.{0}>";
       foreach( Interface @interface in plugin.Interfaces ) {
-        string members = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.Xml );
+        string members = InterfaceGenerator.Generate( this, Subject, @interface, SimpleContainer.Format.XML );
 
         string setting = string.Format( membersTemplate, @interface.Target, members );
         settings.Append( setting );

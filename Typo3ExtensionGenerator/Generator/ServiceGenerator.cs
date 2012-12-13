@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Typo3ExtensionGenerator.Generator.Class;
+﻿using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
 using Typo3ExtensionGenerator.Model;
 using log4net;

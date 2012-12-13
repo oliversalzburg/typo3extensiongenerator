@@ -65,6 +65,8 @@ namespace Typo3ExtensionGenerator.Generator {
       configurationGenerator.Generate();
       ServiceGenerator serviceGenerator = new ServiceGenerator( GeneratorContext, Subject );
       serviceGenerator.Generate();
+      TaskGenerator taskGenerator = new TaskGenerator( GeneratorContext, Subject );
+      taskGenerator.Generate();
       
       // We generate the requirements last so that they can overwrite previous work
       RequirementGenerator requirementGenerator = new RequirementGenerator( GeneratorContext, Subject );
@@ -89,15 +91,20 @@ namespace Typo3ExtensionGenerator.Generator {
                                         "</T3locallang>";
 
       WrapAllVirtual( @"Resources/Private/Language/.*.xml", languageFilePrefix, languageFileSuffix );
-
+      
+      #region Prefixes
       const string protectedPhpPrefix = "<?php\n" +
                                         "if( !defined( 'TYPO3_MODE' ) ) {\n" +
                                         "	die( 'Access denied.' );\n" +
                                         "}\n";
-      const string phpSuffix = "?>";
 
       const string phpClassPrefix = "<?php\n" +
                                     "class {0} {{\n";
+      #endregion
+
+
+      const string phpSuffix = "?>";
+
       const string phpClassSuffix = "}\n" +
                                     "?>";
 
@@ -108,8 +115,9 @@ namespace Typo3ExtensionGenerator.Generator {
       GenerateTypoScript();
 
       // Wrap virtual files as needed
+      WrapVirtual( "ext_autoload.php", "<?php\n$extensionPath=t3lib_extMgm::extPath('{_extKey}');return array(".FormatSmart( new {_extKey = Subject.Key} ), ");" + phpSuffix );
       WrapVirtual( "ext_localconf.php", protectedPhpPrefix, phpSuffix );
-      WrapVirtual( "ext_tables.php", protectedPhpPrefix, phpSuffix );
+      WrapVirtual( "ext_tables.php",    protectedPhpPrefix, phpSuffix );
       // Flush virtual file system to disk
       FlushVirtual( GeneratorContext.OutputDirectory );
     }

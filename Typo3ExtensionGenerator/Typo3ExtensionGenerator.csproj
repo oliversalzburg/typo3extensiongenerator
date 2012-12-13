@@ -88,6 +88,8 @@
     <Compile Include="Generator\Class\Naming\INamingStrategy.cs" />
     <Compile Include="Generator\Class\Naming\ControllerNamingStrategy.cs" />
     <Compile Include="Generator\Class\Naming\ServiceNamingStrategy.cs" />
+    <Compile Include="Generator\Class\Naming\TaskFieldsNamingStrategy.cs" />
+    <Compile Include="Generator\Class\Naming\TaskNamingStrategy.cs" />
     <Compile Include="Generator\Configuration\ConfigurationFileGenerator.cs" />
     <Compile Include="Generator\Configuration\ConfigurationGenerator.cs" />
     <Compile Include="Generator\Configuration\InterfaceGenerator.cs" />
@@ -106,6 +108,7 @@
     <Compile Include="Generator\ServiceGenerator.cs" />
     <Compile Include="Compatibility\Deprecated.cs" />
     <Compile Include="Compatibility\Typo3Version.cs" />
+    <Compile Include="Generator\TaskGenerator.cs" />
     <Compile Include="Helper\DirectoryHelper.cs" />
     <Compile Include="Helper\NameHelper.cs" />
     <Compile Include="Helper\ParseHelper.cs" />
@@ -137,6 +140,8 @@
     <Compile Include="Model\Requirement.cs" />
     <Compile Include="Model\Service.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
+    <Compile Include="Model\Task\Task.cs" />
+    <Compile Include="Model\Task\TaskFields.cs" />
     <Compile Include="Parser\Document\DocumentWalker.cs" />
     <Compile Include="Parser\Document\VirtualDocument.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
@@ -158,6 +163,7 @@
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
     <Compile Include="Resolver\Extension\RequirementResolver.cs" />
     <Compile Include="Resolver\Extension\ServiceResolver.cs" />
+    <Compile Include="Resolver\Extension\TaskResolver.cs" />
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />

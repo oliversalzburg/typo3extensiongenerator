@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
+  /// <summary>
+  /// Resolves all configurations from markup.
+  /// </summary>
   public static class ConfigurationResolver {
     /// <summary>
     /// Resolves the configurations of data models of an extension from a ParsedPartial.
