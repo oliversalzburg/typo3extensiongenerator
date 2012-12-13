@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using SmartFormat;
 using Typo3ExtensionGenerator.Generator.Class;
 using Typo3ExtensionGenerator.Generator.Class.Naming;
-using Typo3ExtensionGenerator.Generator.Helper;
-using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
 using log4net;
-using Action = Typo3ExtensionGenerator.Model.Action;
 
 namespace Typo3ExtensionGenerator.Generator {
   /// <summary>
@@ -47,7 +39,13 @@ namespace Typo3ExtensionGenerator.Generator {
     /// <param name="service">The service that should be generated.</param>
     private void GenerateService( Service service ) {
       ClassProxyGenerator classGenerator = new ClassProxyGenerator( GeneratorContext, Subject );
-      classGenerator.GenerateClassProxy( service, new ServiceNamingStrategy(), "Classes/Service/", false );
+      ServiceNamingStrategy serviceNamingStrategy = new ServiceNamingStrategy();
+      classGenerator.GenerateClassProxy( service, serviceNamingStrategy, "Classes/Service/", false );
+
+      // Autoload services
+      WriteVirtual(
+        "ext_autoload.php", 
+        String.Format( "'{0}' => $extensionPath . 'Classes/Tasks/{1}',", serviceNamingStrategy.GetExtbaseClassName( Subject, service ).ToLower(), serviceNamingStrategy.GetExtbaseFileName( Subject, service ) ) );
     }
   }
 }
