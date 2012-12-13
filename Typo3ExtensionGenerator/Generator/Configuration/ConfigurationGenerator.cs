@@ -59,27 +59,27 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       StringBuilder result = new StringBuilder();
 
-      const string template = "$TCA['{model}'] = array(\n" +
+      const string template = "$TCA['{_model}'] = array(\n" +
                               "  'ctrl' => array(\n" +
-                              "    'title'                    => 'LLL:EXT:{extensionKey}/Resources/Private/Language/locallang_db.xml:{model}',\n" +
-                              "    'label'                    => '{label}',\n" +
-                              "{tableHidden}" +
-                              "{labelAlt}" +
-                              "{labelFunc}" +
+                              "    'title'                    => 'LLL:EXT:{_extensionKey}/Resources/Private/Language/locallang_db.xml:{_model}',\n" +
+                              "    'label'                    => '{_label}',\n" +
+                              "{_tableHidden}" +
+                              "{_labelAlt}" +
+                              "{_labelFunc}" +
                               "    'dividers2tabs'            => TRUE,\n" +
 
-                              "{commonFields}" +
+                              "{_commonFields}" +
 
-                              "{versioningFields}" +
+                              "{_versioningFields}" +
                               
-                              "{translationFields}" +
+                              "{_translationFields}" +
 
-                              "{sortableFields}" +
+                              "{_sortableFields}" +
                               
-                              "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{extensionKey}' ) . 'Configuration/TCA/{configFilename}',\n" +
-                              "    'iconfile'                 => t3lib_extMgm::extRelPath( '{extensionKey}' ) . 'Resources/Public/Icons/{model}.png',\n" +
-                              "{thumbnail}" +
-                              "{searchFields}" +
+                              "    'dynamicConfigFile'        => t3lib_extMgm::extPath( '{_extensionKey}' ) . 'Configuration/TCA/{_configFilename}',\n" +
+                              "    'iconfile'                 => t3lib_extMgm::extRelPath( '{_extensionKey}' ) . 'Resources/Public/Icons/{_model}.png',\n" +
+                              "{_thumbnail}" +
+                              "{_searchFields}" +
                               "  )\n" +
                               ");";
 
@@ -171,25 +171,25 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
         string absoluteModelName = NameHelper.GetAbsoluteModelName( Subject, configuration.Model );
         var dataObject = new {
-                               extensionKey = Subject.Key,
-                               model = absoluteModelName,
-                               label = configuration.Label,
-                               labelAlt = labelAlternative,
-                               labelFunc = labelFunction,
-                               commonFields = finalCommonFields,
-                               translationFields = finalTranslationFields,
-                               versioningFields = finalVersioningFields,
-                               sortableFields = finalSortableFields,
-                               configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
-                               thumbnail = thumbnailField,
-                               searchFields = finalSearchFields,
-                               tableHidden = hideTable
+                               _extensionKey = Subject.Key,
+                               _model = absoluteModelName,
+                               _label = configuration.Label,
+                               _labelAlt = labelAlternative,
+                               _labelFunc = labelFunction,
+                               _commonFields = finalCommonFields,
+                               _translationFields = finalTranslationFields,
+                               _versioningFields = finalVersioningFields,
+                               _sortableFields = finalSortableFields,
+                               _configFilename = NameHelper.GetExtbaseDomainModelFileName( Subject, configuration.Model ),
+                               _thumbnail = thumbnailField,
+                               _searchFields = finalSearchFields,
+                               _tableHidden = hideTable
                              };
         string generatedConfiguration = template.FormatSmart( dataObject );
 
         result.Append( generatedConfiguration + "\n" );
 
-        // Flush a placdeholder icon
+        // Flush a placeholder icon
         ResourceHelper.FlushIcon( "document.png", this, string.Format( "Resources/Public/Icons/{0}.png", absoluteModelName ) );
       }
 

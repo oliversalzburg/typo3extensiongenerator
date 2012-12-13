@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using NDesk.Options;
-using Typo3ExtensionGenerator.Compatibility;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
 using Typo3ExtensionGenerator.Parser;
-using Typo3ExtensionGenerator.PreProcess;
 using log4net;
 
 namespace Typo3ExtensionGenerator {
+  /// <summary>
+  /// Main application class
+  /// </summary>
   internal static class Program {
     
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );

@@ -18,6 +18,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// <param name="subject">The model for the interface defintion.</param>
     /// <param name="format">The format of the interface.</param>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">No display type given in interface.</exception>
     public static string Generate( AbstractGenerator parent, Extension extension, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface subject, SimpleContainer.Format format ) {
       string propertyTemplate = ( format == SimpleContainer.Format.PhpArray )
                                   ? SimpleContainer.PropertyTemplatePhp
@@ -52,7 +53,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
 
       // config
       string configuration = string.Empty;
-
+      
       // Add foreign_table
       if( subject.ParentModel.ForeignModels.ContainsKey( subject.Target ) ) {
         DataModel foreignModel = subject.ParentModel.ForeignModels[ subject.Target ];

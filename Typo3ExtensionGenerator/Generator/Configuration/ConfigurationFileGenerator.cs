@@ -86,6 +86,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// Generates the 'interface' array.
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">"The interface field does not exist in the data model.</exception>
     private string GenerateInterface() {
       // Describes which fields (and in which order) are shown in the Info/View Item dialog in the BE.
       const string infoInterfaceTemplate = "  'interface' => array( 'showRecordFieldList' => '{0}' )";
@@ -133,6 +134,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// NOTE: This refers to these types: http://typo3.org/documentation/document-library/core-documentation/doc_core_tca/4.7.1/view/1/3/#id590907
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">The type interface field neither exists in the data model nor is it a palette.</exception>
     private string GenerateTypes() {
       // Template for the 'types' collection.
       const string typesTemplate = "  'types' => array( {0} )";
@@ -198,6 +200,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// Generates the 'palettes' array.
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">"The palette field does not exist in the data model.</exception>
     private string GeneratePalettes() {
       // Template for the 'palettes' collection.
       const string palettesTemplate = "  'palettes' => array( {0} )";
@@ -249,6 +252,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
     /// Generates the 'columns' array.
     /// </summary>
     /// <returns></returns>
+    /// <exception cref="GeneratorException">Could not generate interface for nonexistent field.</exception>
     private string GenerateColumns() {
       // Template for the 'columns' collection.
       const string columnsTemplate = "  'columns' => array( {0} )";
