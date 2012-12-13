@@ -5,7 +5,16 @@ using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
 
 namespace Typo3ExtensionGenerator.Resolver.Plugin {
+  /// <summary>
+  /// Resolves ExtBase SignalSlot listeners from the extension markup.
+  /// </summary>
   public static class ListenerResolver {
+    /// <summary>
+    /// Find an ExtBase SignalSlot listener in a parsed fragment and return it.
+    /// </summary>
+    /// <param name="parsedFragment"></param>
+    /// <returns></returns>
+    /// <exception cref="ParserException">Listener does not define a signal host or slot.</exception>
     public static Listener ResolveListener( Fragment parsedFragment ) {
       Listener resultingListener = new Listener();
       resultingListener.TargetAction = ActionResolver.ResolveAction( parsedFragment );

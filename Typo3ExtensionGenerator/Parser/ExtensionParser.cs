@@ -35,8 +35,8 @@ namespace Typo3ExtensionGenerator.Parser {
       Extension result = Parse( fragment );
 
       // Do we have a valid title?
-      if( string.IsNullOrEmpty( result.Title ) ) {
-        result.Title = result.Key;
+      if( string.IsNullOrEmpty( result.Name ) ) {
+        result.Name = result.Key;
       }
 
       // Do we have a valid author?

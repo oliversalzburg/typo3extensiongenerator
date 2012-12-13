@@ -158,7 +158,7 @@ namespace Typo3ExtensionGenerator.Generator {
         new {
               extensionName = "tx_" + NameHelper.UpperCamelCase( Subject.Key ).ToLower(),
               extensionKey = Subject.Key,
-              extensionTitle = Subject.Title
+              extensionTitle = Subject.Name
             };
 
       Log.Info( "Generating TypoScript constants..." );

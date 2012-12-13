@@ -1,4 +1,6 @@
-﻿namespace Typo3ExtensionGenerator.Parser.Definitions {
+﻿using Typo3ExtensionGenerator.Resolver.Configuration;
+
+namespace Typo3ExtensionGenerator.Parser.Definitions {
   /// <summary>
   /// Defines the keywords that are used in the TYPO3 Extension Generator grammar
   /// </summary>
@@ -17,6 +19,11 @@
     /// as - Used to apply a human-readable name to an object.
     /// </summary>
     public const string Title = "as";
+
+    /// <summary>
+    /// description - Gives a description to an entity.
+    /// </summary>
+    public const string Description = "description";
 
     /// <summary>
     /// in - Defines a category for the given item.
@@ -43,6 +50,9 @@
     /// </summary>
     public const string Implementation = "represents";
 
+    /// <summary>
+    /// Directives that are in use in an extension markup
+    /// </summary>
     public static class ExtensionDirectives {
       /// <summary>
       /// author - Used to define the name of the author of the extension.
@@ -68,11 +78,6 @@
       /// version - Defines the version of the extension (1.2.3)
       /// </summary>
       public const string Version = "version";
-
-      /// <summary>
-      /// description - Gives a description for the extension.
-      /// </summary>
-      public const string Description = "description";
 
       /// <summary>
       /// plugin - Used to declare a new plugin.
@@ -103,6 +108,11 @@
       /// service - Used to define a service class.
       /// </summary>
       public const string DeclareService = "service";
+
+      /// <summary>
+      /// task - Used to define a scheduler task.
+      /// </summary>
+      public const string DeclareTask = "task";
     }
 
     /// <summary>
@@ -110,13 +120,29 @@
     /// </summary>
     public const string DataModelTemplate = "template";
 
-
+    /// <summary>
+    /// Data types
+    /// </summary>
     public static class Types {
+      /// <summary>
+      /// An unsigned integer.
+      /// </summary>
       public const string UnsignedInt = "uint";
+
+      /// <summary>
+      /// A string
+      /// </summary>
       public const string String = "string";
+
+      /// <summary>
+      /// A character array
+      /// </summary>
       public const string CharacterArray = "char";
     }
 
+    /// <summary>
+    /// Directives primarily used in a plugin context.
+    /// </summary>
     public static class PluginDirectives {
       /// <summary>
       /// action - Declares an action in a plugin.
@@ -128,15 +154,37 @@
       /// </summary>
       public const string Listener = "listener";
 
+      /// <summary>
+      /// Directives used primarily inside an action context.
+      /// </summary>
       public static class ActionDirectives {
         /// <summary>
         /// uncachable - Marks a controller action as uncachable.
         /// </summary>
         public const string Uncachable = "uncachable";
 
+        /// <summary>
+        /// host - The ExtBase SignalSlot host.
+        /// Used when describing a listener action for an ExtBase SignalSlot
+        /// </summary>
         public const string Host = "host";
+
+        /// <summary>
+        /// slot - The ExtBase SignalSlot slot.
+        /// Used when describing a listener action for an ExtBase SignalSlot
+        /// </summary>
         public const string Slot = "slot";
       }
+    }
+
+    /// <summary>
+    /// Directives that are primarily used in a service context.
+    /// </summary>
+    public static class ServiceDirectives {
+      /// <summary>
+      /// fields - Define a class that should be used to describe additional parameters for a scheduler task
+      /// </summary>
+      public const string AdditionalFields = "fields";
     }
 
     /// <summary>
@@ -208,6 +256,9 @@
       /// </summary>
       public const string Hidden = "hide";
 
+      /// <summary>
+      /// Directives primarily used inside an interface context
+      /// </summary>
       public static class InterfaceDirectives {
         /// <summary>
         /// exclude - This interface element is 'excluded' it can only be edited by certain people.
@@ -261,11 +312,21 @@
         }
       }
 
+      /// <summary>
+      /// type - Used to define a type in a configuration.
+      /// </summary>
+      /// <see cref="TypeResolver"/>
       public const string TypeDeclaration = "type";
+
+      /// <summary>
+      /// interface - Used to define an interface to a data model member in a configuration.
+      /// </summary>
       public const string InterfaceType = "interface";
 
+      /// <summary>
+      /// palette - Describes a palette. A palette is a group of interface members that can be dynamically shown/hidden in the BE.
+      /// </summary>
       public const string PaletteDeclaration = "palette";
-      public const string InterfacePalette = "interface";
     }
   }
 }

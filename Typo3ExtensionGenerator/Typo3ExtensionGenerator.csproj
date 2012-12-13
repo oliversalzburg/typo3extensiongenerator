@@ -137,6 +137,7 @@
     <Compile Include="Model\Requirement.cs" />
     <Compile Include="Model\Service.cs" />
     <Compile Include="Model\SimpleContainer.cs" />
+    <Compile Include="Model\Task.cs" />
     <Compile Include="Parser\Document\DocumentWalker.cs" />
     <Compile Include="Parser\Document\VirtualDocument.cs" />
     <Compile Include="Parser\ExtensionParser.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Resolver\Extension\RepositoryResolver.cs" />
     <Compile Include="Resolver\Extension\RequirementResolver.cs" />
     <Compile Include="Resolver\Extension\ServiceResolver.cs" />
+    <Compile Include="Resolver\Extension\TaskResolver.cs" />
     <Compile Include="Resolver\Model\ForeignKeyResolver.cs" />
     <Compile Include="Resolver\Model\ModelResolver.cs" />
     <Compile Include="Resolver\Module\ModuleResolver.cs" />

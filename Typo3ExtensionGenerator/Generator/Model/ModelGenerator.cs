@@ -115,7 +115,7 @@ namespace Typo3ExtensionGenerator.Generator.Model {
           dataMembers.Append( string.Format( propertyTemplate, member.Value, foreignModelClassName ) );   
 
         } else {
-          dataMembers.Append( string.Format( propertyTemplate, member.Value, TypeTranslator.ToPhp( member.Name, dataModel.SourceFragment.SourceDocument ) ) );   
+          dataMembers.Append( string.Format( propertyTemplate, member.Value, TypeTranslator.ToPHP( member.Name, dataModel.SourceFragment.SourceDocument ) ) );   
         }
         
       }
@@ -333,14 +333,14 @@ namespace Typo3ExtensionGenerator.Generator.Model {
             dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
-                TypeTranslator.ToSql( Keywords.Types.UnsignedInt, dataModel.SourceFragment.SourceDocument ) ) );
+                TypeTranslator.ToSQL( Keywords.Types.UnsignedInt, dataModel.SourceFragment.SourceDocument ) ) );
 
           } else if( TypeTranslator.CanTranslate( member.Name ) ) {
             // If it is a POD type, just translate it
             dataMembers.Append(
               string.Format(
                 "{0} {1},\n", NameHelper.GetSqlColumnName( Subject, member.Value ),
-                TypeTranslator.ToSql( member.Name, dataModel.SourceFragment.SourceDocument ) ) );
+                TypeTranslator.ToSQL( member.Name, dataModel.SourceFragment.SourceDocument ) ) );
 
           } else {
             throw new GeneratorException(

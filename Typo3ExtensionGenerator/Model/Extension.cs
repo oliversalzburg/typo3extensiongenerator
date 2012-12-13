@@ -5,6 +5,9 @@ using System.Text;
 using Typo3ExtensionGenerator.Parser;
 
 namespace Typo3ExtensionGenerator.Model {
+  /// <summary>
+  /// The data model for an extension
+  /// </summary>
   public class Extension : IParserResult {
     /// <summary>
     /// The extension key.
@@ -14,7 +17,7 @@ namespace Typo3ExtensionGenerator.Model {
     /// <summary>
     /// The display name of the extension.
     /// </summary>
-    public string Title { get; set; }
+    public string Name { get; set; }
 
     /// <summary>
     /// A short description of the extension.
@@ -80,6 +83,11 @@ namespace Typo3ExtensionGenerator.Model {
     /// The services defined in this extension.
     /// </summary>
     public List<Service> Services { get; set; }
+
+    /// <summary>
+    /// The scheduler tasks defined in this extension.
+    /// </summary>
+    public List<Task> Tasks { get; set; }
 
     #region Implementation of IParserResult
     /// <summary>
