@@ -320,8 +320,7 @@ namespace Typo3ExtensionGenerator.Helper {
     /// <param name="input"></param>
     /// <returns></returns>
     public static string UpperCamelCase( string input ) {
-      return input.Substring( 0, 1 ).ToUpper()
-             + Regex.Replace( input.Substring( 1 ), "_(.)", match => match.Groups[ 1 ].Captures[ 0 ].Value.ToUpper() );
+      return input.Substring( 0, 1 ).ToUpper() + Regex.Replace( input.Substring( 1 ), "_(.)", match => match.Groups[ 1 ].Captures[ 0 ].Value.ToUpper() );
     }
 
     /// <summary>
