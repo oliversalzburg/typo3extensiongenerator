@@ -22,5 +22,8 @@ The **TYPO3 Extension Generator** is a tool to generate a TYPO3 extension from a
 - ### Only generates Fluid *stubs*; you're supposed to write your own templates.  
   The generated extension expects to have its generated stubs overwritten by your own templates. Your own templates are merged during the build process.
 
-- ### Implement through Inheritance!  
+- ### Implement through Inheritance.  
   Your own classes (like controllers and repositories) always extend the generated wrappers. The wrappers contain all interfaces to the rest of the extension. These interface can be accessed in your classes through an injected reference to the wrapper.
+
+## IDE Support
+- File Type templates for phpStorm included!
