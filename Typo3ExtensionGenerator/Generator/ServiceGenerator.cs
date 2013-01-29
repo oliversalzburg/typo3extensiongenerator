@@ -45,7 +45,7 @@ namespace Typo3ExtensionGenerator.Generator {
       // Autoload services
       WriteVirtual(
         "ext_autoload.php", 
-        String.Format( "'{0}' => $extensionPath . 'Classes/Tasks/{1}',", serviceNamingStrategy.GetExtbaseClassName( Subject, service ).ToLower(), serviceNamingStrategy.GetExtbaseFileName( Subject, service ) ) );
+        String.Format( "'{0}' => $extensionPath . 'Classes/Service/{1}',", serviceNamingStrategy.GetExtbaseClassName( Subject, service ).ToLower(), serviceNamingStrategy.GetExtbaseFileName( Subject, service ) ) );
     }
   }
 }
