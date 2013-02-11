@@ -204,9 +204,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy $(ProjectDir)app.log4net $(TargetPath).log4net
-copy $(TargetPath) "P:\_2012\ext-downloads\build\Typo3ExtensionGenerator.exe"
-copy $(TargetPath) "P:\_2012\ext-user_visitorlist\build\Typo3ExtensionGenerator.exe"
-copy $(TargetPath) "P:\_2012\ext-mailchimp_subscribe\build\Typo3ExtensionGenerator.exe"</PostBuildEvent>
+copy $(TargetPath) "P:\GitHub\ext-downloads\build\Typo3ExtensionGenerator.exe"
+copy $(TargetPath) "P:\GitHub\ext-user_visitorlist\build\Typo3ExtensionGenerator.exe"
+copy $(TargetPath) "P:\GitHub\ext-mailchimp_subscribe\build\Typo3ExtensionGenerator.exe"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
