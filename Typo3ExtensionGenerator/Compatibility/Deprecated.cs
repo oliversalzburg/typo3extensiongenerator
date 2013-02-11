@@ -55,7 +55,7 @@ namespace Typo3ExtensionGenerator.Compatibility {
       }
 
       // In case the given replacement is again already deprecated, run it through the system again.
-      return Get( Replacements[ signature ].Single( r => r.Key.Version <= targetVersion.Version ).Value, targetVersion );
+      return Get( Replacements[ signature ].OrderBy( r => r.Key.Version ).Last( r => r.Key.Version <= targetVersion.Version ).Value, targetVersion );
     }
   }
 }
