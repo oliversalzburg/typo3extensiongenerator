@@ -29,8 +29,8 @@ namespace Typo3ExtensionGenerator.Generator.Plugin {
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     private static readonly ArrayList _void = new ArrayList {
-      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1})", Typo3Version.TYPO3_4_6_0, "t3lib_l10n_parser_Llxml::getParsedData({0},{1})" ),
-      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1},{2})", Typo3Version.TYPO3_4_6_0, "t3lib_l10n_parser_Llxml::getParsedData({0},{1},{2})" ) 
+      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1})", Typo3Version.TYPO3_4_6_0, "t3lib_div::makeInstance('t3lib_l10n_parser_Llxml')->getParsedData({0},{1})" ),
+      Deprecated.Register( "t3lib_div::readLLXMLfile({0},{1},{2})", Typo3Version.TYPO3_4_6_0, "t3lib_div::makeInstance('t3lib_l10n_parser_Llxml')->getParsedData({0},{1},{2})" )
     };
 
     /// <summary>
