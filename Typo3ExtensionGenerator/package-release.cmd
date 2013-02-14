@@ -15,5 +15,5 @@ cd bin\Release
 del *.pdb
 ..\..\..\tool\7za a -r -tzip "..\..\%foldername%-%mydate%-%mytime%.zip" *
 
-IF EXIST build-post.cmd CALL build-post.cmd
+IF EXIST package-post.cmd CALL package-post.cmd
 ENDLOCAL
