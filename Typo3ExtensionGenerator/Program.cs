@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using NDesk.Options;
 using Typo3ExtensionGenerator.Generator;
 using Typo3ExtensionGenerator.Model;
@@ -87,7 +88,7 @@ namespace Typo3ExtensionGenerator {
         generator.Generate();
         AbstractGenerator.EndCachingSession( cacheFile );
 
-        Console.WriteLine( "Finished after {0}", DateTime.Now.Subtract( start ) );
+        Console.WriteLine( "{1} finished after {0}", DateTime.Now.Subtract( start ), "T3EG v." + Assembly.GetExecutingAssembly().GetName().Version );
 
       } catch( ParserException parserException ) {
         Log.Error( parserException );
