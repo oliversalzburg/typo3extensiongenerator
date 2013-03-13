@@ -26,8 +26,8 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
     /// <summary>
     /// Aggregates all actions defined for a controller.
     /// </summary>
-    /// <param name="seed">The object that conains the Action definitions.</param>
-    /// <param name="ignoreCachable">If set to true, all actions will be treated equally. The result will then contain the same lists for cachable and uncachable.</param>
+    /// <param name="seed">The object that contains the Action definitions.</param>
+    /// <param name="ignoreCachable">If set to <see langword="true"/>, all actions will be treated equally. The result will then contain the same lists for cachable and uncachable.</param>
     /// <returns></returns>
     public static AggregationResult Aggregate( IControllerTemplate seed, bool ignoreCachable = false ) {
 
@@ -35,9 +35,8 @@ namespace Typo3ExtensionGenerator.Generator.Helper {
       StringBuilder uncachableActions = new StringBuilder();
 
       // If ignoreCachable is set, we'll aggregate them all into "actions"
-      
       foreach( Action action in seed.Actions ) {
-        if( action.Uncachable && ignoreCachable ) {
+        if( action.Uncachable && !ignoreCachable ) {
           uncachableActions.Append(  action.Name + "," );
         } else {
           actions.Append( action.Name + "," );
