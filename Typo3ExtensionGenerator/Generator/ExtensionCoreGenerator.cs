@@ -48,6 +48,7 @@ namespace Typo3ExtensionGenerator.Generator {
                               "  'version'          => '{version}',\n" +
                               "  'constraints'      => array(\n" +
                               "    'depends'   => array(\n" +
+                              "      'typo3'   => '4.5.0',\n" +
                               "      'extbase' => '1.3.0',\n" +
                               "      'fluid'   => '1.3.0',\n" +
                               "    ),\n" +
@@ -60,14 +61,14 @@ namespace Typo3ExtensionGenerator.Generator {
 
       string result = template.FormatSmart(
         new {
-              title = Subject.Title,
-              description = Subject.Description,
-              authorName = Subject.Author.Name,
-              authorEmail = Subject.Author.Email,
+              title         = Subject.Title,
+              description   = Subject.Description,
+              authorName    = Subject.Author.Name,
+              authorEmail   = Subject.Author.Email,
               authorCompany = Subject.Author.Company,
-              category = Subject.Category,
-              state = Subject.State,
-              version = Subject.Version
+              category      = Subject.Category,
+              state         = Subject.State,
+              version       = Subject.Version
             } );
 
       WritePhpFile( "ext_emconf.php", result, DateTime.UtcNow );
