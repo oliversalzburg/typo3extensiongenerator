@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<filetype binary="false" default_extension="" description="TYPO3 Extension Generator File" name="TYPO3 Extension">
+  <highlighting>
+    <options>
+      <option name="LINE_COMMENT" value="//" />
+      <option name="COMMENT_START" value="/*" />
+      <option name="COMMENT_END" value="*/" />
+      <option name="HEX_PREFIX" value="0x" />
+      <option name="NUM_POSTFIXES" value="" />
+      <option name="HAS_BRACES" value="true" />
+      <option name="HAS_STRING_ESCAPES" value="true" />
+    </options>
+    <keywords keywords="always;author;authorCompany;authorEmail;description;exclude;extension;fields;fileReference;group;hide;in;input;interfaceInfo;label;labelAlt;labelHook;palette;never;represents;richtext;searchFields;select;show;state;t3CommonFields;t3ManagedFields;t3Sortable;t3TranslationFields;t3VersioningFields;template;text;thumbnail;type;uncachable;version" ignore_case="false" />
+    <keywords2 keywords="action;as;interface;listener;through" />
+    <keywords3 keywords="configure;model;module;plugin;repository;require;service;task" />
+    <keywords4 keywords="char;string;uint" />
+  </highlighting>
+  <extensionMap>
+    <mapping ext="extgen" />
+  </extensionMap>
+</filetype>
+

@@ -14,6 +14,7 @@
       <option name="LINE_COMMENT_AT_START" value="false" />
     </options>
     <keywords ignore_case="false">
+	  <keyword name="always" />
       <keyword name="author" />
       <keyword name="authorCompany" />
       <keyword name="authorEmail" />
@@ -30,11 +31,13 @@
       <keyword name="label" />
       <keyword name="labelAlt" />
       <keyword name="labelHook" />
+	  <keyword name="never" />
       <keyword name="palette" />
       <keyword name="represents" />
       <keyword name="richtext" />
       <keyword name="searchFields" />
       <keyword name="select" />
+	  <keyword name="show" />
       <keyword name="state" />
       <keyword name="t3CommonFields" />
       <keyword name="t3ManagedFields" />
