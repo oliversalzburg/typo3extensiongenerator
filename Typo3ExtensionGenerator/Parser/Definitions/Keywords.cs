@@ -252,9 +252,26 @@ namespace Typo3ExtensionGenerator.Parser.Definitions {
       public const string InterfaceInfo = "interfaceInfo";
 
       /// <summary>
-      /// hide - This configuration is hidden. Users will not be able to create records for this model through the backend.
+      /// Constants referring to the visibility of items.
       /// </summary>
-      public const string Hidden = "hide";
+      public static class Visibility {
+        /// <summary>
+        /// hide - This configuration is hidden. Users will not be able to create records for this model through the backend.
+        /// </summary>
+        public const string Hidden = "hide";
+
+        /// <summary>
+        /// show - Show this item by default.
+        /// </summary>
+        public const string Show = "show";
+
+        /// <summary>
+        /// always - Unconditionally show or hide this item.
+        /// </summary>
+        public const string Always = "always";
+      }
+
+      
 
       /// <summary>
       /// Directives primarily used inside an interface context
@@ -276,9 +293,8 @@ namespace Typo3ExtensionGenerator.Parser.Definitions {
         public const string DefaultValue = "default";
 
         /// <summary>
-        /// from
+        /// Representations of data types
         /// </summary>
-        //public const string Foreign        = "from";
         public static class Representations {
           /// <summary>
           /// input

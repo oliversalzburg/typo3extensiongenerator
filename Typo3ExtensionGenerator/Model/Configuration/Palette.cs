@@ -10,6 +10,27 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
   /// </summary>
   [Serializable]
   public class Palette : IParserResult {
+
+    /// <summary>
+    /// Controls the visibility of a palette
+    /// </summary>
+    public enum PaletteVisibility {
+      /// <summary>
+      /// The default visibility - nothing will be added to the configuration
+      /// </summary>
+      Default,
+
+      /// <summary>
+      /// Always show this palette - sets canNotCollapse in the configuration
+      /// </summary>
+      ShowAlways,
+
+      /// <summary>
+      /// Never show this palette - sets isHiddenPalette in the configuration
+      /// </summary>
+      ShowNever
+    }
+
     /// <summary>
     /// The name of this palette.
     /// </summary>
@@ -24,6 +45,11 @@ namespace Typo3ExtensionGenerator.Model.Configuration {
     /// The fields that are displayed inside this palette.
     /// </summary>
     public string Interface { get; set; }
+
+    /// <summary>
+    /// The visibility of this palette
+    /// </summary>
+    public PaletteVisibility Visibility { get; set; }
 
     #region Implementation of IParserResult
     /// <summary>

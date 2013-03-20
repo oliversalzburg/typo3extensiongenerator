@@ -5,6 +5,7 @@ using System.Text;
 using Typo3ExtensionGenerator.Model.Configuration;
 using Typo3ExtensionGenerator.Parser;
 using Typo3ExtensionGenerator.Parser.Definitions;
+using Typo3ExtensionGenerator.Resolver.Configuration.Interface;
 using log4net;
 
 namespace Typo3ExtensionGenerator.Resolver.Configuration {
@@ -12,7 +13,6 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
   /// Resolves a palette from markup.
   /// </summary>
   public static class PaletteResolver {
-
     private static readonly ILog Log = LogManager.GetLogger( System.Reflection.MethodBase.GetCurrentMethod().DeclaringType );
 
     /// <summary>
@@ -27,14 +27,29 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration {
       if( null == interfacePartial ) {
         throw new ParserException( string.Format( "Palette '{0}' does not define an interface.", parsedFragment.Parameters ), parsedFragment.SourceDocument );
       }
-      
-      Palette parsedType = new Palette {
-                                         Name           = parsedFragment.Parameters,
-                                         Interface      = interfacePartial.Parameters,
-                                         SourceFragment = interfacePartial
-                                       };
 
-      return parsedType;
+      Palette parsedPalette = new Palette {
+        Name           = parsedFragment.Parameters,
+        Interface      = interfacePartial.Parameters,
+        Visibility     = Palette.PaletteVisibility.Default,
+        SourceFragment = interfacePartial
+      };
+
+      if( parsedFragment.Fragments.Any() ) {
+        foreach( Fragment configurationDirective in parsedFragment.Fragments ) {
+          // Find configuration directives
+          if( Keywords.ConfigurationDirectives.Visibility.Hidden == configurationDirective.Keyword ) {
+            parsedPalette.Visibility = Palette.PaletteVisibility.ShowNever;
+
+          } else if( Keywords.ConfigurationDirectives.Visibility.Show == configurationDirective.Keyword ) {
+            if( Keywords.ConfigurationDirectives.Visibility.Always == configurationDirective.Parameters ) {
+              parsedPalette.Visibility = Palette.PaletteVisibility.ShowAlways;
+            }
+          }
+        }
+      }
+
+      return parsedPalette;
     }
   }
 }

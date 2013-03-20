@@ -11,11 +11,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
     public static void Resolve( Fragment parsedFragment, Typo3ExtensionGenerator.Model.Configuration.Interface.Interface @interface, string displayType ) {
       if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.FileReference == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType {
-                                                                                     Name =
-                                                                                       Keywords.ConfigurationDirectives.
-                                                                                       InterfaceDirectives.
-                                                                                       Representations.RecordGroup,
-                                                                                       SourceFragment = parsedFragment
+                                                                                     Name = Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RecordGroup,
+                                                                                     SourceFragment = parsedFragment
                                                                                    };
 
         specializedDisplayType.Set( "internal_type", "file_reference" );
@@ -35,11 +32,8 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
 
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RecordGroup == displayType ) {
         RecordGroupDisplayType recordGroupDisplayType = new RecordGroupDisplayType {
-                                                                                     Name =
-                                                                                       Keywords.ConfigurationDirectives.
-                                                                                       InterfaceDirectives.
-                                                                                       Representations.RecordGroup,
-                                                                                       SourceFragment = parsedFragment
+                                                                                     Name = Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RecordGroup,
+                                                                                     SourceFragment = parsedFragment
                                                                                    };
 
         // Show records next to select box
@@ -67,11 +61,7 @@ namespace Typo3ExtensionGenerator.Resolver.Configuration.Interface {
 
       } else if( Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.RichTextArea == displayType ) {
         SpecializedDisplayType specializedDisplayType = new SpecializedDisplayType() {
-                                                                                       Name =
-                                                                                         Keywords.
-                                                                                         ConfigurationDirectives.
-                                                                                         InterfaceDirectives.
-                                                                                         Representations.TextArea,
+                                                                                       Name = Keywords.ConfigurationDirectives.InterfaceDirectives.Representations.TextArea,
                                                                                        SourceFragment = parsedFragment
                                                                                      };
 

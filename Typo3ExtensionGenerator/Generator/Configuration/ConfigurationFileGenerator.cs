@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using SmartFormat;
+using Typo3ExtensionGenerator.Compatibility;
 using Typo3ExtensionGenerator.Generator.Model.Templates;
 using Typo3ExtensionGenerator.Helper;
 using Typo3ExtensionGenerator.Model;
@@ -205,7 +206,7 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
       // Template for the 'palettes' collection.
       const string palettesTemplate = "  'palettes' => array( {0} )";
       // Template for a single palette definition.
-      const string paletteTemplate = "'{0}' => array( {1} )";
+      const string paletteTemplate = "'{0}' => array( {1} ),";
 
       // Describes which fields (and in which order) are shown in the palette in the BE when editing a record.
       const string paletteInterfaceTemplate = "'showitem' => '{0}'";
@@ -239,11 +240,40 @@ namespace Typo3ExtensionGenerator.Generator.Configuration {
         paletteInterfaceFields = Regex.Replace( paletteInterfaceFields, ", *", ", " );
 
         string paletteInterface = string.Format( paletteInterfaceTemplate, paletteInterfaceFields );
-        string paletteBody = String.Format( paletteTemplate, palette.Name, paletteInterface );
+        string paletteDefinition = paletteInterface;
+
+        if( palette.Visibility != Palette.PaletteVisibility.Default ) {
+          switch( palette.Visibility ) {
+            case Palette.PaletteVisibility.Default:
+              break;
+
+            case Palette.PaletteVisibility.ShowAlways:
+              paletteDefinition += ",'canNotCollapse'=>TRUE";
+              break;
+
+            case Palette.PaletteVisibility.ShowNever:
+              if( GeneratorContext.TargetVersion.Version < Typo3Version.TYPO3_4_7_0.Version ) {
+                Log.Warn( "Palettes can't be hidden indefinitely if the target version is below 4.7!" );
+              } else {
+                paletteDefinition += ",'isHiddenPalette'=>TRUE";
+              }
+              break;
+
+            default:
+              throw new ArgumentOutOfRangeException();
+          }
+        }
+
+        paletteDefinition = paletteDefinition.TrimEnd( new[] {',', ' '} );
+        string paletteBody = String.Format( paletteTemplate, palette.Name, paletteDefinition );
         finalPalettes.Append( paletteBody );
       }
 
-      string resultingPalettes = string.Format( palettesTemplate, finalPalettes );
+      string allPalettes = finalPalettes.ToString();
+      if( 0 < allPalettes.Length ) {
+        allPalettes = allPalettes.Substring( 0, allPalettes.Length - 1 );
+      }
+      string resultingPalettes = string.Format( palettesTemplate, allPalettes );
 
       return resultingPalettes;
     }
