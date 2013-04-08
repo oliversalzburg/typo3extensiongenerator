@@ -139,10 +139,6 @@ namespace Typo3ExtensionGenerator.Generator {
                                        "		# cat=plugin.{extensionName}//a; type=int+; label=Default storage PID\n" +
                                        "		storagePid = \n" +
                                        "	}}\n" +
-                                       "	settings {{\n" +
-                                       "	 # cat=plugin.{extensionName}/file; type=string; label=Path to file type icons\n" +
-                                       "    iconPath = EXT:{extensionKey}/Resources/Public/Icons/TypeIcons/\n" +
-                                       "  }}\n" +
                                        "}}";
 
       const string setupTemplate = "plugin.{extensionName} {{\n" +
@@ -153,12 +149,6 @@ namespace Typo3ExtensionGenerator.Generator {
                                    "	}}\n" +
                                    "	persistence {{\n" +
                                    "		storagePid = {{$plugin.{extensionName}.persistence.storagePid}}\n" +
-                                   "	}}\n" +
-                                   "	settings {{\n" +
-                                   "	  iconPath = {{$plugin.{extensionName}.settings.iconPath}}\n" +
-                                   "	  example {{\n" +
-                                   "	    // Place your own TS here\n" +
-                                   "	  }}\n" +
                                    "	}}\n" +
                                    "}}";
 
